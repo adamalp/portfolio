@@ -161,30 +161,22 @@ export default function AboutPage() {
 
         {/* Story chapters */}
         <section className="mb-16">
-          <SectionHeader subtitle="The journey in six chapters">
-            My story
+          <SectionHeader subtitle="Read the full story in six chapters">
+            Deep dives
           </SectionHeader>
 
-          <div className="space-y-0">
-            {storyChapters.map((chapter, index) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {storyChapters.map((chapter) => (
               <Link
                 key={chapter.slug}
                 href={`/story/${chapter.slug}`}
-                className="group block relative pl-8 pb-8 last:pb-0"
+                className="group p-5 bg-surface border border-border rounded-lg hover:border-primary/50 transition-all"
               >
-                {index < storyChapters.length - 1 && (
-                  <div className="absolute left-[11px] top-6 bottom-0 w-px bg-border group-hover:bg-primary/30 transition-colors" />
-                )}
-                <div className="absolute left-0 top-1.5 w-6 h-6 rounded-full border-2 border-border bg-background group-hover:border-primary transition-colors flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-                <div className="p-4 rounded-lg hover:bg-surface/50 transition-colors">
-                  <div className="font-mono text-xs text-primary mb-1">{chapter.year}</div>
-                  <h3 className="font-mono text-lg text-text group-hover:text-primary transition-colors mb-1">
-                    {chapter.title}
-                  </h3>
-                  <p className="text-sm text-muted">{chapter.subtitle}</p>
-                </div>
+                <div className="font-mono text-xs text-primary mb-2">{chapter.year}</div>
+                <h3 className="font-mono text-text group-hover:text-primary transition-colors mb-1">
+                  {chapter.title}
+                </h3>
+                <p className="text-sm text-muted">{chapter.subtitle}</p>
               </Link>
             ))}
           </div>
