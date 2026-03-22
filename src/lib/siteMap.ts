@@ -139,6 +139,7 @@ export const adventures: Adventure[] = [
 ];
 
 export const timelineEntries: TimelineEntry[] = [
+  { year: "1995", title: "Upbringing — kid filmmaker, first experiments", category: "story", link: "/story/upbringing" },
   { year: "2013", title: "Start at Brown University", category: "story", link: "/story/brown" },
   { year: "2015", title: "NOLS Alaska expedition", category: "adventure", link: "/adventures/nols-alaska" },
   { year: "2017", title: "Graduate Brown, go full-time on Pangea", category: "story", link: "/story/rhode-island" },

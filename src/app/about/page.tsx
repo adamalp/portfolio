@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui";
-import { storyChapters, adventures, timelineEntries } from "@/lib/siteMap";
+import { adventures, timelineEntries } from "@/lib/siteMap";
 
 const categories = ["all", "story", "build", "adventure"] as const;
 type Category = (typeof categories)[number];
@@ -156,29 +156,6 @@ export default function AboutPage() {
                 </Link>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* Story chapters */}
-        <section className="mb-16">
-          <SectionHeader subtitle="Read the full story in six chapters">
-            Deep dives
-          </SectionHeader>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {storyChapters.map((chapter) => (
-              <Link
-                key={chapter.slug}
-                href={`/story/${chapter.slug}`}
-                className="group p-5 bg-surface border border-border rounded-lg hover:border-primary/50 transition-all"
-              >
-                <div className="font-mono text-xs text-primary mb-2">{chapter.year}</div>
-                <h3 className="font-mono text-text group-hover:text-primary transition-colors mb-1">
-                  {chapter.title}
-                </h3>
-                <p className="text-sm text-muted">{chapter.subtitle}</p>
-              </Link>
-            ))}
           </div>
         </section>
 
