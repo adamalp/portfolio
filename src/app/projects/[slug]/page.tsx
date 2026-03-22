@@ -1,7 +1,22 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { buildProjects } from "@/lib/siteMap";
 import { Button, TechTag } from "@/components/ui";
+
+const projectImages: Record<string, string> = {
+  "pangea": "/images/early_pangea.JPG",
+  "founder-communities": "/images/nycfc_ramp.JPG",
+};
+
+const projectInlineImages: Record<string, Record<string, { src: string; alt: string }>> = {
+  "pangea": {
+    "The journey": { src: "/images/old_pangea_app_store.PNG", alt: "Early Pangea app store listing" },
+  },
+  "founder-communities": {
+    "NYC Founders Club": { src: "/images/nyski_mountin_bouyout.JPG", alt: "NYC Founders Club annual ski mountain buyout" },
+  },
+};
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
@@ -128,6 +143,19 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           )}
         </header>
 
+        {/* Hero image */}
+        {projectImages[slug] && (
+          <div className="relative aspect-video rounded-lg overflow-hidden border border-border mb-12">
+            <Image
+              src={projectImages[slug]}
+              alt={project.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
+
         {/* Content sections */}
         <div className="space-y-12">
           {details?.sections.map((section, index) => (
@@ -138,6 +166,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                   <p key={i} className="text-muted leading-relaxed">{paragraph}</p>
                 ))}
               </div>
+              {projectInlineImages[slug]?.[section.title] && (
+                <div className="relative aspect-video rounded-lg overflow-hidden border border-border mt-6">
+                  <Image
+                    src={projectInlineImages[slug][section.title].src}
+                    alt={projectInlineImages[slug][section.title].alt}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
             </section>
           ))}
         </div>

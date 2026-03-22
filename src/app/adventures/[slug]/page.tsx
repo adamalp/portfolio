@@ -1,6 +1,20 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { adventures } from "@/lib/siteMap";
+
+const adventureImages: Record<string, string> = {
+  "nols-alaska": "/images/alaska_mammoth_husk.PNG",
+  "cotopaxi": "/images/cotopaxi_summit.JPG",
+  "ski-and-outdoor": "/images/backcountry_ski.JPG",
+};
+
+const adventureInlineImages: Record<string, Record<string, { src: string; alt: string }>> = {
+  "ski-and-outdoor": {
+    "Ice Coast Films": { src: "/images/ski_film_poster.jpg", alt: "Ice Coast Films NY SKI poster" },
+    "Why I keep going back to the mountains": { src: "/images/albanie_pose.JPG", alt: "Hiking in the mountains" },
+  },
+};
 
 interface AdventurePageProps {
   params: Promise<{ slug: string }>;
@@ -74,10 +88,18 @@ export default async function AdventurePage({ params }: AdventurePageProps) {
           <p className="text-xl text-muted">{adventure.subtitle}</p>
         </header>
 
-        {/* Hero image placeholder */}
-        <div className="aspect-video bg-surface border border-border rounded-lg mb-12 flex items-center justify-center">
-          <span className="font-mono text-muted">// Photo to be added</span>
-        </div>
+        {/* Hero image */}
+        {adventureImages[slug] && (
+          <div className="relative aspect-video rounded-lg overflow-hidden border border-border mb-12">
+            <Image
+              src={adventureImages[slug]}
+              alt={adventure.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
 
         {/* Content sections */}
         <div className="space-y-12">
@@ -89,6 +111,16 @@ export default async function AdventurePage({ params }: AdventurePageProps) {
                   <p key={i} className="text-muted leading-relaxed">{paragraph}</p>
                 ))}
               </div>
+              {adventureInlineImages[slug]?.[section.title] && (
+                <div className="relative aspect-video rounded-lg overflow-hidden border border-border mt-6">
+                  <Image
+                    src={adventureInlineImages[slug][section.title].src}
+                    alt={adventureInlineImages[slug][section.title].alt}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
             </section>
           ))}
         </div>

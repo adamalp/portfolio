@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui";
 import { storyChapters, adventures, timelineEntries } from "@/lib/siteMap";
@@ -33,39 +34,62 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Bio */}
         <section className="mb-16">
-          <h1 className="text-3xl md:text-4xl font-mono font-bold text-text mb-6">
+          <h1 className="text-3xl md:text-4xl font-mono font-bold text-text mb-8">
             About me
           </h1>
-          <div className="space-y-4 text-muted leading-relaxed">
-            <p>
-              I&apos;m Adam Alpert — a founder, builder, and community creator based in Cambridge, MA.
-              I&apos;m the co-founder and CEO of{" "}
-              <Link href="/projects/pangea" className="text-primary hover:text-secondary transition-colors">
-                Pangea
-              </Link>
-              , an AI-native staffing platform connecting companies with top fractional creative,
-              marketing, and growth talent. We built it from a Brown dorm room through Y Combinator
-              to profitability.
-            </p>
-            <p>
-              I also curate{" "}
-              <Link href="/projects/founder-communities" className="text-primary hover:text-secondary transition-colors">
-                founder communities
-              </Link>
-              {" "}in New York and Cambridge — intimate dinners, meaningful collisions, and a
-              product layer to keep ambitious people connected. And I&apos;m currently pursuing my MBA at{" "}
-              <Link href="/story/mit" className="text-primary hover:text-secondary transition-colors">
-                MIT Sloan
-              </Link>
-              , exploring the intersection of AI, marketplaces, and organizational design.
-            </p>
-            <p>
-              I&apos;ve been building things since I was a kid filming videos with a cheap HD camera
-              and posting them online. That instinct — to take an idea, make it real, and share
-              it with people — has shaped almost everything I&apos;ve done since.
-            </p>
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex-shrink-0">
+              <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-lg overflow-hidden border border-border">
+                <Image
+                  src="/images/adam_professional.JPG"
+                  alt="Adam Alpert"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
+            <div className="space-y-4 text-muted leading-relaxed">
+              <p>
+                I&apos;m Adam Alpert — a founder, builder, and community creator based in Cambridge, MA.
+                I&apos;m the co-founder and CEO of{" "}
+                <Link href="/projects/pangea" className="text-primary hover:text-secondary transition-colors">
+                  Pangea
+                </Link>
+                , an AI-native staffing platform connecting companies with top fractional creative,
+                marketing, and growth talent. We built it from a Brown dorm room through Y Combinator
+                to profitability.
+              </p>
+              <p>
+                I also curate{" "}
+                <Link href="/projects/founder-communities" className="text-primary hover:text-secondary transition-colors">
+                  founder communities
+                </Link>
+                {" "}in New York and Cambridge — intimate dinners, meaningful collisions, and a
+                product layer to keep ambitious people connected. And I&apos;m currently pursuing my MBA at{" "}
+                <Link href="/story/mit" className="text-primary hover:text-secondary transition-colors">
+                  MIT Sloan
+                </Link>
+                , exploring the intersection of AI, marketplaces, and organizational design.
+              </p>
+              <p>
+                I&apos;ve been building things since I was a kid filming videos with a cheap HD camera
+                and posting them online. That instinct — to take an idea, make it real, and share
+                it with people — has shaped almost everything I&apos;ve done since.
+              </p>
+            </div>
           </div>
         </section>
+
+        {/* Full-width mountain image */}
+        <div className="relative aspect-[21/9] rounded-lg overflow-hidden border border-border mb-16">
+          <Image
+            src="/images/albania_mountains.JPG"
+            alt="Mountain landscape"
+            fill
+            className="object-cover"
+          />
+        </div>
 
         {/* Timeline */}
         <section className="mb-16">
@@ -173,19 +197,36 @@ export default function AboutPage() {
           </SectionHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {adventures.map((adventure) => (
-              <Link
-                key={adventure.slug}
-                href={`/adventures/${adventure.slug}`}
-                className="group p-6 bg-surface border border-border rounded-lg hover:border-primary/50 transition-all"
-              >
-                <div className="font-mono text-xs text-accent mb-2">{adventure.year}</div>
-                <h3 className="font-mono text-lg text-text group-hover:text-primary transition-colors mb-2">
-                  {adventure.title}
-                </h3>
-                <p className="text-sm text-muted">{adventure.subtitle}</p>
-              </Link>
-            ))}
+            {adventures.map((adventure) => {
+              const adventureImages: Record<string, string> = {
+                "nols-alaska": "/images/alaska_mammoth_husk.PNG",
+                "cotopaxi": "/images/cotopaxi_summit.JPG",
+                "ski-and-outdoor": "/images/backcountry_ski.JPG",
+              };
+              return (
+                <Link
+                  key={adventure.slug}
+                  href={`/adventures/${adventure.slug}`}
+                  className="group overflow-hidden bg-surface border border-border rounded-lg hover:border-primary/50 transition-all"
+                >
+                  <div className="relative aspect-[4/3]">
+                    <Image
+                      src={adventureImages[adventure.slug] || ""}
+                      alt={adventure.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <div className="font-mono text-xs text-accent mb-2">{adventure.year}</div>
+                    <h3 className="font-mono text-lg text-text group-hover:text-primary transition-colors mb-2">
+                      {adventure.title}
+                    </h3>
+                    <p className="text-sm text-muted">{adventure.subtitle}</p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       </div>

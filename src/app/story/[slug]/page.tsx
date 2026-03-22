@@ -1,6 +1,21 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { storyChapters } from "@/lib/siteMap";
+
+const chapterImages: Record<string, string> = {
+  "brown": "/images/brown_intramural_hockey.jpg",
+  "rhode-island": "/images/providence.JPG",
+  "yc": "/images/early_pangea_team.jpg",
+  "new-york": "/images/nyc_founders_club.JPG",
+};
+
+const chapterInlineImages: Record<string, Record<string, { src: string; alt: string }>> = {
+  "rhode-island": {
+    "Turning a student project into a company": { src: "/images/tedx.jpg", alt: "TEDx BryantU talk" },
+    "Early customers, early mistakes": { src: "/images/rhode_island_panel.jpg", alt: "Panel discussion during early Pangea days" },
+  },
+};
 
 interface StoryChapterPageProps {
   params: Promise<{ slug: string }>;
@@ -97,6 +112,19 @@ export default async function StoryChapterPage({ params }: StoryChapterPageProps
           <p className="text-xl text-muted">{chapter.subtitle}</p>
         </header>
 
+        {/* Hero image */}
+        {chapterImages[slug] && (
+          <div className="relative aspect-video rounded-lg overflow-hidden border border-border mb-12">
+            <Image
+              src={chapterImages[slug]}
+              alt={chapter.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
+
         {/* Content sections */}
         <div className="space-y-12">
           {content?.sections.map((section, index) => (
@@ -107,6 +135,16 @@ export default async function StoryChapterPage({ params }: StoryChapterPageProps
                   <p key={i} className="text-muted leading-relaxed">{paragraph}</p>
                 ))}
               </div>
+              {chapterInlineImages[slug]?.[section.title] && (
+                <div className="relative aspect-video rounded-lg overflow-hidden border border-border mt-6">
+                  <Image
+                    src={chapterInlineImages[slug][section.title].src}
+                    alt={chapterInlineImages[slug][section.title].alt}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
             </section>
           ))}
         </div>
