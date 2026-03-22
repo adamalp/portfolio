@@ -21,12 +21,12 @@ export const metadata: Metadata = {
   },
   description:
     "Co-founder & CEO of Pangea. Building AI-native platforms, curating founder communities, and exploring what's next at MIT Sloan.",
-  metadataBase: new URL("https://adamalpert.com"),
+  metadataBase: new URL("https://adam-alpert.com"),
   openGraph: {
     title: "Adam Alpert | Builder, Founder, Community Creator",
     description:
       "Co-founder & CEO of Pangea. Building AI-native platforms, curating founder communities, and exploring what's next at MIT Sloan.",
-    url: "https://adamalpert.com",
+    url: "https://adam-alpert.com",
     siteName: "Adam Alpert",
     locale: "en_US",
     type: "website",
