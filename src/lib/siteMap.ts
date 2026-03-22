@@ -145,12 +145,12 @@ export const timelineEntries: TimelineEntry[] = [
   { year: "2020", title: "Accepted into Y Combinator (W21)", category: "story", link: "/story/yc" },
   { year: "2021", title: "Move to NYC, scale Pangea", category: "story", link: "/story/new-york" },
   { year: "2022", title: "Launch NYC Founders Club", category: "build", link: "/projects/founder-communities" },
-  { year: "2026", title: "Cotopaxi summit", category: "adventure", link: "/adventures/cotopaxi" },
   { year: "2024", title: "NYC Founders Club paid membership", category: "build", link: "/projects/founder-communities" },
   { year: "2025", title: "Head of Product at Reprally", category: "build", link: "/projects/reprally" },
   { year: "2025", title: "Start MIT Sloan", category: "story", link: "/story/mit" },
   { year: "2025", title: "Launch SurviveAI", category: "build", link: "/projects/surviveai" },
   { year: "2025", title: "Cambridge Founders Club", category: "build", link: "/projects/founder-communities" },
+  { year: "2026", title: "Cotopaxi summit", category: "adventure", link: "/adventures/cotopaxi" },
 ];
 
 export const writingPosts: WritingPost[] = [
