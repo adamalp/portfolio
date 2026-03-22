@@ -206,3 +206,31 @@ export const principles = [
     description: "Real relationships compound; transactions don't.",
   },
 ];
+
+export interface HomeBelief {
+  lead: string;
+  detail: string;
+}
+
+export const homeBeliefs: HomeBelief[] = [
+  {
+    lead: "The future of work is fractional.",
+    detail:
+      "AI makes small teams more powerful than large organizations. The best talent wants flexibility, autonomy, and the ability to work on multiple things at once.",
+  },
+  {
+    lead: "Distribution beats product.",
+    detail:
+      "The companies that win aren't the ones with the best features — they're the ones with the best networks and the deepest trust.",
+  },
+  {
+    lead: "Real communities can't be built in a feed.",
+    detail:
+      "Curated, in-person, high-trust networks are the antidote to algorithmic isolation — and they'll become more valuable, not less, in an AI-first world.",
+  },
+  {
+    lead: "Ship fast, then systematize.",
+    detail:
+      "Get to market, learn from actual customers, then build the systems to scale what works. Not the other way around.",
+  },
+];

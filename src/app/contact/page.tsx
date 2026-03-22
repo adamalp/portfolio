@@ -19,6 +19,11 @@ const collaborationTypes = [
     title: "Founder Communities",
     description: "Joining or partnering with NYC or Cambridge Founders Clubs.",
   },
+  {
+    title: "AI & Product Roles",
+    description:
+      "Open to high-impact summer opportunities in AI, agentic systems, and product — especially roles where I can build and ship.",
+  },
 ];
 
 const contactMethods = [
@@ -55,8 +60,8 @@ export default function ContactPage() {
         <div className="mb-12 p-6 bg-surface border border-border rounded-lg">
           <p className="text-muted leading-relaxed text-lg">
             If you're building something ambitious and want help with product, marketplaces,
-            or founder communities — or just want to compare notes — I'm always open to good
-            conversations.
+            AI, or founder communities — or just want to compare notes — I'm always open to good
+            conversations. I'm also exploring summer 2026 opportunities in AI and product.
           </p>
         </div>
 
@@ -65,7 +70,7 @@ export default function ContactPage() {
           <h3 className="font-mono text-lg text-muted mb-6">
             <span className="text-primary">//</span> Ways to collaborate
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {collaborationTypes.map((type) => (
               <div
                 key={type.title}
@@ -112,7 +117,7 @@ export default function ContactPage() {
         <div className="p-6 bg-surface border border-border rounded-lg">
           <div className="flex items-center gap-3">
             <span className="w-3 h-3 rounded-full bg-secondary animate-pulse" />
-            <span className="font-mono text-text">Currently open to conversations</span>
+            <span className="font-mono text-text">Open to conversations and summer 2026 opportunities</span>
           </div>
           <p className="text-sm text-muted mt-2">
             I typically respond within 24-48 hours. For time-sensitive inquiries, email is best.
