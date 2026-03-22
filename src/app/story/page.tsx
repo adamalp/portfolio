@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui";
 import { storyChapters } from "@/lib/siteMap";
+
+export const metadata: Metadata = {
+  title: "Story",
+  description: "From kid filmmaker in suburban New York to founder, YC alum, and MIT Sloan — the journey in six chapters.",
+};
 
 export default function StoryPage() {
   return (

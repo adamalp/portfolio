@@ -1,11 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navItems } from "@/lib/siteMap";
 
 export function Navigation() {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -24,9 +26,9 @@ export function Navigation() {
             Adam Alpert
           </Link>
 
-          {/* Navigation links */}
-          <div className="flex items-center gap-1">
-            <ul className="hidden md:flex items-center gap-1">
+          {/* Desktop navigation links */}
+          <div className="hidden md:flex items-center gap-1">
+            <ul className="flex items-center gap-1">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -56,13 +58,55 @@ export function Navigation() {
             </Link>
           </div>
 
-          {/* Mobile menu button - simplified for now */}
-          <button className="md:hidden p-2 text-muted hover:text-text">
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden p-2 text-muted hover:text-text"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              {mobileOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
             </svg>
           </button>
         </div>
+
+        {/* Mobile menu */}
+        {mobileOpen && (
+          <div className="md:hidden border-t border-border py-4">
+            <ul className="flex flex-col gap-1">
+              {navItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`
+                      block px-3 py-2 text-sm font-mono rounded transition-colors
+                      ${
+                        isActive(item.href)
+                          ? "text-primary bg-primary/10"
+                          : "text-muted hover:text-text hover:bg-surface"
+                      }
+                    `}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="block mt-3 mx-3 px-4 py-2 text-sm font-mono font-semibold bg-primary rounded hover:bg-primary/90 transition-colors text-center"
+              style={{ color: "#000000" }}
+            >
+              Work with me
+            </Link>
+          </div>
+        )}
       </nav>
     </header>
   );

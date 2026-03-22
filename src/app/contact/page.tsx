@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { SectionHeader, Button } from "@/components/ui";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Get in touch — advising, speaking, founder communities, and collaboration.",
+};
 
 const collaborationTypes = [
   {

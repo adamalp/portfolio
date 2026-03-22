@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeader, TechTag } from "@/components/ui";
 import { buildProjects } from "@/lib/siteMap";
+
+export const metadata: Metadata = {
+  title: "Build",
+  description: "Companies, platforms, and tools — Pangea, Founder Communities, Reprally, and SurviveAI.",
+};
 
 export default function BuildPage() {
   const companies = buildProjects.filter((p) => p.type === "company");

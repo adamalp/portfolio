@@ -20,7 +20,7 @@ export function ProjectCard({
 }: ProjectCardProps) {
   return (
     <Link
-      href={`/projects/${slug}`}
+      href={`/build/${slug}`}
       className={`
         group block p-6 bg-surface border border-border rounded-lg
         transition-all duration-300

@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SectionHeader } from "@/components/ui";
 import { adventures } from "@/lib/siteMap";
+
+export const metadata: Metadata = {
+  title: "Adventures",
+  description: "NOLS Alaska, Cotopaxi summit, skiing, and the outdoors — expeditions and personal challenges.",
+};
 
 export default function AdventuresPage() {
   return (
