@@ -50,16 +50,19 @@ export default async function AdventurePage({ params }: AdventurePageProps) {
   }
 
   const content = adventureContent[slug];
+  const currentIndex = adventures.findIndex((a) => a.slug === slug);
+  const prevAdventure = currentIndex > 0 ? adventures[currentIndex - 1] : null;
+  const nextAdventure = currentIndex < adventures.length - 1 ? adventures[currentIndex + 1] : null;
 
   return (
     <div className="min-h-screen py-16 md:py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back link */}
         <Link
-          href="/adventures"
+          href="/about"
           className="inline-flex items-center gap-2 font-mono text-sm text-muted hover:text-primary transition-colors mb-8"
         >
-          ← Back to adventures
+          ← About
         </Link>
 
         {/* Header */}
@@ -90,14 +93,28 @@ export default async function AdventurePage({ params }: AdventurePageProps) {
           ))}
         </div>
 
-        {/* Back navigation */}
+        {/* Prev/Next navigation */}
         <nav className="mt-16 pt-8 border-t border-border">
-          <Link
-            href="/adventures"
-            className="font-mono text-sm text-muted hover:text-primary transition-colors"
-          >
-            ← Back to all adventures
-          </Link>
+          <div className="flex justify-between">
+            {prevAdventure ? (
+              <Link href={`/adventures/${prevAdventure.slug}`} className="group flex flex-col">
+                <span className="text-xs font-mono text-muted mb-1">← Previous</span>
+                <span className="font-mono text-text group-hover:text-primary transition-colors">{prevAdventure.title}</span>
+              </Link>
+            ) : (
+              <div />
+            )}
+            {nextAdventure ? (
+              <Link href={`/adventures/${nextAdventure.slug}`} className="group flex flex-col text-right">
+                <span className="text-xs font-mono text-muted mb-1">Next →</span>
+                <span className="font-mono text-text group-hover:text-primary transition-colors">{nextAdventure.title}</span>
+              </Link>
+            ) : (
+              <Link href="/about" className="font-mono text-sm text-muted hover:text-primary transition-colors">
+                ← About
+              </Link>
+            )}
+          </div>
         </nav>
       </div>
     </div>

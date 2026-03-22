@@ -27,36 +27,25 @@ export function Navigation() {
           </Link>
 
           {/* Desktop navigation links */}
-          <div className="hidden md:flex items-center gap-1">
-            <ul className="flex items-center gap-1">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`
-                      px-3 py-2 text-sm font-mono rounded transition-colors
-                      ${
-                        isActive(item.href)
-                          ? "text-primary bg-primary/10"
-                          : "text-muted hover:text-text hover:bg-surface"
-                      }
-                    `}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-
-            {/* CTA Button */}
-            <Link
-              href="/contact"
-              className="ml-4 px-4 py-2 text-sm font-mono font-semibold bg-primary rounded hover:bg-primary/90 transition-colors"
-              style={{ color: "#000000" }}
-            >
-              Work with me
-            </Link>
-          </div>
+          <ul className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`
+                    px-3 py-2 text-sm font-mono rounded transition-colors
+                    ${
+                      isActive(item.href)
+                        ? "text-primary bg-primary/10"
+                        : "text-muted hover:text-text hover:bg-surface"
+                    }
+                  `}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
 
           {/* Mobile menu button */}
           <button
@@ -97,14 +86,6 @@ export function Navigation() {
                 </li>
               ))}
             </ul>
-            <Link
-              href="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="block mt-3 mx-3 px-4 py-2 text-sm font-mono font-semibold bg-primary rounded hover:bg-primary/90 transition-colors text-center"
-              style={{ color: "#000000" }}
-            >
-              Work with me
-            </Link>
           </div>
         )}
       </nav>

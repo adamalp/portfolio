@@ -82,10 +82,10 @@ export default async function StoryChapterPage({ params }: StoryChapterPageProps
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back link */}
         <Link
-          href="/story"
+          href="/about"
           className="inline-flex items-center gap-2 font-mono text-sm text-muted hover:text-primary transition-colors mb-8"
         >
-          ← Back to story
+          ← About
         </Link>
 
         {/* Header */}

@@ -144,13 +144,13 @@ export const timelineEntries: TimelineEntry[] = [
   { year: "2017", title: "Graduate Brown, go full-time on Pangea", category: "story", link: "/story/rhode-island" },
   { year: "2020", title: "Accepted into Y Combinator (W21)", category: "story", link: "/story/yc" },
   { year: "2021", title: "Move to NYC, scale Pangea", category: "story", link: "/story/new-york" },
-  { year: "2022", title: "Launch NYC Founders Club", category: "build", link: "/build/founder-communities" },
+  { year: "2022", title: "Launch NYC Founders Club", category: "build", link: "/projects/founder-communities" },
   { year: "2023", title: "Cotopaxi summit", category: "adventure", link: "/adventures/cotopaxi" },
-  { year: "2024", title: "NYC Founders Club paid membership", category: "build", link: "/build/founder-communities" },
-  { year: "2025", title: "Head of Product at Reprally", category: "build", link: "/build/reprally" },
+  { year: "2024", title: "NYC Founders Club paid membership", category: "build", link: "/projects/founder-communities" },
+  { year: "2025", title: "Head of Product at Reprally", category: "build", link: "/projects/reprally" },
   { year: "2025", title: "Start MIT Sloan", category: "story", link: "/story/mit" },
-  { year: "2025", title: "Launch SurviveAI", category: "build", link: "/build/surviveai" },
-  { year: "2025", title: "Cambridge Founders Club", category: "build", link: "/build/founder-communities" },
+  { year: "2025", title: "Launch SurviveAI", category: "build", link: "/projects/surviveai" },
+  { year: "2025", title: "Cambridge Founders Club", category: "build", link: "/projects/founder-communities" },
 ];
 
 export const writingPosts: WritingPost[] = [
@@ -181,12 +181,10 @@ export const writingPosts: WritingPost[] = [
 ];
 
 export const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/story", label: "Story" },
-  { href: "/build", label: "Build" },
-  { href: "/adventures", label: "Adventures" },
+  { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
   { href: "/writing", label: "Writing" },
-  { href: "/timeline", label: "Timeline" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export const principles = [
