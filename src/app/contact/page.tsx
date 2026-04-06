@@ -29,20 +29,20 @@ const collaborationTypes = [
 const contactMethods = [
   {
     label: "Email",
-    value: "adam@pangea.app",
-    href: "mailto:adam@pangea.app",
+    value: "alalpert@mit.edu",
+    href: "mailto:alalpert@mit.edu",
     primary: true,
   },
   {
     label: "LinkedIn",
-    value: "linkedin.com/in/adamalpert",
-    href: "https://linkedin.com/in/adamalpert",
+    value: "linkedin.com/in/adamalp",
+    href: "https://linkedin.com/in/adamalp",
     primary: false,
   },
   {
-    label: "Twitter",
-    value: "@adamalpert",
-    href: "https://twitter.com/adamalpert",
+    label: "X",
+    value: "@the_pangean",
+    href: "https://x.com/the_pangean",
     primary: false,
   },
 ];

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { TypewriterText, GlitchText } from "@/components/effects";
+import { GlitchText } from "@/components/effects";
 import { Button, SectionHeader, TerminalCard } from "@/components/ui";
 import { homeBeliefs } from "@/lib/siteMap";
 
@@ -35,12 +35,8 @@ export default function Home() {
       {/* Section 1: Hero */}
       <section className="relative py-24 md:py-32 lg:py-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-mono font-bold mb-6 leading-tight">
-            <TypewriterText
-              text="I build marketplaces, AI products, and founder communities."
-              speed={40}
-              className="text-text"
-            />
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-mono font-bold mb-6 leading-tight text-text">
+            I build marketplaces, AI products, and founder communities.
           </h1>
 
           <p className="text-xl md:text-2xl text-muted max-w-3xl mb-8">

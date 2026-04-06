@@ -1,10 +1,10 @@
 import Link from "next/link";
 
 const socialLinks = [
-  { href: "mailto:adam@pangea.app", label: "Email" },
-  { href: "https://linkedin.com/in/adamalpert", label: "LinkedIn" },
-  { href: "https://github.com/adamalpert", label: "GitHub" },
-  { href: "https://twitter.com/adamalpert", label: "Twitter" },
+  { href: "mailto:alalpert@mit.edu", label: "Email" },
+  { href: "https://linkedin.com/in/adamalp", label: "LinkedIn" },
+  { href: "https://github.com/adamalp", label: "GitHub" },
+  { href: "https://x.com/the_pangean", label: "X" },
 ];
 
 export function Footer() {
