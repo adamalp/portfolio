@@ -1,31 +1,38 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Inter } from "next/font/google";
+import { JetBrains_Mono, Inter_Tight, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { Navigation, Footer, PageTransition } from "@/components/layout";
-import { GridBackground, ScanlineOverlay } from "@/components/effects";
 
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
 });
 
-const inter = Inter({
+const interTight = Inter_Tight({
   variable: "--font-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+});
+
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Adam Alpert | Builder, Founder, Community Creator",
+    default: "Adam Alpert · Founder, Builder, Operator",
     template: "%s | Adam Alpert",
   },
   description:
-    "Co-founder & CEO of Pangea. Building AI-native platforms, curating founder communities, and exploring what's next at MIT Sloan.",
+    "Founder of Pangea.app, NYC & Cambridge Founders Clubs, MIT Sloan MBA. Building marketplaces, AI products, and founder communities.",
   metadataBase: new URL("https://adam-alpert.com"),
   openGraph: {
-    title: "Adam Alpert | Builder, Founder, Community Creator",
+    title: "Adam Alpert · Founder, Builder, Operator",
     description:
-      "Co-founder & CEO of Pangea. Building AI-native platforms, curating founder communities, and exploring what's next at MIT Sloan.",
+      "Founder of Pangea.app, NYC & Cambridge Founders Clubs, MIT Sloan MBA. Building marketplaces, AI products, and founder communities.",
     url: "https://adam-alpert.com",
     siteName: "Adam Alpert",
     locale: "en_US",
@@ -33,28 +40,21 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Adam Alpert | Builder, Founder, Community Creator",
+    title: "Adam Alpert · Founder, Builder, Operator",
     description:
-      "Co-founder & CEO of Pangea. Building AI-native platforms, curating founder communities, and exploring what's next at MIT Sloan.",
+      "Founder of Pangea.app, NYC & Cambridge Founders Clubs, MIT Sloan MBA. Building marketplaces, AI products, and founder communities.",
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="dark">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased bg-background text-text min-h-screen flex flex-col`}
+        className={`${interTight.variable} ${jetbrainsMono.variable} ${instrumentSerif.variable} antialiased`}
       >
-        <GridBackground />
-        <ScanlineOverlay opacity={0.02} />
         <Navigation />
         <main className="flex-1 pt-16">
           <PageTransition>{children}</PageTransition>

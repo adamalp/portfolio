@@ -1,129 +1,186 @@
 import type { Metadata } from "next";
-import { SectionHeader, Button } from "@/components/ui";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch — advising, speaking, founder communities, and collaboration.",
+  description:
+    "Get in touch — advising, speaking, founder communities, and collaboration.",
 };
 
-const collaborationTypes = [
+const cways = [
   {
-    title: "Advising & Consulting",
-    description: "Product strategy, marketplace design, and growth for startups.",
-  },
-  {
-    title: "Speaking & Panels",
-    description: "Talks on marketplaces, community building, and founder journeys.",
-  },
-  {
-    title: "Founder Communities",
-    description: "Joining or partnering with NYC or Cambridge Founders Clubs.",
-  },
-  {
-    title: "AI & Product Roles",
-    description:
-      "Open to high-impact summer opportunities in AI, agentic systems, and product — especially roles where I can build and ship.",
-  },
-];
-
-const contactMethods = [
-  {
-    label: "Email",
-    value: "alalpert@mit.edu",
+    tag: "Email",
+    name: "alalpert@mit.edu",
     href: "mailto:alalpert@mit.edu",
-    primary: true,
+    external: false,
   },
   {
-    label: "LinkedIn",
-    value: "linkedin.com/in/adamalp",
+    tag: "LinkedIn",
+    name: "/in/adamalpert",
     href: "https://linkedin.com/in/adamalp",
-    primary: false,
+    external: true,
   },
   {
-    label: "X",
-    value: "@the_pangean",
+    tag: "Pangea",
+    name: "Hire fractional talent",
+    href: "https://pangea.app",
+    external: true,
+  },
+  {
+    tag: "NYFC / CFC",
+    name: "Apply to founder communities",
+    href: "mailto:alalpert@mit.edu?subject=Founder%20Communities",
+    external: false,
+  },
+  {
+    tag: "X",
+    name: "@the_pangean",
     href: "https://x.com/the_pangean",
-    primary: false,
+    external: true,
   },
 ];
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen py-16 md:py-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <SectionHeader subtitle="Let's build something together">
-          Work with me
-        </SectionHeader>
-
-        {/* Intro */}
-        <div className="mb-12 p-6 bg-surface border border-border rounded-lg">
-          <p className="text-muted leading-relaxed text-lg">
-            If you're building something ambitious and want help with product, marketplaces,
-            AI, or founder communities — or just want to compare notes — I'm always open to good
-            conversations. I'm also exploring summer 2026 opportunities in AI and product.
-          </p>
+    <div className="page" data-page="contact">
+      <section style={{ paddingTop: 64 }}>
+        <div className="shell">
+          <div className="kicker" style={{ marginBottom: 24 }}>
+            Contact
+          </div>
+          <h1
+            className="h-display"
+            style={{ maxWidth: "14ch", marginBottom: 56 }}
+          >
+            Let&rsquo;s find out if there&rsquo;s a{" "}
+            <em className="warm">there</em> there.
+          </h1>
         </div>
+      </section>
 
-        {/* Ways to collaborate */}
-        <div className="mb-16">
-          <h3 className="font-mono text-lg text-muted mb-6">
-            <span className="text-primary">//</span> Ways to collaborate
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {collaborationTypes.map((type) => (
-              <div
-                key={type.title}
-                className="p-6 bg-surface border border-border rounded-lg"
-              >
-                <h4 className="font-mono text-text mb-2">{type.title}</h4>
-                <p className="text-sm text-muted">{type.description}</p>
+      <section style={{ paddingTop: 0, paddingBottom: 140 }}>
+        <div className="shell">
+          <div className="contact-hero">
+            <div>
+              <p className="lede" style={{ marginBottom: 32 }}>
+                If you&rsquo;re building something ambitious and want help with
+                product, marketplaces, AI, or founder communities — or just
+                want to compare notes — I&rsquo;m always open to good
+                conversations.
+              </p>
+
+              <div className="kicker" style={{ margin: "24px 0 8px" }}>
+                Ways to collaborate
               </div>
-            ))}
-          </div>
-        </div>
+              <div className="cways">
+                {cways.map((c) =>
+                  c.external ? (
+                    <a
+                      key={c.tag + c.name}
+                      href={c.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cway"
+                    >
+                      <span className="cway-tag">{c.tag}</span>
+                      <span className="cway-name">{c.name}</span>
+                      <span className="cway-arr">↗</span>
+                    </a>
+                  ) : (
+                    <Link
+                      key={c.tag + c.name}
+                      href={c.href}
+                      className="cway"
+                    >
+                      <span className="cway-tag">{c.tag}</span>
+                      <span className="cway-name">{c.name}</span>
+                      <span className="cway-arr">↗</span>
+                    </Link>
+                  )
+                )}
+              </div>
 
-        {/* Contact methods */}
-        <div className="mb-16">
-          <h3 className="font-mono text-lg text-muted mb-6">
-            <span className="text-primary">//</span> Get in touch
-          </h3>
-          <div className="space-y-4">
-            {contactMethods.map((method) => (
-              <a
-                key={method.label}
-                href={method.href}
-                target={method.href.startsWith("mailto") ? undefined : "_blank"}
-                rel={method.href.startsWith("mailto") ? undefined : "noopener noreferrer"}
-                className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
-                  method.primary
-                    ? "bg-primary/10 border-primary/30 hover:bg-primary/20"
-                    : "bg-surface border-border hover:border-primary/50"
-                }`}
+              <div
+                style={{
+                  marginTop: 32,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 12,
+                  color: "var(--mute)",
+                  letterSpacing: "0.06em",
+                }}
               >
-                <div>
-                  <div className="font-mono text-xs text-muted mb-1">{method.label}</div>
-                  <div className={`font-mono ${method.primary ? "text-primary" : "text-text"}`}>
-                    {method.value}
-                  </div>
-                </div>
-                <span className="text-primary">→</span>
-              </a>
-            ))}
-          </div>
-        </div>
+                <span
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background: "var(--signal)",
+                    boxShadow: "0 0 8px var(--signal)",
+                  }}
+                  className="animate-pulse-slow"
+                />
+                <span>
+                  OPEN · CONVERSATIONS &amp; SUMMER 2026 OPPORTUNITIES · REPLIES IN 24–48 HOURS
+                </span>
+              </div>
+            </div>
 
-        {/* Status */}
-        <div className="p-6 bg-surface border border-border rounded-lg">
-          <div className="flex items-center gap-3">
-            <span className="w-3 h-3 rounded-full bg-secondary animate-pulse" />
-            <span className="font-mono text-text">Open to conversations and summer 2026 opportunities</span>
+            <ContactForm />
           </div>
-          <p className="text-sm text-muted mt-2">
-            I typically respond within 24-48 hours. For time-sensitive inquiries, email is best.
-          </p>
         </div>
-      </div>
+      </section>
     </div>
+  );
+}
+
+function ContactForm() {
+  return (
+    <form
+      className="contact-form"
+      action="mailto:alalpert@mit.edu"
+      method="post"
+      encType="text/plain"
+    >
+      <div className="kicker" style={{ marginBottom: 20 }}>
+        Or send a note
+      </div>
+      <div className="field">
+        <label htmlFor="contact-name">Name</label>
+        <input id="contact-name" name="name" type="text" placeholder="Your name" />
+      </div>
+      <div className="field">
+        <label htmlFor="contact-email">Email</label>
+        <input id="contact-email" name="email" type="email" placeholder="you@domain.com" />
+      </div>
+      <div className="field">
+        <label htmlFor="contact-context">Context</label>
+        <textarea
+          id="contact-context"
+          name="context"
+          placeholder="What are you building? What kind of conversation are you hoping to have?"
+        />
+      </div>
+      <button
+        type="submit"
+        className="btn btn-primary"
+        style={{ width: "100%", justifyContent: "center" }}
+      >
+        Send <span className="arr">→</span>
+      </button>
+      <p
+        style={{
+          fontFamily: "var(--font-mono)",
+          color: "var(--mute)",
+          fontSize: 10,
+          letterSpacing: "0.06em",
+          marginTop: 16,
+        }}
+      >
+        Replies typically within 48 hours.
+      </p>
+    </form>
   );
 }

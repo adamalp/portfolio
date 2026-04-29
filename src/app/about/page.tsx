@@ -1,204 +1,301 @@
-"use client";
-
-import { useState } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { SectionHeader } from "@/components/ui";
-import { adventures, timelineEntries } from "@/lib/siteMap";
+import { adventures, storyChapters, timelineEntries } from "@/lib/siteMap";
 
-const categories = ["all", "story", "build", "adventure"] as const;
-type Category = (typeof categories)[number];
-
-const categoryColors = {
-  story: "bg-primary",
-  build: "bg-secondary",
-  adventure: "bg-accent",
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Adam Alpert — founder, builder, operator. Six chapters of life and work, a chronological timeline, and the adventures in between.",
 };
 
-const categoryLabels = {
-  story: "Life",
-  build: "Work",
-  adventure: "Adventure",
+const storyLedes: Record<string, string> = {
+  upbringing:
+    "Early creativity, family, and the first instinct that I could just make things and put them out into the world.",
+  brown:
+    "History at Brown, NOLS Alaska, and the first version of what would become Pangea.",
+  "rhode-island":
+    "Post-grad in Providence, turning a student project into a real company.",
+  yc: "W21, $125K, and three months that compressed years of learning into a season.",
+  "new-york":
+    "Moving to NYC, building a remote-first team, and scaling the marketplace through pivots.",
+  mit: "Going back to school. Media Lab, the $100K, and Cambridge Founders Club on top of the ecosystem.",
+};
+
+const adventureImages: Record<string, string> = {
+  "nols-alaska": "/images/alaska_mammoth_husk.PNG",
+  cotopaxi: "/images/cotopaxi_summit.JPG",
+  "ski-and-outdoor": "/images/backcountry_ski.JPG",
 };
 
 export default function AboutPage() {
-  const [selectedCategory, setSelectedCategory] = useState<Category>("all");
-
-  const filteredEntries =
-    selectedCategory === "all"
-      ? timelineEntries
-      : timelineEntries.filter((e) => e.category === selectedCategory);
-
   return (
-    <div className="min-h-screen py-16 md:py-24">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Bio */}
-        <section className="mb-16">
-          <h1 className="text-3xl md:text-4xl font-mono font-bold text-text mb-8">
-            About me
+    <div className="page" data-page="about">
+      {/* Intro */}
+      <section style={{ paddingTop: 64 }}>
+        <div className="shell">
+          <div className="kicker" style={{ marginBottom: 24 }}>
+            About
+          </div>
+          <h1
+            className="h-display"
+            style={{ maxWidth: "16ch", marginBottom: 56 }}
+          >
+            Founder, builder, <em className="warm">operator</em>.
           </h1>
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="flex-shrink-0">
-              <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-lg overflow-hidden border border-border">
-                <Image
-                  src="/images/adam_professional.JPG"
-                  alt="Adam Alpert"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-            </div>
-            <div className="space-y-4 text-muted leading-relaxed">
-              <p>
-                I&apos;m Adam Alpert — a founder, builder, and community creator based in Cambridge, MA.
-                I&apos;m the co-founder and CEO of{" "}
-                <Link href="/projects/pangea" className="text-primary hover:text-secondary transition-colors">
-                  Pangea
-                </Link>
-                , an AI-native staffing platform connecting companies with top fractional creative,
-                marketing, and growth talent. We built it from a Brown dorm room through Y Combinator
-                to profitability.
+
+          <div className="about-hero">
+            <div>
+              <p className="lede" style={{ marginBottom: 24 }}>
+                I&rsquo;ve been building things since I was a{" "}
+                <Link href="/story/upbringing" className="inline-link">
+                  kid filming videos
+                </Link>{" "}
+                with a cheap HD camera and posting them online. That instinct —
+                to take an idea, make it real, and share it with people — has
+                shaped almost everything since.
               </p>
-              <p>
-                I also curate{" "}
-                <Link href="/projects/founder-communities" className="text-primary hover:text-secondary transition-colors">
-                  founder communities
+              <p
+                style={{
+                  color: "var(--mute)",
+                  fontFamily: "var(--font-sans)",
+                  fontSize: 17,
+                  lineHeight: 1.6,
+                }}
+              >
+                Started <em>Pangea</em> out of my{" "}
+                <Link href="/story/brown" className="inline-link">
+                  Brown dorm room
                 </Link>
-                {" "}in New York and Cambridge — intimate dinners, meaningful collisions, and a
-                product layer to keep ambitious people connected. And I&apos;m currently pursuing my MBA at{" "}
-                <Link href="/story/mit" className="text-primary hover:text-secondary transition-colors">
+                . Took it through{" "}
+                <Link href="/story/rhode-island" className="inline-link">
+                  early-stage Rhode Island
+                </Link>{" "}
+                and{" "}
+                <Link href="/story/yc" className="inline-link">
+                  Y Combinator W21
+                </Link>
+                . Built founder communities in{" "}
+                <Link href="/story/new-york" className="inline-link">
+                  New York
+                </Link>{" "}
+                and Cambridge. Now digging deeper into systems, AI, and
+                strategy at{" "}
+                <Link href="/story/mit" className="inline-link">
                   MIT Sloan
                 </Link>
-                , exploring the intersection of AI, marketplaces, and organizational design.
-              </p>
-              <p>
-                I&apos;ve been building things since I was a kid filming videos with a cheap HD camera
-                and posting them online. That instinct — to take an idea, make it real, and share
-                it with people — has shaped almost everything I&apos;ve done since.
+                .
               </p>
             </div>
+            <div className="about-portrait">
+              <Image
+                src="/images/adam_professional.JPG"
+                alt="Adam Alpert"
+                fill
+                sizes="(min-width: 800px) 30vw, 90vw"
+                className="object-cover"
+                priority
+              />
+              <span className="badge">Cambridge · 2026</span>
+            </div>
           </div>
-        </section>
-
-        {/* Full-width mountain image */}
-        <div className="relative aspect-[21/9] rounded-lg overflow-hidden border border-border mb-16">
-          <Image
-            src="/images/albania_mountains.JPG"
-            alt="Mountain landscape"
-            fill
-            className="object-cover"
-          />
         </div>
+      </section>
 
-        {/* Timeline */}
-        <section className="mb-16">
-          <SectionHeader subtitle="A chronological view of life and work">
-            Timeline
-          </SectionHeader>
-
-          {/* Filter */}
-          <div className="mb-8 flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 text-sm font-mono border rounded transition-colors ${
-                  selectedCategory === cat
-                    ? "border-primary text-primary bg-primary/10"
-                    : "border-border text-muted hover:border-muted"
-                }`}
+      {/* Story chapter index */}
+      <section style={{ paddingTop: 96 }}>
+        <div className="shell">
+          <div className="sec-head">
+            <div className="sec-num">
+              <span className="slash">/</span> THE LONG VERSION
+            </div>
+            <h2 className="sec-title">Six chapters, in order.</h2>
+          </div>
+          <div className="story-grid">
+            {storyChapters.map((s, i) => (
+              <Link
+                key={s.slug}
+                href={`/story/${s.slug}`}
+                className="story-card"
               >
-                {cat === "all" ? "All" : categoryLabels[cat]}
-              </button>
+                <div className="story-num">0{i + 1}</div>
+                <div className="story-meta">
+                  <div className="story-years">{s.year}</div>
+                  <h3 className="story-title">{s.title}</h3>
+                  <p className="story-lede">
+                    {storyLedes[s.slug] ?? s.subtitle}
+                  </p>
+                </div>
+                <div className="story-arr">→</div>
+              </Link>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Legend */}
-          <div className="mb-6 flex flex-wrap gap-4 text-xs font-mono text-muted">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-primary" />
-              <span>Life</span>
+      {/* Photo strip */}
+      <section style={{ paddingTop: 96 }}>
+        <div className="shell">
+          <div className="strip">
+            <div className="strip-item">
+              <Image
+                src="/images/cotopaxi_summit.JPG"
+                alt="Cotopaxi"
+                fill
+                sizes="(min-width: 720px) 50vw, 100vw"
+                className="object-cover"
+              />
+              <span className="label">Cotopaxi · 2026</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-secondary" />
-              <span>Work</span>
+            <div className="strip-item">
+              <Image
+                src="/images/nyski_mountin_bouyout.JPG"
+                alt="NY Founders Club ski day"
+                fill
+                sizes="(min-width: 720px) 25vw, 100vw"
+                className="object-cover"
+              />
+              <span className="label">NYFC · ski mountain</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-accent" />
-              <span>Adventure</span>
-            </div>
-          </div>
-
-          {/* Timeline entries */}
-          <div className="relative">
-            <div className="absolute left-4 top-0 bottom-0 w-px bg-border" />
-            <div className="space-y-0">
-              {filteredEntries.map((entry) => (
-                <Link
-                  key={`${entry.year}-${entry.title}`}
-                  href={entry.link}
-                  className="group block relative pl-12 py-4 hover:bg-surface/30 transition-colors rounded-lg"
-                >
-                  <div
-                    className={`absolute left-2.5 top-6 w-3 h-3 rounded-full ${
-                      categoryColors[entry.category]
-                    } ring-4 ring-background`}
-                  />
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
-                    <span className="font-mono text-sm text-primary min-w-[60px]">
-                      {entry.year}
-                    </span>
-                    <span className="font-mono text-text group-hover:text-primary transition-colors">
-                      {entry.title}
-                    </span>
-                  </div>
-                </Link>
-              ))}
+            <div className="strip-item">
+              <Image
+                src="/images/tedx.jpg"
+                alt="TEDx"
+                fill
+                sizes="(min-width: 720px) 25vw, 100vw"
+                className="object-cover"
+              />
+              <span className="label">TEDx</span>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Adventures */}
-        <section>
-          <SectionHeader subtitle="Expeditions and personal challenges">
-            Adventures
-          </SectionHeader>
+      {/* Timeline */}
+      <section style={{ padding: "clamp(64px, 10vh, 140px) 0" }}>
+        <div className="shell">
+          <div className="sec-head">
+            <div className="sec-num">
+              <span className="slash">/</span> TIMELINE
+            </div>
+            <h2 className="sec-title">A roughly chronological pass.</h2>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {adventures.map((adventure) => {
-              const adventureImages: Record<string, string> = {
-                "nols-alaska": "/images/alaska_mammoth_husk.PNG",
-                "cotopaxi": "/images/cotopaxi_summit.JPG",
-                "ski-and-outdoor": "/images/backcountry_ski.JPG",
-              };
-              return (
-                <Link
-                  key={adventure.slug}
-                  href={`/adventures/${adventure.slug}`}
-                  className="group overflow-hidden bg-surface border border-border rounded-lg hover:border-primary/50 transition-all"
-                >
-                  <div className="relative aspect-[4/3]">
+          <div
+            style={{
+              display: "flex",
+              gap: 18,
+              marginBottom: 32,
+              flexWrap: "wrap",
+              fontFamily: "var(--font-mono)",
+              fontSize: 11,
+              letterSpacing: "0.06em",
+              color: "var(--mute)",
+              textTransform: "uppercase",
+            }}
+          >
+            <span>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 9,
+                  height: 9,
+                  borderRadius: "50%",
+                  background: "var(--paper)",
+                  marginRight: 8,
+                  verticalAlign: 1,
+                }}
+              />
+              Story
+            </span>
+            <span>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 9,
+                  height: 9,
+                  borderRadius: "50%",
+                  background: "var(--ember)",
+                  marginRight: 8,
+                  verticalAlign: 1,
+                }}
+              />
+              Build
+            </span>
+            <span>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 9,
+                  height: 9,
+                  borderRadius: "50%",
+                  background: "var(--signal)",
+                  marginRight: 8,
+                  verticalAlign: 1,
+                }}
+              />
+              Adventure
+            </span>
+          </div>
+
+          <div className="tl">
+            {timelineEntries.map((t, i) => (
+              <Link
+                key={`${t.year}-${i}`}
+                href={t.link}
+                className={`tl-item ${t.category}`}
+              >
+                <div className="tl-year">{t.year}</div>
+                <div className="tl-body">
+                  <span className="tl-dot" />
+                  <span className="tl-title">{t.title}</span>
+                  <span className="tl-cat">{t.category}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Adventures */}
+      <section style={{ paddingBottom: 140 }}>
+        <div className="shell">
+          <div className="sec-head">
+            <div className="sec-num">
+              <span className="slash">/</span> OUTSIDE
+            </div>
+            <h2 className="sec-title">Why I keep returning to the mountains.</h2>
+          </div>
+          <div className="proj-grid">
+            {adventures.map((adv) => (
+              <Link
+                key={adv.slug}
+                href={`/adventures/${adv.slug}`}
+                className="proj-card"
+              >
+                <div className="proj-thumb">
+                  {adventureImages[adv.slug] && (
                     <Image
-                      src={adventureImages[adventure.slug] || ""}
-                      alt={adventure.title}
+                      src={adventureImages[adv.slug]}
+                      alt={adv.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      sizes="(min-width: 720px) 50vw, 100vw"
+                      className="object-cover"
                     />
+                  )}
+                </div>
+                <div className="proj-body">
+                  <div className="proj-meta">
+                    <span>{adv.title}</span>
+                    <span>{adv.year}</span>
                   </div>
-                  <div className="p-6">
-                    <div className="font-mono text-xs text-accent mb-2">{adventure.year}</div>
-                    <h3 className="font-mono text-lg text-text group-hover:text-primary transition-colors mb-2">
-                      {adventure.title}
-                    </h3>
-                    <p className="text-sm text-muted">{adventure.subtitle}</p>
-                  </div>
-                </Link>
-              );
-            })}
+                  <h3 className="proj-name">{adv.subtitle}</h3>
+                </div>
+              </Link>
+            ))}
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
