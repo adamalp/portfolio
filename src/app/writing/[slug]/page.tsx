@@ -79,7 +79,7 @@ export default async function WritingPostPage({ params }: WritingPostPageProps) 
             <span className="dim">·</span>
             <span>{post.tags.join(" · ")}</span>
           </div>
-          <h1 className="h-1" style={{ marginBottom: 28 }}>
+          <h1 className="title-1" style={{ marginBottom: 28 }}>
             {post.title}
           </h1>
           <p className="lede" style={{ marginBottom: 40 }}>

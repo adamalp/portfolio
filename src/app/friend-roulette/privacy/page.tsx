@@ -22,7 +22,7 @@ export default function FriendRoulettePrivacy() {
             <span className="dim">·</span>
             <span>Last updated April 29, 2026</span>
           </div>
-          <h1 className="h-1" style={{ marginBottom: 28 }}>
+          <h1 className="title-1" style={{ marginBottom: 28 }}>
             Privacy Policy
           </h1>
           <p className="lede" style={{ marginBottom: 40 }}>

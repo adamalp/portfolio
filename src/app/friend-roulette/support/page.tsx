@@ -132,7 +132,7 @@ export default function FriendRouletteSupport() {
             <span className="dim">·</span>
             <span>Support</span>
           </div>
-          <h1 className="h-1" style={{ marginBottom: 28 }}>
+          <h1 className="title-1" style={{ marginBottom: 28 }}>
             Support
           </h1>
           <p className="lede" style={{ marginBottom: 40 }}>
@@ -163,7 +163,7 @@ export default function FriendRouletteSupport() {
                 }}
               >
                 <h2
-                  className="h-3"
+                  className="title-3"
                   style={{ margin: 0, color: "var(--paper)" }}
                 >
                   {f.q}

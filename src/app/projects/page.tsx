@@ -155,7 +155,7 @@ export default function ProjectsPage() {
                 <div className="kicker" style={{ justifyContent: "center", marginBottom: 16 }}>
                   More cooking
                 </div>
-                <div className="h-3" style={{ marginBottom: 12 }}>
+                <div className="title-3" style={{ marginBottom: 12 }}>
                   Got an idea worth shipping?
                 </div>
                 <div style={{ color: "var(--mute)", fontSize: 14 }}>

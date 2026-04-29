@@ -260,7 +260,7 @@ export default function Home() {
               <div className="kicker" style={{ marginBottom: 20 }}>
                 Open for conversation
               </div>
-              <h2 className="h-1" style={{ maxWidth: "18ch" }}>
+              <h2 className="title-1" style={{ maxWidth: "18ch" }}>
                 If you&rsquo;re building something{" "}
                 <em className="warm">ambitious</em>, let&rsquo;s talk.
               </h2>
