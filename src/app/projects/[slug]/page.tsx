@@ -122,6 +122,24 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       <section style={{ paddingTop: project.image ? 0 : 48, paddingBottom: 80 }}>
         <div className="shell">
+          {slug === "friend-roulette" && (
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                flexWrap: "wrap",
+                marginBottom: 48,
+              }}
+            >
+              <Link href="/friend-roulette/support" className="btn btn-ghost">
+                Support <span className="arr">↗</span>
+              </Link>
+              <Link href="/friend-roulette/privacy" className="btn btn-ghost">
+                Privacy policy <span className="arr">↗</span>
+              </Link>
+            </div>
+          )}
+
           <div className="deep">
             {sections.map((s, i) => (
               <div key={i} className="dsec">
