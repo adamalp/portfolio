@@ -56,7 +56,7 @@ export function Footer() {
             <FooterCol
               heading="Elsewhere"
               items={[
-                { label: "Email →", href: "mailto:adam@pangea.app" },
+                { label: "Email →", href: "mailto:aalpert421@gmail.com" },
                 { label: "LinkedIn ↗", href: "https://linkedin.com/in/adamalp", external: true },
                 { label: "GitHub ↗", href: "https://github.com/adamalp", external: true },
                 { label: "X ↗", href: "https://x.com/the_pangean", external: true },

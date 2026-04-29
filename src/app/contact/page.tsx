@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 const cways = [
   {
     tag: "Email",
-    name: "alalpert@mit.edu",
-    href: "mailto:alalpert@mit.edu",
+    name: "aalpert421@gmail.com",
+    href: "mailto:aalpert421@gmail.com",
     external: false,
   },
   {
@@ -29,7 +29,7 @@ const cways = [
   {
     tag: "NYFC / CFC",
     name: "Apply to founder communities",
-    href: "mailto:alalpert@mit.edu?subject=Founder%20Communities",
+    href: "mailto:aalpert421@gmail.com?subject=Founder%20Communities",
     external: false,
   },
   {
@@ -140,7 +140,7 @@ function ContactForm() {
   return (
     <form
       className="contact-form"
-      action="mailto:alalpert@mit.edu"
+      action="mailto:aalpert421@gmail.com"
       method="post"
       encType="text/plain"
     >

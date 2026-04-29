@@ -112,8 +112,8 @@ export default function FriendRoulettePrivacy() {
             <h2>Contact</h2>
             <p>
               Questions, concerns, or requests? Email{" "}
-              <a href="mailto:adam@adam-alpert.com" className="inline-link">
-                adam@adam-alpert.com
+              <a href="mailto:aalpert421@gmail.com" className="inline-link">
+                aalpert421@gmail.com
               </a>
               .
             </p>

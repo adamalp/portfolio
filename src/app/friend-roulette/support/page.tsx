@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Friend Roulette · Support",
   description:
-    "Help and FAQs for Friend Roulette. Email adam@adam-alpert.com for anything not covered here.",
+    "Help and FAQs for Friend Roulette. Email aalpert421@gmail.com for anything not covered here.",
 };
 
 const faqs: { q: string; a: React.ReactNode }[] = [
@@ -137,8 +137,8 @@ export default function FriendRouletteSupport() {
           </h1>
           <p className="lede" style={{ marginBottom: 40 }}>
             Need help? Email{" "}
-            <a href="mailto:adam@adam-alpert.com" className="inline-link">
-              adam@adam-alpert.com
+            <a href="mailto:aalpert421@gmail.com" className="inline-link">
+              aalpert421@gmail.com
             </a>{" "}
             and I&rsquo;ll get back to you. A few common questions are answered
             below.
@@ -199,8 +199,8 @@ export default function FriendRouletteSupport() {
               }}
             >
               Email me at{" "}
-              <a href="mailto:adam@adam-alpert.com" className="inline-link">
-                adam@adam-alpert.com
+              <a href="mailto:aalpert421@gmail.com" className="inline-link">
+                aalpert421@gmail.com
               </a>{" "}
               with a description of what&rsquo;s happening and a screenshot if
               you have one. I&rsquo;ll respond within a couple of days.
