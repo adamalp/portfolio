@@ -86,11 +86,6 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
-  },
   formatDetection: {
     email: false,
     telephone: false,
@@ -103,7 +98,7 @@ const personJsonLd = {
   "@type": "Person",
   name: "Adam Alpert",
   url: SITE_URL,
-  image: `${SITE_URL}/opengraph-image`,
+  image: `${SITE_URL}/opengraph-image.png`,
   jobTitle: "Co-founder & CEO, Pangea",
   description: SITE_DESCRIPTION,
   email: "mailto:aalpert421@gmail.com",

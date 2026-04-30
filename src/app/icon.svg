@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#0a0a0c"></rect>
+  <rect x="3.5" y="3.5" width="57" height="57" rx="8" fill="none" stroke="#d8d2c4" stroke-width="2"></rect>
+  <text x="32" y="48" font-family="Instrument Serif, Georgia, &#39;Times New Roman&#39;, serif" font-style="italic" font-size="46" font-weight="400" fill="#f5f0e6" text-anchor="middle">A</text>
+</svg>
