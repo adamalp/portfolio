@@ -67,6 +67,15 @@ export const metadata: Metadata = {
     siteName: "Adam Alpert",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Adam Alpert — Founder, Builder, Operator. YC W21 · MIT Sloan · adamalpert.com",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -74,6 +83,15 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     creator: "@the_pangean",
     site: "@the_pangean",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Adam Alpert — Founder, Builder, Operator. YC W21 · MIT Sloan · adamalpert.com",
+        type: "image/png",
+      },
+    ],
   },
   robots: {
     index: true,
@@ -98,7 +116,7 @@ const personJsonLd = {
   "@type": "Person",
   name: "Adam Alpert",
   url: SITE_URL,
-  image: `${SITE_URL}/opengraph-image.png`,
+  image: `${SITE_URL}/og-image.png`,
   jobTitle: "Co-founder & CEO, Pangea",
   description: SITE_DESCRIPTION,
   email: "mailto:aalpert421@gmail.com",
