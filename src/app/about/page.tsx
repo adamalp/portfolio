@@ -7,6 +7,14 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Adam Alpert — founder, builder, operator. Six chapters of life and work, a chronological timeline, and the adventures in between.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About · Adam Alpert",
+    description:
+      "Six chapters of life and work — Brown, NOLS Alaska, Pangea, Y Combinator, NYC, MIT Sloan — plus a timeline and adventures.",
+    url: "/about",
+    type: "profile",
+  },
 };
 
 const storyLedes: Record<string, string> = {

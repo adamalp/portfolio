@@ -15,9 +15,26 @@ export async function generateMetadata({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = buildProjects.find((p) => p.slug === slug);
   if (!project) return {};
+  const title = `${project.title}${project.ital ?? ""}`;
+  const description = project.lede ?? project.description;
+  const path = `/projects/${slug}`;
   return {
-    title: `${project.title}${project.ital ?? ""}`,
-    description: project.lede ?? project.description,
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title: `${title} · Adam Alpert`,
+      description,
+      url: path,
+      type: "article",
+      images: project.image ? [project.image] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} · Adam Alpert`,
+      description,
+      images: project.image ? [project.image] : undefined,
+    },
   };
 }
 

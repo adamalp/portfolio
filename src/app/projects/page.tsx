@@ -7,6 +7,14 @@ export const metadata: Metadata = {
   title: "Projects",
   description:
     "Companies, platforms, and tools — Pangea, Founder Communities, Reprally, SurviveAI, Clawviyo, MyLogia, Friend Roulette.",
+  alternates: { canonical: "/projects" },
+  openGraph: {
+    title: "Projects · Adam Alpert",
+    description:
+      "Companies, platforms, and tools — Pangea, Founder Communities, Reprally, SurviveAI, Clawviyo, MyLogia, Friend Roulette.",
+    url: "/projects",
+    type: "website",
+  },
 };
 
 function ProjectCard({ p }: { p: BuildProject }) {

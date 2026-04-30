@@ -53,9 +53,23 @@ export async function generateMetadata({ params }: StoryChapterPageProps) {
   const { slug } = await params;
   const chapter = storyChapters.find((c) => c.slug === slug);
   if (!chapter) return {};
+  const description = chapterLedes[slug] ?? chapter.subtitle;
+  const path = `/story/${slug}`;
   return {
     title: chapter.title,
-    description: chapterLedes[slug] ?? chapter.subtitle,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      title: `${chapter.title} · Adam Alpert`,
+      description,
+      url: path,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${chapter.title} · Adam Alpert`,
+      description,
+    },
   };
 }
 

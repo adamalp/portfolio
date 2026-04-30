@@ -14,7 +14,26 @@ export async function generateMetadata({ params }: WritingPostPageProps) {
   const { slug } = await params;
   const post = writingPosts.find((p) => p.slug === slug);
   if (!post) return {};
-  return { title: post.title, description: post.excerpt };
+  const path = `/writing/${slug}`;
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: { canonical: path },
+    openGraph: {
+      title: `${post.title} · Adam Alpert`,
+      description: post.excerpt,
+      url: path,
+      type: "article",
+      publishedTime: post.date,
+      authors: ["Adam Alpert"],
+      tags: post.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${post.title} · Adam Alpert`,
+      description: post.excerpt,
+    },
+  };
 }
 
 function formatDate(d: string): string {

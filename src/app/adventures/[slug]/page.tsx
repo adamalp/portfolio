@@ -26,6 +26,32 @@ export function generateStaticParams() {
   }));
 }
 
+export async function generateMetadata({ params }: AdventurePageProps) {
+  const { slug } = await params;
+  const adventure = adventures.find((a) => a.slug === slug);
+  if (!adventure) return {};
+  const image = adventureImages[slug];
+  const path = `/adventures/${slug}`;
+  return {
+    title: adventure.title,
+    description: adventure.subtitle,
+    alternates: { canonical: path },
+    openGraph: {
+      title: `${adventure.title} · Adam Alpert`,
+      description: adventure.subtitle,
+      url: path,
+      type: "article",
+      images: image ? [image] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${adventure.title} · Adam Alpert`,
+      description: adventure.subtitle,
+      images: image ? [image] : undefined,
+    },
+  };
+}
+
 const adventureContent: Record<string, {
   sections: { title: string; content: string }[];
 }> = {

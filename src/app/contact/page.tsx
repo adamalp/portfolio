@@ -5,6 +5,14 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Get in touch — advising, speaking, founder communities, and collaboration.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact · Adam Alpert",
+    description:
+      "Get in touch — advising, speaking, founder communities, and collaboration.",
+    url: "/contact",
+    type: "website",
+  },
 };
 
 const cways = [
