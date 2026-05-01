@@ -118,6 +118,29 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </div>
       </section>
 
+      {project.features && project.features.length > 0 && (
+        <section style={{ paddingBottom: 16 }}>
+          <div className="shell">
+            <div className="features-head">
+              <span className="features-eyebrow">
+                {project.featuresHeading ?? "What's inside"}
+              </span>
+            </div>
+            <div className="features-grid">
+              {project.features.map((f, i) => (
+                <div key={i} className="feature-card">
+                  <div className="feature-tag">
+                    {f.tag ?? `${String(i + 1).padStart(2, "0")} · Feature`}
+                  </div>
+                  <h3 className="feature-title">{f.title}</h3>
+                  <p className="feature-body">{f.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {project.image && (
         <div className="shell">
           <div className="full-img">
@@ -170,10 +193,79 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                       <p key={j}>{par}</p>
                     ))}
                   </div>
+                  {s.images && s.images.length > 0 && (
+                    <div
+                      className={`sec-imgs sec-imgs-${
+                        s.images.length === 1 ? "one" : s.images.length === 2 ? "two" : "many"
+                      }`}
+                    >
+                      {s.images.map((img, k) => (
+                        <figure
+                          key={k}
+                          className={`sec-img sec-img-${img.shape ?? "wide"}`}
+                        >
+                          <div className="sec-img-frame">
+                            <Image
+                              src={img.src}
+                              alt={img.alt}
+                              fill
+                              sizes="(min-width: 1240px) 600px, (min-width: 800px) 50vw, 100vw"
+                              className="object-cover"
+                            />
+                          </div>
+                          {img.caption && (
+                            <figcaption className="sec-img-cap">{img.caption}</figcaption>
+                          )}
+                        </figure>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
+
+          {[
+            ...(project.gallery ? [project.gallery] : []),
+            ...(project.galleries ?? []),
+          ].map((gal, gIdx) =>
+            gal.items.length === 0 ? null : (
+              <div key={gIdx} className="gallery-block">
+                <div className="gallery-head">
+                  {gal.kicker && (
+                    <span className="gallery-kicker">{gal.kicker}</span>
+                  )}
+                  {gal.heading && (
+                    <h2 className="gallery-title">{gal.heading}</h2>
+                  )}
+                  {gal.intro && <p className="gallery-intro">{gal.intro}</p>}
+                </div>
+                <div
+                  className={`gallery-grid gallery-${gal.shape ?? "phone"} gallery-count-${Math.min(gal.items.length, 6)}`}
+                >
+                  {gal.items.map((img, k) => (
+                    <figure
+                      key={k}
+                      className={`gallery-item gallery-${gal.shape ?? "phone"}`}
+                    >
+                      <div className="gallery-frame">
+                        <Image
+                          src={img.src}
+                          alt={img.alt}
+                          fill
+                          sizes="(min-width: 1240px) 33vw, (min-width: 800px) 50vw, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
+                      {img.caption && (
+                        <figcaption className="gallery-cap">{img.caption}</figcaption>
+                      )}
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            )
+          )}
 
           <div className="pn">
             {prev ? (
