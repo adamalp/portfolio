@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Friend Roulette · Privacy",
   description:
-    "Friend Roulette does not collect, transmit, or store any of your data on our servers. Everything stays on your device.",
+    "Friend Roulette does not collect, transmit, or store your personal data on our servers. Everything stays on your device.",
 };
 
 export default function FriendRoulettePrivacy() {
@@ -20,7 +20,7 @@ export default function FriendRoulettePrivacy() {
             <span className="dim">·</span>
             <span>Privacy Policy</span>
             <span className="dim">·</span>
-            <span>Last updated April 29, 2026</span>
+            <span>Last updated May 6, 2026</span>
           </div>
           <h1 className="title-1" style={{ marginBottom: 28 }}>
             Privacy Policy
@@ -35,15 +35,17 @@ export default function FriendRoulettePrivacy() {
             <h2>The short version</h2>
             <p>
               <strong>
-                Friend Roulette does not collect, transmit, or store any of your
-                data on our servers.
+                Friend Roulette does not collect, transmit, or store your
+                personal data on our servers.
               </strong>{" "}
-              Everything you do in the app — the contacts you choose, the notes
-              you write, the connections you log — lives only on your device.
+              The contacts you choose, the notes you write, and the connections
+              you log all live only on your device.
             </p>
             <p>
-              We have no analytics. We have no third-party trackers. We do not
-              have a server, and we have no way to read your information.
+              The one exception is anonymous crash and error reports, which we
+              use solely to find and fix bugs. These reports never include your
+              contacts, notes, or any personal content — see{" "}
+              <strong>Crash reports</strong> below for details.
             </p>
 
             <h2>What stays on your device</h2>
@@ -63,8 +65,8 @@ export default function FriendRoulettePrivacy() {
 
             <h2>Permissions we request</h2>
             <p>
-              Friend Roulette asks for two iOS permissions, and only uses them
-              locally:
+              Friend Roulette only asks for permissions it uses locally on your
+              device:
             </p>
             <ul>
               <li>
@@ -80,15 +82,48 @@ export default function FriendRoulettePrivacy() {
                 push notifications and do not have any server-side notification
                 infrastructure.
               </li>
+              <li>
+                <strong>Microphone & speech recognition.</strong> When you
+                choose to dictate a note, your voice is transcribed on-device.
+                The audio is not recorded, stored, or sent off your device.
+              </li>
+              <li>
+                <strong>Background app refresh.</strong> Friend Roulette uses
+                the system background-refresh capability to update your daily
+                roulette pick so notifications can name the friend you&rsquo;re
+                being reminded about. No network requests are made — this is a
+                fully on-device operation.
+              </li>
             </ul>
+
+            <h2>Crash reports</h2>
+            <p>
+              To find and fix bugs, Friend Roulette sends anonymous crash and
+              error reports to <strong>Sentry</strong>, an industry-standard
+              diagnostics service. These reports are limited to technical
+              information about the crash itself — the type of error, the line
+              of code that failed, your device model, and the app version.
+            </p>
+            <p>
+              We have configured Sentry to{" "}
+              <strong>strip any potentially personal fields</strong> (such as
+              contact names, phone numbers, and note text) before reports are
+              sent. We do not send your IP address as identifying data, and we
+              do not link reports to a user account (we do not have user
+              accounts).
+            </p>
+            <p>
+              If you would prefer not to send crash reports, you can disable
+              network access for Friend Roulette in your device settings; the
+              app remains fully functional without it.
+            </p>
 
             <h2>What we don&rsquo;t do</h2>
             <ul>
               <li>We do not have user accounts.</li>
-              <li>We do not collect analytics or usage data.</li>
               <li>
-                We do not use third-party SDKs that collect data (no Google
-                Analytics, Firebase, Amplitude, Mixpanel, Sentry, etc.).
+                We do not collect product analytics or usage data (no Google
+                Analytics, Firebase, Amplitude, Mixpanel, etc.).
               </li>
               <li>We do not advertise.</li>
               <li>We do not sell, share, or rent any information.</li>

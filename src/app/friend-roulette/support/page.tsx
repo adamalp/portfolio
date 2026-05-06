@@ -97,13 +97,50 @@ const faqs: { q: string; a: React.ReactNode }[] = [
     ),
   },
   {
+    q: "Can I change the time the daily reminder fires?",
+    a: (
+      <p>
+        Yes. Open <strong>Manage → Settings</strong> and tap{" "}
+        <strong>Time</strong> to pick any hour and minute. You can also turn
+        the daily reminder off entirely with the toggle on the same screen.
+      </p>
+    ),
+  },
+  {
+    q: "Why does the notification name a specific friend?",
+    a: (
+      <p>
+        Friend Roulette pre-picks the next person in the background and bakes
+        their name into the reminder, so the nudge is concrete (&ldquo;Reach
+        out to Sarah&rdquo;) instead of generic. The pick uses the same
+        weighted random selection as the roulette itself — people who are due
+        to hear from you come up more often.
+      </p>
+    ),
+  },
+  {
+    q: "What does the home screen widget show?",
+    a: (
+      <p>
+        The small widget shows the friend you&rsquo;re currently being nudged
+        to reach out to, with a quick subtitle of how many people are ready
+        for a check-in. Tap it to open Friend Roulette directly to the
+        roulette screen. Add it from your home screen the same way as any
+        other widget — long-press → <strong>Edit Home Screen</strong> →{" "}
+        <strong>+</strong> → search for Friend Roulette.
+      </p>
+    ),
+  },
+  {
     q: "Notifications aren't appearing.",
     a: (
       <p>
         Open iOS <strong>Settings → Notifications → Friend Roulette</strong> and
-        make sure notifications are allowed. The app schedules one local daily
-        reminder at 9 AM. If you&rsquo;ve recently changed time zones or the
-        system date, force-close and reopen the app to reschedule.
+        make sure notifications are allowed. Then in the app, open{" "}
+        <strong>Manage → Settings</strong> and confirm the daily reminder is
+        toggled on and the time is set to what you expect. If you&rsquo;ve
+        recently changed time zones or the system date, force-close and reopen
+        the app to reschedule.
       </p>
     ),
   },
