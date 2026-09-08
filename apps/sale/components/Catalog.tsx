@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicItem } from "@/lib/db";
 import { biddingOpen, BIDS_CLOSE_LABEL, pickupDays, PICKUP_ADDRESS, PICKUP_DAY_KEY, PICKUP_DAY_LABEL, PICKUP_TIMES } from "@/lib/pickup";
-import { FREE_MIN_SPEND, FREE_UNDER, freeEligible } from "@/lib/deals";
+import { FREE_MIN_SPEND, freeEligible, REWARD_TIERS, rewardEligible, rewardSpendFor, rewardTier } from "@/lib/deals";
 
 const fmt = (n: number | null | undefined) => (n == null ? null : "$" + Math.round(n).toLocaleString());
 const STORAGE = "sale-cart-v1";
@@ -24,6 +24,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
   const [hideSold, setHideSold] = useState(false);
   const [bidFilter, setBidFilter] = useState<"all" | "none" | "has">("all");
   const [q, setQ] = useState("");
+  const [rewardId, setRewardId] = useState<number | null>(null);
   const [pickQ, setPickQ] = useState("");
   const [pick, setPick] = useState<{ kind: "idle" | "busy" | "done" | "error"; msg?: string }>({ kind: "idle" });
   const noBidCount = items.filter((i) => i.status !== "Sold" && !i.open_offers).length;
@@ -52,6 +53,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
         if (saved && typeof saved === "object") {
           setCart(saved.cart ?? {});
           setMine(saved.mine ?? {});
+          setRewardId(typeof saved.rewardId === "number" ? saved.rewardId : null);
           setName(saved.name ?? "");
           setContact(saved.contact ?? "");
         }
@@ -61,8 +63,8 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
   }, []);
   useEffect(() => {
     if (!loaded.current) return;
-    try { localStorage.setItem(STORAGE, JSON.stringify({ cart, name, contact, mine })); } catch {}
-  }, [cart, name, contact, mine]);
+    try { localStorage.setItem(STORAGE, JSON.stringify({ cart, name, contact, mine, rewardId })); } catch {}
+  }, [cart, name, contact, mine, rewardId]);
 
   // Deep link: ?item=18 scrolls to and highlights that card.
   useEffect(() => {
@@ -91,11 +93,17 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
 
   const byId = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
   const inCart = Object.keys(cart).map(Number).map((id) => byId.get(id)).filter((i): i is PublicItem => !!i && i.status !== "Sold");
-  const paidTotal = inCart.filter((i) => !freeEligible(i)).reduce((s, i) => s + (parseFloat(cart[i.id]) || 0), 0);
+  const paidTotal = inCart.filter((i) => !freeEligible(i) && i.id !== rewardId).reduce((s, i) => s + (parseFloat(cart[i.id]) || 0), 0);
   const freeUnlocked = paidTotal >= FREE_MIN_SPEND;
   const freeCount = inCart.filter((i) => freeEligible(i)).length;
-  const amountFor = (i: PublicItem) => (freeUnlocked && freeEligible(i) ? 0 : parseFloat(cart[i.id]) || 0);
+  const tier = rewardTier(paidTotal);
+  const nextTier = REWARD_TIERS.find((t) => t.spend > paidTotal) ?? null;
+  const rewardChoices = items.filter((i) => rewardEligible(i) && tier != null && (i.asking_price ?? 0) <= tier.cap);
+  const reward = rewardId != null ? byId.get(rewardId) ?? null : null;
+  const rewardValid = !!reward && !!tier && rewardEligible(reward) && (reward.asking_price ?? 0) <= tier.cap;
+  const amountFor = (i: PublicItem) => (rewardValid && i.id === rewardId ? 0 : freeUnlocked && freeEligible(i) ? 0 : parseFloat(cart[i.id]) || 0);
   const total = inCart.reduce((s, i) => s + amountFor(i), 0);
+  const rewardInCart = rewardValid && cart[rewardId!] !== undefined;
 
   function add(it: PublicItem) {
     const amt = drafts[it.id] ?? suggest(it);
@@ -111,7 +119,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const bad = inCart.filter((i) => !(amountFor(i) > 0) && !(freeUnlocked && freeEligible(i)));
+    const bad = inCart.filter((i) => !(amountFor(i) > 0) && !(freeUnlocked && freeEligible(i)) && !(rewardValid && i.id === rewardId));
     if (bad.length) return setState({ kind: "error", msg: `Enter a price for: ${bad.map((b) => b.name).join(", ")}` });
     if (contact.replace(/\D/g, "").length < 10) return setState({ kind: "error", msg: "Enter a phone number I can text (10 digits)." });
     if (!biddingOpen()) return setState({ kind: "error", msg: `Bidding closed ${BIDS_CLOSE_LABEL}.` });
@@ -119,17 +127,20 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
     const pickup = pickedDays.length || times.length
       ? `Pickup: ${pickedDays.length ? pickedDays.join(", ") : "any day"}${times.length ? " · " + times.join("/").toLowerCase() : ""}`
       : "";
-    const fullNote = [pickup, note.trim()].filter(Boolean).join("\n");
+    const rewardLine = rewardValid && reward ? `Free pick: ${reward.name} (cart ${fmt(paidTotal)})` : "";
+    const fullNote = [pickup, rewardLine, note.trim()].filter(Boolean).join("\n");
+    const extra = rewardValid && !rewardInCart && reward ? [{ item_id: reward.id, amount: 0 }] : [];
     setState({ kind: "sending" });
     const res = await fetch("/api/offers", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name, contact, note: fullNote, offers: inCart.map((i) => ({ item_id: i.id, amount: amountFor(i) })) }),
+      body: JSON.stringify({ name, contact, note: fullNote, offers: [...inCart.map((i) => ({ item_id: i.id, amount: amountFor(i) })), ...extra] }),
     });
     if (res.ok) {
       setState({ kind: "done", msg: `Sent ${inCart.length} offer${inCart.length > 1 ? "s" : ""}. I'll text you at ${contact}.` });
       setMine((m) => ({ ...m, ...Object.fromEntries(inCart.map((i) => [i.id, Math.round(amountFor(i))])) }));
       setCart({});
+      setRewardId(null);
       setNote("");
       setDays([]);
       setTimes([]);
@@ -242,7 +253,9 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
                           ) : it.asking_price ? (
                             <>
                               <span className="price">Starting at <b>{fmt(it.asking_price)}</b></span>
-                              {freeEligible(it) ? <span className="freetag">Free with a {fmt(FREE_MIN_SPEND)}+ cart</span> : <span className="price sub">No bids yet</span>}
+                              {freeEligible(it) ? <span className="freetag">Free with a {fmt(FREE_MIN_SPEND)}+ cart</span>
+                                : rewardEligible(it) ? <span className="freetag">Free pick with a {fmt(rewardSpendFor(it.asking_price)!)}+ cart</span>
+                                : <span className="price sub">No bids yet</span>}
                             </>
                           ) : (
                             <span className="price">No bids yet. Name your price.</span>
@@ -336,7 +349,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
                           </div>
                         </div>
                         <div className="ci-amt">
-                          {freeUnlocked && freeEligible(it) ? (
+                          {(freeUnlocked && freeEligible(it)) || (rewardValid && it.id === rewardId) ? (
                             <span className="free">FREE</span>
                           ) : (
                             <>
@@ -353,6 +366,22 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
                 </ol>
                 <div className="cart-total"><span>{count} item{count > 1 ? "s" : ""}{freeCount > 0 && freeUnlocked && <> · <span className="okt">{freeCount} free</span></>}</span><b>{fmt(total)}</b></div>
                 {freeCount > 0 && !freeUnlocked && <p className="muted fine">Add {fmt(FREE_MIN_SPEND - paidTotal)} more in other items and the {freeCount} small item{freeCount > 1 ? "s" : ""} in your cart become free.</p>}
+
+                <fieldset className="reward">
+                  <legend>🎁 Your free pick</legend>
+                  {tier ? (
+                    <>
+                      <p className="muted">Your cart is over {fmt(tier.spend)}, so you can take one unbid item up to <b>{fmt(tier.cap)}</b> for free.{nextTier && <> Reach {fmt(nextTier.spend)} and the cap goes to {fmt(nextTier.cap)}.</>}</p>
+                      <select value={rewardId ?? ""} onChange={(e) => setRewardId(e.target.value ? Number(e.target.value) : null)} aria-label="Choose your free item">
+                        <option value="">Choose an item…</option>
+                        {rewardChoices.map((i) => <option key={i.id} value={i.id}>{i.name} · {fmt(i.asking_price)}</option>)}
+                      </select>
+                      {rewardValid && reward && <p className="muted fine left">{reward.name} is free with this order. If someone bids on it before Thursday, I&apos;ll text you an alternative.</p>}
+                    </>
+                  ) : (
+                    <p className="muted">Spend {fmt((nextTier ?? REWARD_TIERS[0]).spend - paidTotal)} more in bids and you can pick one unbid item up to <b>{fmt((nextTier ?? REWARD_TIERS[0]).cap)}</b> for free. Bigger carts unlock bigger picks: {REWARD_TIERS.map((t) => `${fmt(t.spend)} → up to ${fmt(t.cap)}`).join(", ")}.</p>
+                  )}
+                </fieldset>
 
                 <fieldset className="pickup">
                   <legend>When could you pick up?</legend>

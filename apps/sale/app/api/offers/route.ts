@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { biddingOpen, BIDS_CLOSE_LABEL } from "@/lib/pickup";
-import { FREE_MIN_SPEND, freeEligible } from "@/lib/deals";
+import { FREE_MIN_SPEND, freeEligible, rewardEligible, rewardTier } from "@/lib/deals";
 import { randomUUID } from "crypto";
 import { db } from "@/lib/db";
 
@@ -30,8 +30,22 @@ export async function POST(req: Request) {
     return it && !freeEligible(it) ? s + (Number(o.amount) || 0) : s;
   }, 0);
   const freeOk = paid >= FREE_MIN_SPEND;
+  // One free reward pick: an item with no open bids, priced within the tier the paid subtotal unlocks.
+  const tier = rewardTier(paid);
+  let rewardId: number | null = null;
+  if (tier) {
+    const zeroIds = offers.filter((o: any) => Number(o.amount) === 0).map((o: any) => Number(o.item_id));
+    if (zeroIds.length) {
+      const { data: best } = await db().from("item_best_offer").select("item_id,open_offers").in("item_id", zeroIds);
+      const openMap = new Map((best ?? []).map((b: any) => [b.item_id, Number(b.open_offers)]));
+      for (const id of zeroIds) {
+        const it = byId.get(id);
+        if (it && !freeEligible(it) && rewardEligible({ ...it, open_offers: openMap.get(id) ?? 0 }) && Number(it.asking_price) <= tier.cap) { rewardId = id; break; }
+      }
+    }
+  }
   const rows = offers
-    .filter((o: any) => ok.has(Number(o.item_id)) && Number.isFinite(Number(o.amount)) && (Number(o.amount) > 0 || (Number(o.amount) === 0 && freeOk && freeEligible(byId.get(Number(o.item_id))))))
+    .filter((o: any) => ok.has(Number(o.item_id)) && Number.isFinite(Number(o.amount)) && (Number(o.amount) > 0 || (Number(o.amount) === 0 && ((freeOk && freeEligible(byId.get(Number(o.item_id)))) || Number(o.item_id) === rewardId))))
     .map((o: any) => ({ item_id: Number(o.item_id), amount: Math.round(Number(o.amount)), buyer_name: name, buyer_contact: contact, note, submission_id }));
   if (!rows.length) return NextResponse.json({ error: "Those items aren't available anymore." }, { status: 409 });
 
