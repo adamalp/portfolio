@@ -2,6 +2,7 @@ import Catalog from "@/components/Catalog";
 import Gallery from "@/components/Gallery";
 import RecentBids from "@/components/RecentBids";
 import Countdown from "@/components/Countdown";
+import CopyPrompt from "@/components/CopyPrompt";
 import { FREE_MIN_SPEND, FREE_UNDER, REWARD_TIERS } from "@/lib/deals";
 import { BIDS_CLOSE_LABEL, MOVE_OUT_LABEL, PICKUP_ADDRESS, PICKUP_CITY, PICKUP_DAY_LABEL, PICKUP_DEADLINE_LABEL, PICKUP_MAP_URL, WINNERS_LABEL } from "@/lib/pickup";
 import { publicItems, recentBids } from "@/lib/db";
@@ -42,7 +43,8 @@ export default async function Home() {
         <p><b>{PICKUP_DAY_LABEL} is pickup day.</b> Swing by the apartment any time that afternoon or evening, grab your stuff, and help me finish the beer in the fridge. If Saturday truly doesn&apos;t work, pick another day in the cart and we&apos;ll sort it out, as long as it&apos;s before {PICKUP_DEADLINE_LABEL}.</p>
         <p>I&apos;m moving out on {MOVE_OUT_LABEL}, so everything has to be picked up by <b>{PICKUP_DEADLINE_LABEL}</b>. </p>
         <p><b>Spend more, take more home free.</b> Anything starting at ${FREE_UNDER} or less is free once the rest of your cart adds up to ${FREE_MIN_SPEND}. On top of that, {REWARD_TIERS.map((t, i) => <span key={t.spend}>{i > 0 ? (i === REWARD_TIERS.length - 1 ? ", and " : ", ") : ""}a ${t.spend} cart lets you pick any unbid item up to ${t.cap} free</span>)}. Every card without a bid shows what it takes to earn it.</p>
-        <p><b>Using an AI assistant?</b> Point it at <a href="/skill">sale.adam-alpert.com/skill</a> and it can browse the catalog with photos and bids, help you choose, and hand you a link with your cart ready to send.</p>
+        <p><b>Using an AI assistant?</b> It can browse the catalog with photos and bids, help you choose, and hand you a link with your cart ready to send. Details at <a href="/skill">sale.adam-alpert.com/skill</a>.</p>
+        <CopyPrompt />
         <p>Pairs and lots are priced for the whole set unless noted. Pickup is from the apartment at <a href={PICKUP_MAP_URL} target="_blank" rel="noreferrer">{PICKUP_ADDRESS}</a> in {PICKUP_CITY}, a short walk from the Central Square T stop; happy to coordinate a time. Items marked <em>tentative</em> might be kept — offers on those are welcome but non-binding on my side.</p>
       </div>
     </div>

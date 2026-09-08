@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import type { PublicItem } from "@/lib/db";
 import { biddingOpen, BIDS_CLOSE_LABEL, pickupDays, PICKUP_ADDRESS, PICKUP_DAY_KEY, PICKUP_DAY_LABEL, PICKUP_TIMES } from "@/lib/pickup";
 import { FREE_MIN_SPEND, freeEligible, REWARD_TIERS, rewardEligible, rewardSpendFor, rewardTier } from "@/lib/deals";
+import CopyPrompt from "@/components/CopyPrompt";
 
 const fmt = (n: number | null | undefined) => (n == null ? null : "$" + Math.round(n).toLocaleString());
 const STORAGE = "sale-cart-v1";
@@ -212,8 +213,8 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
             {pick.kind === "busy" && <p className="muted fine left">Reading all {items.length} items and putting a cart together. Usually under 10 seconds.</p>}
             {pick.kind === "error" && <p className="err">{pick.msg}</p>}
             {pick.kind === "done" && <p className="ok">{pick.msg} Your cart is open, tweak anything you like.</p>}
-            <p className="muted fine left skilllink">Prefer your own Claude or ChatGPT? <a href="/skill">Give it the sale skill</a> and it can browse, advise, and hand you a ready-to-send cart.</p>
           </form>
+          <CopyPrompt compact />
         </section>
       )}
       <div className="toolbar">

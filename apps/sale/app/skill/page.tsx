@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { SITE, skillText } from "@/lib/skillText";
 import CopyButton from "./CopyButton";
+import { AGENT_PROMPT } from "@/components/CopyPrompt";
 
 export const metadata: Metadata = { title: "Adam's Moving Sale · for AI assistants", description: "Let your AI assistant browse the sale and build your bids." };
 
 export default function SkillPage() {
-  const prompt = `Read ${SITE}/SKILL.md and follow it. Then show me what's for sale that fits: `;
+  const prompt = AGENT_PROMPT;
   return (
     <div className="wrap skillpage">
       <a className="back" href="/">← Back to the sale</a>
@@ -18,7 +19,8 @@ export default function SkillPage() {
       <section className="how">
         <h2>Fastest way</h2>
         <p>Paste this into any assistant that can read the web:</p>
-        <pre className="code">{prompt}<em>a studio, mostly need a bed setup and kitchen basics, budget $300</em></pre>
+        <pre className="code">{prompt}</pre>
+        <p className="muted">Then tell it what you&apos;re after, like <em>a studio, mostly need a bed setup and kitchen basics, budget $300</em>.</p>
         <CopyButton text={prompt} label="Copy the prompt" />
       </section>
 
