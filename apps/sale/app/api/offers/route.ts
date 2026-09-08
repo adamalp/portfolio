@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { biddingOpen, BIDS_CLOSE_LABEL } from "@/lib/pickup";
+import { FREE_MIN_SPEND, freeEligible } from "@/lib/deals";
 import { randomUUID } from "crypto";
 import { db } from "@/lib/db";
 
@@ -18,13 +19,19 @@ export async function POST(req: Request) {
   if (!offers.length || offers.length > 60) return NextResponse.json({ error: "Pick at least one item." }, { status: 400 });
 
   const ids = offers.map((o: any) => Number(o.item_id));
-  const { data: items, error } = await db().from("items").select("id,status").in("id", ids);
+  const { data: items, error } = await db().from("items").select("id,status,asking_price").in("id", ids);
   if (error) return NextResponse.json({ error: "Database error" }, { status: 500 });
   const ok = new Set((items ?? []).filter((i) => i.status !== "Sold" && i.status !== "Hidden").map((i) => i.id));
 
   const submission_id = randomUUID();
+  const byId = new Map((items ?? []).map((i: any) => [i.id, i]));
+  const paid = offers.reduce((s: number, o: any) => {
+    const it = byId.get(Number(o.item_id));
+    return it && !freeEligible(it) ? s + (Number(o.amount) || 0) : s;
+  }, 0);
+  const freeOk = paid >= FREE_MIN_SPEND;
   const rows = offers
-    .filter((o: any) => ok.has(Number(o.item_id)) && Number.isFinite(Number(o.amount)) && Number(o.amount) > 0)
+    .filter((o: any) => ok.has(Number(o.item_id)) && Number.isFinite(Number(o.amount)) && (Number(o.amount) > 0 || (Number(o.amount) === 0 && freeOk && freeEligible(byId.get(Number(o.item_id))))))
     .map((o: any) => ({ item_id: Number(o.item_id), amount: Math.round(Number(o.amount)), buyer_name: name, buyer_contact: contact, note, submission_id }));
   if (!rows.length) return NextResponse.json({ error: "Those items aren't available anymore." }, { status: 409 });
 

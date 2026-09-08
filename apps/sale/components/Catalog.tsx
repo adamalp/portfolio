@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicItem } from "@/lib/db";
 import { biddingOpen, BIDS_CLOSE_LABEL, pickupDays, PICKUP_ADDRESS, PICKUP_DAY_KEY, PICKUP_DAY_LABEL, PICKUP_TIMES } from "@/lib/pickup";
+import { FREE_MIN_SPEND, FREE_UNDER, freeEligible } from "@/lib/deals";
 
 const fmt = (n: number | null | undefined) => (n == null ? null : "$" + Math.round(n).toLocaleString());
 const STORAGE = "sale-cart-v1";
@@ -16,12 +17,15 @@ function suggest(it: PublicItem): string {
   return "";
 }
 
-export default function Catalog({ items }: { items: PublicItem[] }) {
+export default function Catalog({ items, pickerEnabled = false }: { items: PublicItem[]; pickerEnabled?: boolean }) {
   const router = useRouter();
   const cats = useMemo(() => Array.from(new Set(items.map((i) => i.category))), [items]);
   const [cat, setCat] = useState("All");
   const [hideSold, setHideSold] = useState(false);
   const [bidFilter, setBidFilter] = useState<"all" | "none" | "has">("all");
+  const [q, setQ] = useState("");
+  const [pickQ, setPickQ] = useState("");
+  const [pick, setPick] = useState<{ kind: "idle" | "busy" | "done" | "error"; msg?: string }>({ kind: "idle" });
   const noBidCount = items.filter((i) => i.status !== "Sold" && !i.open_offers).length;
   const hasBidCount = items.filter((i) => i.status !== "Sold" && i.open_offers > 0).length;
   const [cart, setCart] = useState<Cart>({});
@@ -60,6 +64,15 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
     try { localStorage.setItem(STORAGE, JSON.stringify({ cart, name, contact, mine })); } catch {}
   }, [cart, name, contact, mine]);
 
+  // Deep link: ?item=18 scrolls to and highlights that card.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("item");
+    if (!id) return;
+    const el = document.getElementById("item-" + id);
+    if (!el) return;
+    setTimeout(() => { el.scrollIntoView({ block: "center" }); el.classList.add("flash"); }, 50);
+  }, []);
+
   // Keep best offers fresh while people browse.
   useEffect(() => {
     const t = setInterval(() => { if (document.visibilityState === "visible") router.refresh(); }, 45000);
@@ -78,7 +91,11 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
 
   const byId = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
   const inCart = Object.keys(cart).map(Number).map((id) => byId.get(id)).filter((i): i is PublicItem => !!i && i.status !== "Sold");
-  const total = inCart.reduce((s, i) => s + (parseFloat(cart[i.id]) || 0), 0);
+  const paidTotal = inCart.filter((i) => !freeEligible(i)).reduce((s, i) => s + (parseFloat(cart[i.id]) || 0), 0);
+  const freeUnlocked = paidTotal >= FREE_MIN_SPEND;
+  const freeCount = inCart.filter((i) => freeEligible(i)).length;
+  const amountFor = (i: PublicItem) => (freeUnlocked && freeEligible(i) ? 0 : parseFloat(cart[i.id]) || 0);
+  const total = inCart.reduce((s, i) => s + amountFor(i), 0);
 
   function add(it: PublicItem) {
     const amt = drafts[it.id] ?? suggest(it);
@@ -94,7 +111,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const bad = inCart.filter((i) => !(parseFloat(cart[i.id]) > 0));
+    const bad = inCart.filter((i) => !(amountFor(i) > 0) && !(freeUnlocked && freeEligible(i)));
     if (bad.length) return setState({ kind: "error", msg: `Enter a price for: ${bad.map((b) => b.name).join(", ")}` });
     if (contact.replace(/\D/g, "").length < 10) return setState({ kind: "error", msg: "Enter a phone number I can text (10 digits)." });
     if (!biddingOpen()) return setState({ kind: "error", msg: `Bidding closed ${BIDS_CLOSE_LABEL}.` });
@@ -107,11 +124,11 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
     const res = await fetch("/api/offers", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name, contact, note: fullNote, offers: inCart.map((i) => ({ item_id: i.id, amount: parseFloat(cart[i.id]) })) }),
+      body: JSON.stringify({ name, contact, note: fullNote, offers: inCart.map((i) => ({ item_id: i.id, amount: amountFor(i) })) }),
     });
     if (res.ok) {
       setState({ kind: "done", msg: `Sent ${inCart.length} offer${inCart.length > 1 ? "s" : ""}. I'll text you at ${contact}.` });
-      setMine((m) => ({ ...m, ...Object.fromEntries(inCart.map((i) => [i.id, Math.round(parseFloat(cart[i.id]))])) }));
+      setMine((m) => ({ ...m, ...Object.fromEntries(inCart.map((i) => [i.id, Math.round(amountFor(i))])) }));
       setCart({});
       setNote("");
       setDays([]);
@@ -123,6 +140,30 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
     }
   }
 
+  async function runPicker(e: React.FormEvent) {
+    e.preventDefault();
+    if (pickQ.trim().length < 3) return;
+    setPick({ kind: "busy" });
+    try {
+      const res = await fetch("/api/pick", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ query: pickQ }) });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) return setPick({ kind: "error", msg: j.error || "Something went wrong. Try again." });
+      const picks: { item_id: number; amount: number; why: string }[] = j.picks || [];
+      if (!picks.length) return setPick({ kind: "error", msg: j.note || "Nothing matched. Try describing the room or the items." });
+      setCart((cur) => ({ ...cur, ...Object.fromEntries(picks.map((p) => [p.item_id, String(p.amount)])) }));
+      setPick({ kind: "done", msg: j.note });
+      setState({ kind: "idle" });
+      setOpen(true);
+    } catch {
+      setPick({ kind: "error", msg: "Something went wrong. Try again." });
+    }
+  }
+
+  const matches = (i: PublicItem) => {
+    const s = q.trim().toLowerCase();
+    if (!s) return true;
+    return (i.name + " " + i.category + " " + i.description).toLowerCase().includes(s);
+  };
   const visibleCats = cats.filter((c) => cat === "All" || c === cat);
   const count = inCart.length;
   const [openForBids, setOpenForBids] = useState(true);
@@ -130,7 +171,21 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
 
   return (
     <>
+      {pickerEnabled && (
+        <section className="picker" aria-label="Help me pick">
+          <form onSubmit={runPicker}>
+            <label htmlFor="pickq"><b>Not sure where to start?</b> Tell me what you need and I&apos;ll build you a cart.</label>
+            <div className="row">
+              <input id="pickq" value={pickQ} onChange={(e) => setPickQ(e.target.value)} placeholder="e.g. furnishing a studio, need a bed setup and kitchen basics, budget $300" maxLength={600} />
+              <button className="btn" type="submit" disabled={pick.kind === "busy"}>{pick.kind === "busy" ? "Thinking…" : "Build my cart"}</button>
+            </div>
+            {pick.kind === "error" && <p className="err">{pick.msg}</p>}
+            {pick.kind === "done" && <p className="ok">{pick.msg} Your cart is open, tweak anything you like.</p>}
+          </form>
+        </section>
+      )}
       <div className="toolbar">
+        <input className="search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search items…" aria-label="Search items" />
         {["All", ...cats].map((c) => (
           <button key={c} className="chip" aria-pressed={cat === c} onClick={() => setCat(c)}>{c}</button>
         ))}
@@ -142,7 +197,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
 
       <main>
         {visibleCats.map((c) => {
-          const list = items.filter((i) => i.category === c && !(hideSold && i.status === "Sold")
+          const list = items.filter((i) => matches(i) && i.category === c && !(hideSold && i.status === "Sold")
             && (bidFilter === "all" || (bidFilter === "none" ? i.status !== "Sold" && !i.open_offers : i.open_offers > 0)));
           if (!list.length) return null;
           return (
@@ -156,7 +211,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                   const my = mine[it.id];
                   const leading = my != null && it.best_offer != null && my >= it.best_offer;
                   return (
-                    <article key={it.id} className={`card ${sold ? "sold" : ""} ${sel ? "selected" : ""} ${it.image_url ? "has-img" : ""}`}>
+                    <article key={it.id} id={`item-${it.id}`} className={`card ${sold ? "sold" : ""} ${sel ? "selected" : ""} ${it.image_url ? "has-img" : ""}`}>
                       {it.image_url && (
                         <a className="img" href={it.image_url} target="_blank" rel="noreferrer" aria-label={`Photo of ${it.name}`}>
                           <img src={it.image_url} alt="" loading="lazy" />
@@ -186,7 +241,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                           ) : it.asking_price ? (
                             <>
                               <span className="price">Starting at <b>{fmt(it.asking_price)}</b></span>
-                              <span className="price sub">No bids yet</span>
+                              {freeEligible(it) ? <span className="freetag">Free with a {fmt(FREE_MIN_SPEND)}+ cart</span> : <span className="price sub">No bids yet</span>}
                             </>
                           ) : (
                             <span className="price">No bids yet. Name your price.</span>
@@ -276,19 +331,27 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                             {it.best_offer ? <>Current best {fmt(it.best_offer)}</> : it.asking_price ? <>Starting at {fmt(it.asking_price)}</> : <>No bids yet</>}
                             {low && <span className="warn"> · below the current best</span>}
                             {underStart && <span className="warn"> · below the starting price</span>}
+                            {freeEligible(it) && !freeUnlocked && <span className="hint"> · free once the rest of your cart hits {fmt(FREE_MIN_SPEND)}</span>}
                           </div>
                         </div>
                         <div className="ci-amt">
-                          <span className="cur">$</span>
-                          <input type="number" min={1} step={1} inputMode="numeric" value={cart[it.id]} placeholder="Price"
-                            onChange={(e) => setAmount(it.id, e.target.value)} aria-label={`Your offer for ${it.name}`} />
+                          {freeUnlocked && freeEligible(it) ? (
+                            <span className="free">FREE</span>
+                          ) : (
+                            <>
+                              <span className="cur">$</span>
+                              <input type="number" min={1} step={1} inputMode="numeric" value={cart[it.id]} placeholder="Price"
+                                onChange={(e) => setAmount(it.id, e.target.value)} aria-label={`Your offer for ${it.name}`} />
+                            </>
+                          )}
                           <button type="button" className="btn ghost small" onClick={() => remove(it.id)} aria-label={`Remove ${it.name}`}>✕</button>
                         </div>
                       </li>
                     );
                   })}
                 </ol>
-                <div className="cart-total"><span>{count} item{count > 1 ? "s" : ""}</span><b>{fmt(total)}</b></div>
+                <div className="cart-total"><span>{count} item{count > 1 ? "s" : ""}{freeCount > 0 && freeUnlocked && <> · <span className="okt">{freeCount} free</span></>}</span><b>{fmt(total)}</b></div>
+                {freeCount > 0 && !freeUnlocked && <p className="muted fine">Add {fmt(FREE_MIN_SPEND - paidTotal)} more in other items and the {freeCount} small item{freeCount > 1 ? "s" : ""} in your cart become free.</p>}
 
                 <fieldset className="pickup">
                   <legend>When could you pick up?</legend>

@@ -2,6 +2,7 @@ import Catalog from "@/components/Catalog";
 import Gallery from "@/components/Gallery";
 import RecentBids from "@/components/RecentBids";
 import Countdown from "@/components/Countdown";
+import { FREE_MIN_SPEND, FREE_UNDER } from "@/lib/deals";
 import { BIDS_CLOSE_LABEL, MOVE_OUT_LABEL, PICKUP_ADDRESS, PICKUP_CITY, PICKUP_DAY_LABEL, PICKUP_DEADLINE_LABEL, PICKUP_MAP_URL, WINNERS_LABEL } from "@/lib/pickup";
 import { publicItems, recentBids } from "@/lib/db";
 
@@ -33,13 +34,14 @@ export default async function Home() {
       </header>
       <Gallery />
       <RecentBids bids={bids} />
-      <Catalog items={items} />
+      <Catalog items={items} pickerEnabled={!!process.env.ANTHROPIC_API_KEY} />
       <div className="how">
         <h2>How offers work</h2>
         <p>It works like a quiet auction. Every item has a low starting price, and each card shows the current best bid, so you know what to beat. Type your price, hit <em>Add</em>, and keep browsing. When you&apos;re done, open your cart, check your numbers, and send everything in one go. You only give your name and phone number once.</p>
         <p>If someone outbids you, the card updates and you can come back and bid again. Bidding closes <b>{BIDS_CLOSE_LABEL}</b>. I&apos;ll text the winners {WINNERS_LABEL}.</p>
         <p><b>{PICKUP_DAY_LABEL} is pickup day.</b> Swing by the apartment any time that afternoon or evening, grab your stuff, and help me finish the beer in the fridge. If Saturday truly doesn&apos;t work, pick another day in the cart and we&apos;ll sort it out, as long as it&apos;s before {PICKUP_DEADLINE_LABEL}.</p>
         <p>I&apos;m moving out on {MOVE_OUT_LABEL}, so everything has to be picked up by <b>{PICKUP_DEADLINE_LABEL}</b>. </p>
+        <p><b>Small stuff is free with a bigger haul.</b> Anything starting at ${FREE_UNDER} or less costs nothing once the rest of your cart adds up to ${FREE_MIN_SPEND} or more. Pile them on.</p>
         <p>Pairs and lots are priced for the whole set unless noted. Pickup is from the apartment at <a href={PICKUP_MAP_URL} target="_blank" rel="noreferrer">{PICKUP_ADDRESS}</a> in {PICKUP_CITY}, a short walk from the Central Square T stop; happy to coordinate a time. Items marked <em>tentative</em> might be kept — offers on those are welcome but non-binding on my side.</p>
       </div>
     </div>
