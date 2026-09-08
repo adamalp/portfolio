@@ -93,6 +93,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
     e.preventDefault();
     const bad = inCart.filter((i) => !(parseFloat(cart[i.id]) > 0));
     if (bad.length) return setState({ kind: "error", msg: `Enter a price for: ${bad.map((b) => b.name).join(", ")}` });
+    if (contact.replace(/\D/g, "").length < 10) return setState({ kind: "error", msg: "Enter a phone number I can text (10 digits)." });
     const pickedDays = dayOptions.filter((d) => days.includes(d.key)).map((d) => d.label);
     const pickup = pickedDays.length || times.length
       ? `Pickup: ${pickedDays.length ? pickedDays.join(", ") : "any day"}${times.length ? " · " + times.join("/").toLowerCase() : ""}`
@@ -105,7 +106,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
       body: JSON.stringify({ name, contact, note: fullNote, offers: inCart.map((i) => ({ item_id: i.id, amount: parseFloat(cart[i.id]) })) }),
     });
     if (res.ok) {
-      setState({ kind: "done", msg: `Sent ${inCart.length} offer${inCart.length > 1 ? "s" : ""}. I'll get back to you at ${contact}.` });
+      setState({ kind: "done", msg: `Sent ${inCart.length} offer${inCart.length > 1 ? "s" : ""}. I'll text you at ${contact}.` });
       setMine((m) => ({ ...m, ...Object.fromEntries(inCart.map((i) => [i.id, Math.round(parseFloat(cart[i.id]))])) }));
       setCart({});
       setNote("");
@@ -282,9 +283,9 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                 </fieldset>
 
                 <fieldset className="who">
-                  <legend>Where should I reach you?</legend>
+                  <legend>Where should I text you?</legend>
                   <input required placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
-                  <input required placeholder="Phone or email" value={contact} onChange={(e) => setContact(e.target.value)} autoComplete="tel" />
+                  <input required type="tel" inputMode="tel" placeholder="Phone number (I'll text you)" value={contact} onChange={(e) => setContact(e.target.value)} autoComplete="tel" />
                   <textarea placeholder="Anything else? Pickup timing, questions, bundle deal…" value={note} onChange={(e) => setNote(e.target.value)} />
                 </fieldset>
 

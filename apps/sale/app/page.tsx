@@ -29,8 +29,8 @@ export default async function Home() {
       <Catalog items={items} />
       <div className="how">
         <h2>How offers work</h2>
-        <p>It works like a quiet auction. Every item has a low starting price, and each card shows the current best bid, so you know what to beat. Type your price, hit <em>Add</em>, and keep browsing. When you&apos;re done, open your cart, check your numbers, and send everything in one go. You only give your name and phone or email once.</p>
-        <p>If someone outbids you, the card updates and you can come back and bid again. I&apos;ll text or email you when an offer is accepted.</p>
+        <p>It works like a quiet auction. Every item has a low starting price, and each card shows the current best bid, so you know what to beat. Type your price, hit <em>Add</em>, and keep browsing. When you&apos;re done, open your cart, check your numbers, and send everything in one go. You only give your name and phone number once.</p>
+        <p>If someone outbids you, the card updates and you can come back and bid again. I&apos;ll text you when an offer is accepted.</p>
         <p>I&apos;m moving out on {MOVE_OUT_LABEL}, so everything has to be picked up by <b>{PICKUP_DEADLINE_LABEL}</b>. Tell me in the cart which days work for you and I&apos;ll confirm a time.</p>
         <p>Pairs and lots are priced for the whole set unless noted. Pickup is from the apartment; happy to coordinate a time. Items marked <em>tentative</em> might be kept — offers on those are welcome but non-binding on my side.</p>
       </div>
