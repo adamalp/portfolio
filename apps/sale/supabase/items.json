@@ -736,5 +736,18 @@
   "notes": "Height TBD",
   "sort_order": 58,
   "image_url": "/items/mirror.jpg"
+ },
+ {
+  "id": 59,
+  "category": "Furniture",
+  "name": "Console table by the front door",
+  "description": "Light wood console table with a slim top and lower stretcher, currently holding the lamp and photos by the entry.",
+  "dimensions": "",
+  "qty": 1,
+  "asking_price": 40,
+  "status": "Available",
+  "notes": "Dimensions TBD",
+  "sort_order": 59,
+  "image_url": "/items/front-door-console.jpg"
  }
 ]
