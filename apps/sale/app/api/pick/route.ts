@@ -3,7 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { publicItems } from "@/lib/db";
-import { FREE_MIN_SPEND, FREE_UNDER } from "@/lib/deals";
+import { FREE_MIN_SPEND, FREE_UNDER, freeEligible } from "@/lib/deals";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,6 +15,7 @@ const Picks = z.object({
     why: z.string(),
   })),
   note: z.string(),
+  budget: z.number().nullable(),
 });
 
 const minBid = (i: { asking_price: number | null; best_offer: number | null }) => Math.max(i.asking_price ?? 1, i.best_offer ? i.best_offer + 5 : 0, 1);
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
       "Given the shopper's request and the catalog, choose the items that fit. Be generous with useful adjacent items only when the request is broad (e.g. 'furnish a studio'); be precise when it is specific.",
       `Each catalog line shows the minimum bid that will be accepted for that item (already above any current best bid). Suggest amounts at or above that minimum, rounded to whole dollars. Items with a minimum of ${FREE_UNDER} or less are free when the rest of the cart totals ${FREE_MIN_SPEND} or more, so feel free to add small useful ones at their minimum.`,
       "If the shopper gives a budget, the sum of your suggested amounts (excluding free items) must stay within it. Add up the minimums before choosing; if the obvious pick is too expensive, choose a cheaper alternative or leave it out and say so in the note.",
-      "Write a 'why' of at most 12 words per pick, and a 'note' of at most two friendly sentences summarising the cart. Only use item ids from the catalog. If nothing fits, return no picks and explain in the note.",
+      "List picks with the most important first; the least essential last. Set budget to the shopper's budget in whole dollars if they gave one, otherwise null. Write a 'why' of at most 12 words per pick, and a 'note' of at most two friendly sentences summarising the cart without stating a total. Only use item ids from the catalog. If nothing fits, return no picks and explain in the note.",
       "",
       "Catalog (id | name | category | minimum bid | dimensions | description):",
       catalog,
@@ -62,5 +63,24 @@ export async function POST(req: Request) {
       const floor = Math.max(it.asking_price ?? 1, it.best_offer ? it.best_offer + 5 : 0, 1);
       return { item_id: p.item_id, amount: Math.max(Math.round(p.amount), floor), why: p.why.slice(0, 120) };
     });
-  return NextResponse.json({ picks, note: response.parsed_output.note.slice(0, 400) });
+  // Enforce the budget deterministically: drop the least important paid picks until it fits.
+  let note = response.parsed_output.note.slice(0, 400);
+  const budget = response.parsed_output.budget;
+  const paidOf = (list: typeof picks) => list.filter((p) => !freeEligible(valid.get(p.item_id)!)).reduce((s, p) => s + p.amount, 0);
+  if (budget && budget > 0) {
+    const dropped: string[] = [];
+    while (picks.length && paidOf(picks) > budget) {
+      let idx = -1;
+      for (let i = picks.length - 1; i >= 0; i--) if (!freeEligible(valid.get(picks[i].item_id)!)) { idx = i; break; }
+      if (idx < 0) break;
+      dropped.push(valid.get(picks[idx].item_id)!.name);
+      picks.splice(idx, 1);
+    }
+    if (paidOf(picks) < FREE_MIN_SPEND) {
+      // free items only unlock with $100+ of paid items; keep them but they will be charged at their minimum
+    }
+    if (dropped.length) note += ` To stay within ${budget}, I left out: ${dropped.join(", ")}.`;
+  }
+  const paid = paidOf(picks);
+  return NextResponse.json({ picks, note: note.slice(0, 600), paid, budget: budget ?? null });
 }
