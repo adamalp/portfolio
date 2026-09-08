@@ -21,6 +21,9 @@ h1{font-family:"Young Serif",Georgia,serif;font-weight:400;font-size:clamp(30px,
 .lede{color:var(--ink-2);max-width:62ch;margin:0}
 .stats{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .stats b{color:var(--ink);font-weight:600}
+.stats .where{flex-basis:100%;color:var(--ink)}
+.stats .where a{color:var(--ink);text-decoration-color:var(--line);text-underline-offset:3px}
+.stats .where a:hover{text-decoration-color:var(--accent)}
 .toolbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 0;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line)}
 .chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}

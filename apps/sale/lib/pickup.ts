@@ -2,6 +2,9 @@
 export const MOVE_OUT = new Date(2026, 8, 15); // Tue Sept 15, 2026 (local)
 export const PICKUP_DEADLINE_LABEL = "Monday, Sept 14";
 export const MOVE_OUT_LABEL = "Tuesday, Sept 15";
+export const PICKUP_ADDRESS = "129 Franklin St, Central Square";
+export const PICKUP_CITY = "Cambridge, MA";
+export const PICKUP_MAP_URL = "https://maps.google.com/?q=129+Franklin+St,+Cambridge,+MA";
 
 const DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

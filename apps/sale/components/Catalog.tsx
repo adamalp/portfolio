@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicItem } from "@/lib/db";
-import { pickupDays, PICKUP_TIMES } from "@/lib/pickup";
+import { pickupDays, PICKUP_ADDRESS, PICKUP_TIMES } from "@/lib/pickup";
 
 const fmt = (n: number | null | undefined) => (n == null ? null : "$" + Math.round(n).toLocaleString());
 const STORAGE = "sale-cart-v1";
@@ -269,7 +269,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
 
                 <fieldset className="pickup">
                   <legend>When could you pick up?</legend>
-                  <p className="muted">Pickup is from the apartment. Tap every day that could work.</p>
+                  <p className="muted">Pickup is from {PICKUP_ADDRESS}. Tap every day that could work.</p>
                   <div className="chips">
                     {dayOptions.map((d) => (
                       <button type="button" key={d.key} className="chip" aria-pressed={days.includes(d.key)} onClick={() => toggleIn(setDays, d.key)}>{d.label}</button>
