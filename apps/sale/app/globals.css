@@ -45,6 +45,9 @@ section.cat h2{font-family:"Young Serif",Georgia,serif;font-weight:400;font-size
 section.cat h2 small{font-family:"IBM Plex Sans",sans-serif;font-size:12px;color:var(--ink-2);letter-spacing:.08em;text-transform:uppercase}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;grid-template-rows:auto auto 1fr auto;gap:8px}
+.card.has-img{grid-template-rows:auto auto auto 1fr auto}
+.card .img{display:block;margin:-14px -16px 4px;aspect-ratio:4/3;overflow:hidden;border-radius:10px 10px 0 0;background:var(--sold-bg)}
+.card .img img{width:100%;height:100%;object-fit:cover;display:block}
 .card.sold{opacity:.62}
 .card.selected{border-color:var(--accent);background:var(--sel)}
 .card .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}

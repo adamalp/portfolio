@@ -149,7 +149,12 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                   const my = mine[it.id];
                   const leading = my != null && it.best_offer != null && my >= it.best_offer;
                   return (
-                    <article key={it.id} className={`card ${sold ? "sold" : ""} ${sel ? "selected" : ""}`}>
+                    <article key={it.id} className={`card ${sold ? "sold" : ""} ${sel ? "selected" : ""} ${it.image_url ? "has-img" : ""}`}>
+                      {it.image_url && (
+                        <a className="img" href={it.image_url} target="_blank" rel="noreferrer" aria-label={`Photo of ${it.name}`}>
+                          <img src={it.image_url} alt="" loading="lazy" />
+                        </a>
+                      )}
                       <div className="top">
                         <h3>{it.name}{it.qty > 1 && <span className="qty"> ×{it.qty}</span>}</h3>
                         <span className={`pill ${it.status}`}>{it.status}</span>

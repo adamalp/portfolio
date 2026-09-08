@@ -9,7 +9,8 @@
   "asking_price": 200,
   "status": "Available",
   "notes": "",
-  "sort_order": 1
+  "sort_order": 1,
+  "image_url": "/items/dining-table.jpg"
  },
  {
   "id": 2,
@@ -21,7 +22,8 @@
   "asking_price": 200,
   "status": "Available",
   "notes": "Confirm total length / section count",
-  "sort_order": 2
+  "sort_order": 2,
+  "image_url": "/items/sectional-couch.jpg"
  },
  {
   "id": 3,
@@ -45,7 +47,8 @@
   "asking_price": 175,
   "status": "Available",
   "notes": "Brand: West Elm?",
-  "sort_order": 4
+  "sort_order": 4,
+  "image_url": "/items/kitchenette-table.jpg"
  },
  {
   "id": 5,
@@ -57,7 +60,8 @@
   "asking_price": 50,
   "status": "Available",
   "notes": "",
-  "sort_order": 5
+  "sort_order": 5,
+  "image_url": "/items/kitchenette-table.jpg"
  },
  {
   "id": 6,
@@ -81,7 +85,8 @@
   "asking_price": 75,
   "status": "Available",
   "notes": "",
-  "sort_order": 7
+  "sort_order": 7,
+  "image_url": "/items/entry-console.jpg"
  },
  {
   "id": 8,
@@ -93,7 +98,8 @@
   "asking_price": 25,
   "status": "Available",
   "notes": "Two available; price per unit",
-  "sort_order": 8
+  "sort_order": 8,
+  "image_url": "/items/bookshelf.jpg"
  },
  {
   "id": 9,
@@ -117,7 +123,8 @@
   "asking_price": 150,
   "status": "Tentative",
   "notes": "Undecided on selling",
-  "sort_order": 10
+  "sort_order": 10,
+  "image_url": "/items/ottoman-chair.jpg"
  },
  {
   "id": 11,
@@ -129,7 +136,8 @@
   "asking_price": 100,
   "status": "Available",
   "notes": "Height TBD",
-  "sort_order": 11
+  "sort_order": 11,
+  "image_url": "/items/orange-chair.jpg"
  },
  {
   "id": 12,
@@ -189,7 +197,8 @@
   "asking_price": 60,
   "status": "Available",
   "notes": "Height TBD",
-  "sort_order": 16
+  "sort_order": 16,
+  "image_url": "/items/arc-lamp.jpg"
  },
  {
   "id": 17,
@@ -213,7 +222,8 @@
   "asking_price": 250,
   "status": "Available",
   "notes": "Model # TBD",
-  "sort_order": 18
+  "sort_order": 18,
+  "image_url": "/items/tv-65.jpg"
  },
  {
   "id": 19,
@@ -261,7 +271,8 @@
   "asking_price": 40,
   "status": "Available",
   "notes": "",
-  "sort_order": 22
+  "sort_order": 22,
+  "image_url": "/items/monstera.jpg"
  },
  {
   "id": 23,
@@ -333,7 +344,8 @@
   "asking_price": 30,
   "status": "Available",
   "notes": "",
-  "sort_order": 28
+  "sort_order": 28,
+  "image_url": "/items/fake-palm.jpg"
  },
  {
   "id": 29,
@@ -357,7 +369,8 @@
   "asking_price": 100,
   "status": "Available",
   "notes": "",
-  "sort_order": 30
+  "sort_order": 30,
+  "image_url": "/items/brown-rug.jpg"
  },
  {
   "id": 31,
@@ -369,7 +382,8 @@
   "asking_price": 100,
   "status": "Available",
   "notes": "",
-  "sort_order": 31
+  "sort_order": 31,
+  "image_url": "/items/blue-rug.jpg"
  },
  {
   "id": 32,
@@ -381,7 +395,8 @@
   "asking_price": 40,
   "status": "Available",
   "notes": "",
-  "sort_order": 32
+  "sort_order": 32,
+  "image_url": "/items/white-rug.jpg"
  },
  {
   "id": 33,
@@ -405,7 +420,8 @@
   "asking_price": 60,
   "status": "Available",
   "notes": "",
-  "sort_order": 34
+  "sort_order": 34,
+  "image_url": "/items/air-purifier.jpg"
  },
  {
   "id": 35,
@@ -477,7 +493,8 @@
   "asking_price": 15,
   "status": "Available",
   "notes": "",
-  "sort_order": 40
+  "sort_order": 40,
+  "image_url": "/items/trash-can.jpg"
  },
  {
   "id": 41,
@@ -633,7 +650,8 @@
   "asking_price": 30,
   "status": "Available",
   "notes": "Two available; price per unit",
-  "sort_order": 53
+  "sort_order": 53,
+  "image_url": "/items/side-table.jpg"
  },
  {
   "id": 54,
@@ -669,7 +687,8 @@
   "asking_price": 25,
   "status": "Available",
   "notes": "Two available; price per unit",
-  "sort_order": 56
+  "sort_order": 56,
+  "image_url": "/items/bedside.jpg"
  },
  {
   "id": 57,
@@ -681,6 +700,20 @@
   "asking_price": 20,
   "status": "Available",
   "notes": "Two available; price per unit",
-  "sort_order": 57
+  "sort_order": 57,
+  "image_url": "/items/bedside.jpg"
+ },
+ {
+  "id": 58,
+  "category": "Furniture",
+  "name": "Full-length mirror",
+  "description": "Tall leaning floor mirror with a slim frame, currently in the living room.",
+  "dimensions": "",
+  "qty": 1,
+  "asking_price": 30,
+  "status": "Available",
+  "notes": "Height TBD",
+  "sort_order": 58,
+  "image_url": "/items/mirror.jpg"
  }
 ]
