@@ -1,12 +1,13 @@
 import Catalog from "@/components/Catalog";
 import Gallery from "@/components/Gallery";
+import RecentBids from "@/components/RecentBids";
 import { MOVE_OUT_LABEL, PICKUP_DEADLINE_LABEL } from "@/lib/pickup";
-import { publicItems } from "@/lib/db";
+import { publicItems, recentBids } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const items = await publicItems();
+  const [items, bids] = await Promise.all([publicItems(), recentBids()]);
   const avail = items.filter((i) => i.status === "Available" || i.status === "Tentative").length;
   const pending = items.filter((i) => i.status === "Pending").length;
   const sold = items.filter((i) => i.status === "Sold").length;
@@ -26,6 +27,7 @@ export default async function Home() {
         </div>
       </header>
       <Gallery />
+      <RecentBids bids={bids} />
       <Catalog items={items} />
       <div className="how">
         <h2>How offers work</h2>

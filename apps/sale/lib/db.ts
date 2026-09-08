@@ -67,3 +67,35 @@ export async function publicItems(): Promise<PublicItem[]> {
     open_offers: map.get(i.id)?.open_offers ?? 0,
   }));
 }
+
+export type RecentBid = { id: string; item_id: number; item: string; first_name: string; amount: number; created_at: string; leading: boolean };
+
+/** Latest bids for the public ticker. First names only, no contact info. */
+export async function recentBids(limit = 8): Promise<RecentBid[]> {
+  if (process.env.MOCK_DB === "1") return [];
+  const s = db();
+  const { data, error } = await s
+    .from("offers")
+    .select("id,item_id,amount,buyer_name,created_at,items(name)")
+    .in("status", ["open", "accepted"])
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  const { data: best } = await s.from("item_best_offer").select("item_id,best_offer");
+  const bestMap = new Map((best ?? []).map((b: any) => [b.item_id, Number(b.best_offer)]));
+  return (data ?? []).map((o: any) => ({
+    id: o.id,
+    item_id: o.item_id,
+    item: o.items?.name ?? "an item",
+    first_name: firstName(o.buyer_name),
+    amount: Number(o.amount),
+    created_at: o.created_at,
+    leading: bestMap.get(o.item_id) === Number(o.amount),
+  }));
+}
+
+function firstName(full: string): string {
+  const t = (full || "").trim();
+  if (!t || t.startsWith("(")) return "Someone";
+  return t.split(/\s+/)[0].replace(/[^\p{L}\p{N}'’-]/gu, "") || "Someone";
+}
