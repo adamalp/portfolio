@@ -19,6 +19,11 @@ header.hero{display:grid;gap:10px;padding-bottom:22px;border-bottom:1px solid va
 h1{font-family:"Young Serif",Georgia,serif;font-weight:400;font-size:clamp(30px,5vw,44px);line-height:1.05;margin:0;text-wrap:balance}
 .eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--accent);font-weight:600}
 .lede{color:var(--ink-2);max-width:62ch;margin:0}
+.deadline{display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;padding:8px 12px;border-radius:8px;background:var(--warn-bg);color:var(--warn);font-size:14px;width:fit-content}
+.deadline .left{font-variant-numeric:tabular-nums}
+.deadline.closed{background:var(--sold-bg);color:var(--sold)}
+.chips .chip.star{border-color:var(--ok);color:var(--ok)}
+.chips .chip.star[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
 .stats{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .stats b{color:var(--ink);font-weight:600}
 .stats .where{flex-basis:100%;color:var(--ink)}

@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicItem } from "@/lib/db";
-import { pickupDays, PICKUP_ADDRESS, PICKUP_TIMES } from "@/lib/pickup";
+import { biddingOpen, BIDS_CLOSE_LABEL, pickupDays, PICKUP_ADDRESS, PICKUP_DAY_KEY, PICKUP_DAY_LABEL, PICKUP_TIMES } from "@/lib/pickup";
 
 const fmt = (n: number | null | undefined) => (n == null ? null : "$" + Math.round(n).toLocaleString());
 const STORAGE = "sale-cart-v1";
@@ -94,6 +94,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
     const bad = inCart.filter((i) => !(parseFloat(cart[i.id]) > 0));
     if (bad.length) return setState({ kind: "error", msg: `Enter a price for: ${bad.map((b) => b.name).join(", ")}` });
     if (contact.replace(/\D/g, "").length < 10) return setState({ kind: "error", msg: "Enter a phone number I can text (10 digits)." });
+    if (!biddingOpen()) return setState({ kind: "error", msg: `Bidding closed ${BIDS_CLOSE_LABEL}.` });
     const pickedDays = dayOptions.filter((d) => days.includes(d.key)).map((d) => d.label);
     const pickup = pickedDays.length || times.length
       ? `Pickup: ${pickedDays.length ? pickedDays.join(", ") : "any day"}${times.length ? " · " + times.join("/").toLowerCase() : ""}`
@@ -121,6 +122,8 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
 
   const visibleCats = cats.filter((c) => cat === "All" || c === cat);
   const count = inCart.length;
+  const [openForBids, setOpenForBids] = useState(true);
+  useEffect(() => { setOpenForBids(biddingOpen()); const t = setInterval(() => setOpenForBids(biddingOpen()), 30000); return () => clearInterval(t); }, []);
 
   return (
     <>
@@ -176,7 +179,9 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                             {leading ? <>You&apos;re the top bid at <b>{fmt(my)}</b></> : <>Your bid <b>{fmt(my)}</b> was outbid. Raise it?</>}
                           </div>
                         )}
-                        {sold ? null : sel ? (
+                        {sold ? null : !openForBids ? (
+                          <span className="price">Bidding closed</span>
+                        ) : sel ? (
                           <div className="incart">
                             <span className="tick">✓ In your cart · <b>{fmt(parseFloat(cart[it.id]) || 0)}</b></span>
                             <button className="btn ghost small" onClick={() => setOpen(true)}>Edit</button>
@@ -200,7 +205,7 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
         })}
       </main>
 
-      {(count > 0 || state.kind === "done") && !open && (
+      {openForBids && (count > 0 || state.kind === "done") && !open && (
         <div className="cartbar" role="region" aria-label="Your cart">
           <div className="in">
             {state.kind === "done" && count === 0 ? (
@@ -269,10 +274,10 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
 
                 <fieldset className="pickup">
                   <legend>When could you pick up?</legend>
-                  <p className="muted">Pickup is from {PICKUP_ADDRESS}. Tap every day that could work.</p>
+                  <p className="muted"><b>{PICKUP_DAY_LABEL}</b> is pickup day at {PICKUP_ADDRESS} (beer provided). Tap Saturday, or any other days that could work.</p>
                   <div className="chips">
                     {dayOptions.map((d) => (
-                      <button type="button" key={d.key} className="chip" aria-pressed={days.includes(d.key)} onClick={() => toggleIn(setDays, d.key)}>{d.label}</button>
+                      <button type="button" key={d.key} className={`chip ${d.key === PICKUP_DAY_KEY ? "star" : ""}`} aria-pressed={days.includes(d.key)} onClick={() => toggleIn(setDays, d.key)}>{d.key === PICKUP_DAY_KEY ? "🍻 " : ""}{d.label}</button>
                     ))}
                   </div>
                   <div className="chips">

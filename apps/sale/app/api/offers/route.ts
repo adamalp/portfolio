@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { biddingOpen, BIDS_CLOSE_LABEL } from "@/lib/pickup";
 import { randomUUID } from "crypto";
 import { db } from "@/lib/db";
 
@@ -12,6 +13,7 @@ export async function POST(req: Request) {
   const contact = String(body.contact ?? "").trim().slice(0, 200);
   const note = String(body.note ?? "").trim().slice(0, 2000);
   const offers = Array.isArray(body.offers) ? body.offers : [];
+  if (!biddingOpen()) return NextResponse.json({ error: `Bidding closed ${BIDS_CLOSE_LABEL}.` }, { status: 403 });
   if (!name || !contact) return NextResponse.json({ error: "Name and contact are required." }, { status: 400 });
   if (!offers.length || offers.length > 60) return NextResponse.json({ error: "Pick at least one item." }, { status: 400 });
 
