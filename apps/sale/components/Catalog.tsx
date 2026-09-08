@@ -26,6 +26,8 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
   const [q, setQ] = useState("");
   const [rewardId, setRewardId] = useState<number | null>(null);
   const [pickQ, setPickQ] = useState("");
+  const [pickOpen, setPickOpen] = useState(false);
+  const [hidden, setHidden] = useState(false); // floating pill hides while scrolling down
   const [pick, setPick] = useState<{ kind: "idle" | "busy" | "done" | "error"; msg?: string }>({ kind: "idle" });
   const noBidCount = items.filter((i) => i.status !== "Sold" && !i.open_offers).length;
   const hasBidCount = items.filter((i) => i.status !== "Sold" && i.open_offers > 0).length;
@@ -73,6 +75,19 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
     const el = document.getElementById("item-" + id);
     if (!el) return;
     setTimeout(() => { el.scrollIntoView({ block: "center" }); el.classList.add("flash"); }, 50);
+  }, []);
+
+  // Hide the floating picker while scrolling down, show it again on scroll up.
+  useEffect(() => {
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y > last + 8 && y > 200) setHidden(true);
+      else if (y < last - 8) setHidden(false);
+      last = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   // Keep best offers fresh while people browse.
@@ -164,6 +179,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
       setCart((cur) => ({ ...cur, ...Object.fromEntries(picks.map((p) => [p.item_id, String(p.amount)])) }));
       setPick({ kind: "done", msg: j.note });
       setState({ kind: "idle" });
+      setPickOpen(false);
       setOpen(true);
     } catch {
       setPick({ kind: "error", msg: "Something went wrong. Try again." });
@@ -182,20 +198,6 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
 
   return (
     <>
-      {pickerEnabled && (
-        <section className="picker" aria-label="Help me pick">
-          <form onSubmit={runPicker}>
-            <label htmlFor="pickq"><b>Not sure where to start?</b> Tell me what you need and I&apos;ll build you a cart.</label>
-            <div className="row">
-              <input id="pickq" value={pickQ} onChange={(e) => setPickQ(e.target.value)} placeholder="e.g. furnishing a studio, need a bed setup and kitchen basics, budget $300" maxLength={600} />
-              <button className="btn" type="submit" disabled={pick.kind === "busy"}>{pick.kind === "busy" ? "Picking…" : "Build my cart"}</button>
-            </div>
-            {pick.kind === "busy" && <p className="muted fine left">Reading all {items.length} items and putting a cart together. Usually under 10 seconds.</p>}
-            {pick.kind === "error" && <p className="err">{pick.msg}</p>}
-            {pick.kind === "done" && <p className="ok">{pick.msg} Your cart is open, tweak anything you like.</p>}
-          </form>
-        </section>
-      )}
       <div className="toolbar">
         <input className="search" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search items…" aria-label="Search items" />
         {["All", ...cats].map((c) => (
@@ -291,6 +293,23 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
           );
         })}
       </main>
+
+      {pickerEnabled && openForBids && !open && (
+        <div className={`pickfab ${hidden && !pickOpen ? "hidden" : ""} ${count > 0 || state.kind === "done" ? "lifted" : ""}`}>
+          {pickOpen && (
+            <form className="pickpop" onSubmit={runPicker} aria-label="Help me pick">
+              <div className="pp-head"><b>Tell me what you need</b><button type="button" className="btn ghost small" onClick={() => setPickOpen(false)} aria-label="Close">✕</button></div>
+              <textarea autoFocus value={pickQ} onChange={(e) => setPickQ(e.target.value)} placeholder="e.g. furnishing a studio, need a bed setup and kitchen basics, budget $300" maxLength={600} rows={3} />
+              {pick.kind === "busy" && <p className="muted fine left">Reading all {items.length} items and putting a cart together. Usually under 10 seconds.</p>}
+              {pick.kind === "error" && <p className="err">{pick.msg}</p>}
+              <button className="btn" type="submit" disabled={pick.kind === "busy" || pickQ.trim().length < 3}>{pick.kind === "busy" ? "Picking…" : "Build my cart"}</button>
+            </form>
+          )}
+          <button type="button" className="pill" aria-expanded={pickOpen} onClick={() => setPickOpen((v) => !v)}>
+            <span className="spark" aria-hidden="true">✦</span> {pickOpen ? "Close" : "Not sure? Let me build your cart"}
+          </button>
+        </div>
+      )}
 
       {openForBids && (count > 0 || state.kind === "done") && !open && (
         <div className="cartbar" role="region" aria-label="Your cart">
