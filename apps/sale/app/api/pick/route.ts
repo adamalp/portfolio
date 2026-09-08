@@ -17,6 +17,8 @@ const Picks = z.object({
   note: z.string(),
 });
 
+const minBid = (i: { asking_price: number | null; best_offer: number | null }) => Math.max(i.asking_price ?? 1, i.best_offer ? i.best_offer + 5 : 0, 1);
+
 /** Public: turn "I'm looking for..." into a suggested cart. */
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) return NextResponse.json({ error: "Picker is not configured." }, { status: 503 });
@@ -26,7 +28,7 @@ export async function POST(req: Request) {
 
   const items = (await publicItems()).filter((i) => i.status !== "Sold");
   const catalog = items
-    .map((i) => `#${i.id} | ${i.name} | ${i.category} | starting $${i.asking_price ?? "?"} | current best ${i.best_offer ? "$" + i.best_offer : "none"} | ${i.dimensions || "-"} | ${i.description}`)
+    .map((i) => `#${i.id} | ${i.name} | ${i.category} | min bid ${minBid(i)}${i.best_offer ? ` (current best ${i.best_offer})` : ""} | ${i.dimensions || "-"} | ${i.description}`)
     .join("\n");
 
   const client = new Anthropic();
@@ -39,11 +41,11 @@ export async function POST(req: Request) {
     system: [{ type: "text", cache_control: { type: "ephemeral" }, text: [
       "You help shoppers at a friendly apartment moving sale build a cart. The seller wants everything to find a home.",
       "Given the shopper's request and the catalog, choose the items that fit. Be generous with useful adjacent items only when the request is broad (e.g. 'furnish a studio'); be precise when it is specific.",
-      `For each pick suggest a bid amount: at least the starting price, and if there is a current best bid, at least $5 above it. Round to whole dollars. Items starting at $${FREE_UNDER} or less are free when the rest of the cart totals $${FREE_MIN_SPEND} or more, so feel free to add small useful ones at their starting price.`,
-      "If the shopper gives a budget, keep the total of your suggested bids within it, prioritising what they asked for first.",
+      `Each catalog line shows the minimum bid that will be accepted for that item (already above any current best bid). Suggest amounts at or above that minimum, rounded to whole dollars. Items with a minimum of ${FREE_UNDER} or less are free when the rest of the cart totals ${FREE_MIN_SPEND} or more, so feel free to add small useful ones at their minimum.`,
+      "If the shopper gives a budget, the sum of your suggested amounts (excluding free items) must stay within it. Add up the minimums before choosing; if the obvious pick is too expensive, choose a cheaper alternative or leave it out and say so in the note.",
       "Write a 'why' of at most 12 words per pick, and a 'note' of at most two friendly sentences summarising the cart. Only use item ids from the catalog. If nothing fits, return no picks and explain in the note.",
       "",
-      "Catalog (id | name | category | starting price | current best bid | dimensions | description):",
+      "Catalog (id | name | category | minimum bid | dimensions | description):",
       catalog,
     ].join("\n") }],
     messages: [{ role: "user", content: query }],
