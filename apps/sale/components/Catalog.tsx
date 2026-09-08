@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicItem } from "@/lib/db";
+import { pickupDays, PICKUP_TIMES } from "@/lib/pickup";
 
 const fmt = (n: number | null | undefined) => (n == null ? null : "$" + Math.round(n).toLocaleString());
 const STORAGE = "sale-cart-v1";
@@ -27,6 +28,11 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [note, setNote] = useState("");
+  const [days, setDays] = useState<string[]>([]);
+  const [times, setTimes] = useState<string[]>([]);
+  const dayOptions = useMemo(() => pickupDays(), []);
+  const toggleIn = (set: React.Dispatch<React.SetStateAction<string[]>>, v: string) =>
+    set((arr) => (arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]));
   const [state, setState] = useState<{ kind: "idle" | "sending" | "done" | "error"; msg?: string }>({ kind: "idle" });
   const loaded = useRef(false);
 
@@ -87,17 +93,24 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
     e.preventDefault();
     const bad = inCart.filter((i) => !(parseFloat(cart[i.id]) > 0));
     if (bad.length) return setState({ kind: "error", msg: `Enter a price for: ${bad.map((b) => b.name).join(", ")}` });
+    const pickedDays = dayOptions.filter((d) => days.includes(d.key)).map((d) => d.label);
+    const pickup = pickedDays.length || times.length
+      ? `Pickup: ${pickedDays.length ? pickedDays.join(", ") : "any day"}${times.length ? " · " + times.join("/").toLowerCase() : ""}`
+      : "";
+    const fullNote = [pickup, note.trim()].filter(Boolean).join("\n");
     setState({ kind: "sending" });
     const res = await fetch("/api/offers", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ name, contact, note, offers: inCart.map((i) => ({ item_id: i.id, amount: parseFloat(cart[i.id]) })) }),
+      body: JSON.stringify({ name, contact, note: fullNote, offers: inCart.map((i) => ({ item_id: i.id, amount: parseFloat(cart[i.id]) })) }),
     });
     if (res.ok) {
       setState({ kind: "done", msg: `Sent ${inCart.length} offer${inCart.length > 1 ? "s" : ""}. I'll get back to you at ${contact}.` });
       setMine((m) => ({ ...m, ...Object.fromEntries(inCart.map((i) => [i.id, Math.round(parseFloat(cart[i.id]))])) }));
       setCart({});
       setNote("");
+      setDays([]);
+      setTimes([]);
       router.refresh();
     } else {
       const j = await res.json().catch(() => ({}));
@@ -250,6 +263,21 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                   })}
                 </ol>
                 <div className="cart-total"><span>{count} item{count > 1 ? "s" : ""}</span><b>{fmt(total)}</b></div>
+
+                <fieldset className="pickup">
+                  <legend>When could you pick up?</legend>
+                  <p className="muted">Pickup is from the apartment. Tap every day that could work.</p>
+                  <div className="chips">
+                    {dayOptions.map((d) => (
+                      <button type="button" key={d.key} className="chip" aria-pressed={days.includes(d.key)} onClick={() => toggleIn(setDays, d.key)}>{d.label}</button>
+                    ))}
+                  </div>
+                  <div className="chips">
+                    {PICKUP_TIMES.map((t) => (
+                      <button type="button" key={t} className="chip" aria-pressed={times.includes(t)} onClick={() => toggleIn(setTimes, t)}>{t}</button>
+                    ))}
+                  </div>
+                </fieldset>
 
                 <fieldset className="who">
                   <legend>Where should I reach you?</legend>
