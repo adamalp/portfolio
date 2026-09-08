@@ -94,3 +94,12 @@ Detail page content (long descriptions, sections) is stored inline in each `[slu
 - Framer Motion used for page transitions and component animations
 - Detail pages have prev/next navigation (story chapters, projects, adventures)
 - About page structure: Bio with photo → Mountain panorama → Interactive timeline → Adventure image cards
+
+## Moving Sale App (`apps/sale/`)
+
+Standalone Next.js 14 + Supabase app for **sale.adam-alpert.com** (buyers browse apartment items and submit per-item offers; Adam accepts/declines in `/admin`). It has its own `package.json`, `node_modules`, and toolchain, and is excluded from the root site's tsconfig and ESLint.
+
+- Deployed as a **separate Vercel project** with Root Directory = `apps/sale` (same GitHub repo).
+- Env vars: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSCODE` (see `apps/sale/.env.example`).
+- Setup, seeding, and API details: `apps/sale/README.md`. Local preview without a database: `MOCK_DB=1 npm run dev` inside `apps/sale`.
+- Item data of record once live is the Supabase DB; `apps/sale/supabase/items.json` is the seed (mirrors the `Apartment_Sale_Inventory` Google Sheet).
