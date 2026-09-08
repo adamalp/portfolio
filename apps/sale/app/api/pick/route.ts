@@ -31,11 +31,12 @@ export async function POST(req: Request) {
 
   const client = new Anthropic();
   const response = await client.messages.parse({
-    model: "claude-opus-5",
-    max_tokens: 4000,
-    thinking: { type: "adaptive" },
+    // Sonnet 5 with thinking off: a 60-item catalog does not need deep reasoning, and shoppers are waiting on the button.
+    model: "claude-sonnet-5",
+    max_tokens: 1500,
+    thinking: { type: "disabled" },
     output_config: { effort: "low", format: zodOutputFormat(Picks) },
-    system: [
+    system: [{ type: "text", cache_control: { type: "ephemeral" }, text: [
       "You help shoppers at a friendly apartment moving sale build a cart. The seller wants everything to find a home.",
       "Given the shopper's request and the catalog, choose the items that fit. Be generous with useful adjacent items only when the request is broad (e.g. 'furnish a studio'); be precise when it is specific.",
       `For each pick suggest a bid amount: at least the starting price, and if there is a current best bid, at least $5 above it. Round to whole dollars. Items starting at $${FREE_UNDER} or less are free when the rest of the cart totals $${FREE_MIN_SPEND} or more, so feel free to add small useful ones at their starting price.`,
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
       "",
       "Catalog (id | name | category | starting price | current best bid | dimensions | description):",
       catalog,
-    ].join("\n"),
+    ].join("\n") }],
     messages: [{ role: "user", content: query }],
   });
 

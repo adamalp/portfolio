@@ -177,8 +177,9 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
             <label htmlFor="pickq"><b>Not sure where to start?</b> Tell me what you need and I&apos;ll build you a cart.</label>
             <div className="row">
               <input id="pickq" value={pickQ} onChange={(e) => setPickQ(e.target.value)} placeholder="e.g. furnishing a studio, need a bed setup and kitchen basics, budget $300" maxLength={600} />
-              <button className="btn" type="submit" disabled={pick.kind === "busy"}>{pick.kind === "busy" ? "Thinking…" : "Build my cart"}</button>
+              <button className="btn" type="submit" disabled={pick.kind === "busy"}>{pick.kind === "busy" ? "Picking…" : "Build my cart"}</button>
             </div>
+            {pick.kind === "busy" && <p className="muted fine left">Reading all {items.length} items and putting a cart together. Usually under 10 seconds.</p>}
             {pick.kind === "error" && <p className="err">{pick.msg}</p>}
             {pick.kind === "done" && <p className="ok">{pick.msg} Your cart is open, tweak anything you like.</p>}
           </form>
