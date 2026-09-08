@@ -54,25 +54,70 @@ section.cat h2 small{font-family:"IBM Plex Sans",sans-serif;font-size:12px;color
 .btn.small{padding:5px 9px;font-size:12px}
 .btn[disabled],.btn[aria-disabled="true"]{background:var(--sold-bg);color:var(--sold);cursor:default}
 .qty{font-size:12px;color:var(--ink-2)}
-.offer-in{display:flex;align-items:center;gap:6px;font-size:13px}
-.offer-in input{width:90px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);font:inherit;font-variant-numeric:tabular-nums}
 .how{margin-top:40px;padding:18px 20px;border:1px solid var(--line);border-radius:10px;background:var(--surface);max-width:70ch}
 .how h2{font-family:"Young Serif",Georgia,serif;font-weight:400;font-size:20px;margin:0 0 8px}
 .how p{margin:6px 0;color:var(--ink-2)}
 .empty{color:var(--ink-2);padding:30px 0;text-align:center}
-/* offer tray */
-.tray{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(0,0,0,.08)}
-.tray .in{max-width:1100px;margin:0 auto;padding:12px 18px;display:grid;gap:10px}
-.tray .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
-.tray .sum{font-size:14px}
-.tray .sum b{font-variant-numeric:tabular-nums}
-.tray form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.tray form textarea,.tray form input{padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
-.tray form textarea{grid-column:1/-1;min-height:44px;resize:vertical}
-.tray .actions{grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end;align-items:center}
-.tray .err{color:#B3261E;font-size:13px}
-.tray .ok{color:var(--ok);font-size:14px}
-@media (max-width:560px){.tray form{grid-template-columns:1fr}}
+/* card bidding */
+.foot{flex-direction:column;align-items:stretch;gap:8px}
+.bid{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.price.lead b{color:var(--accent)}
+.price.sub{font-size:12px}
+.offer-in{display:flex;align-items:center;gap:6px;font-size:13px}
+.offer-in .cur{color:var(--ink-2)}
+.offer-in input{flex:1;min-width:0;width:auto;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:15px;font-variant-numeric:tabular-nums}
+.incart{display:flex;align-items:center;gap:6px;font-size:13px;flex-wrap:wrap}
+.incart .tick{flex:1;color:var(--ok);font-weight:500}
+.incart .tick b{font-variant-numeric:tabular-nums}
+.mybid{font-size:13px;padding:6px 10px;border-radius:8px}
+.mybid.leading{background:var(--ok-bg);color:var(--ok)}
+.mybid.outbid{background:var(--warn-bg);color:var(--warn)}
+.mybid b{font-variant-numeric:tabular-nums}
+.btn.big{padding:12px 18px;font-size:15px}
+/* cart bar */
+.cartbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -8px 30px rgba(0,0,0,.10)}
+.cartbar .in{max-width:1100px;margin:0 auto;padding:12px 18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.cartbar .sum{font-size:15px}
+.cartbar .sum b{font-variant-numeric:tabular-nums}
+.cartbar .ok{color:var(--ok);font-size:14px}
+/* checkout drawer */
+.overlay{position:fixed;inset:0;z-index:20;background:rgba(20,14,10,.45);display:flex;justify-content:flex-end}
+.drawer{width:min(520px,100%);height:100%;background:var(--bg);border-left:1px solid var(--line);box-shadow:-12px 0 40px rgba(0,0,0,.18);overflow-y:auto;display:flex;flex-direction:column}
+.drawer>header{position:sticky;top:0;background:var(--bg);display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);z-index:1}
+.drawer h2{font-family:"Young Serif",Georgia,serif;font-weight:400;font-size:24px;margin:0}
+.checkout{display:grid;gap:16px;padding:16px 20px 28px}
+.cart-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.cart-item{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.ci-main{flex:1;min-width:160px}
+.ci-name{font-weight:600;font-size:15px}
+.ci-meta{font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ci-meta .warn{color:var(--warn)}
+.ci-amt{display:flex;align-items:center;gap:6px}
+.ci-amt .cur{color:var(--ink-2)}
+.ci-amt input{width:96px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:15px;font-variant-numeric:tabular-nums}
+.cart-total{display:flex;justify-content:space-between;padding:6px 4px;border-top:1px solid var(--line);font-size:15px}
+.cart-total b{font-variant-numeric:tabular-nums;font-size:18px}
+fieldset.who{border:0;margin:0;padding:0;display:grid;gap:8px}
+fieldset.who legend{font-family:"Young Serif",Georgia,serif;font-size:18px;margin-bottom:10px;padding:0}
+fieldset.who input,fieldset.who textarea{padding:11px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;font-size:15px;width:100%}
+fieldset.who textarea{min-height:64px;resize:vertical}
+.drawer .actions{display:grid;gap:8px}
+.drawer .actions .btn{width:100%}
+.drawer .err{color:#B3261E;font-size:13px}
+.drawer .ok{color:var(--ok);font-size:16px}
+.fine{font-size:12px;margin:0;text-align:center}
+.done{padding:40px 20px;display:grid;gap:12px;justify-items:start}
+.done .big{font-size:40px;color:var(--ok);line-height:1}
+.done p{margin:0}
+@media (max-width:560px){
+  .overlay{align-items:flex-end}
+  .drawer{width:100%;height:auto;max-height:92vh;border-left:0;border-top:1px solid var(--line);border-radius:16px 16px 0 0}
+}
+@media (prefers-reduced-motion:no-preference){
+  .drawer{animation:slidein .18s ease-out}
+  @keyframes slidein{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+  @media (max-width:560px){@keyframes slidein{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}}
+}
 /* admin */
 .admin h1{font-size:28px}
 .tabs{display:flex;gap:8px;margin:16px 0}

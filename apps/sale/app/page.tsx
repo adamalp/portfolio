@@ -15,7 +15,7 @@ export default async function Home() {
         <h1>Adam&apos;s Moving Sale</h1>
         <p className="lede">
           Everything below is up for grabs before the move — mostly walnut furniture, a sectional, rugs, plants, and
-          kitchen gear. Tick anything you want, put in your price for each, and send it over. Highest reasonable offer takes it.
+          kitchen gear. Put your price on anything you want and hit Add. When you&apos;re done, review your cart and send it all at once with your name and number. Highest reasonable offer takes it.
         </p>
         <div className="stats">
           <span><b>{avail}</b> available</span>
@@ -26,7 +26,8 @@ export default async function Home() {
       <Catalog items={items} />
       <div className="how">
         <h2>How offers work</h2>
-        <p>Tick the items you&apos;re interested in and enter your offer for each. One form at the bottom sends them all at once. Each card shows the best offer so far, so you can see what you&apos;d need to beat.</p>
+        <p>It works like a quiet auction. Each card shows the current best bid, so you know what to beat. Type your price, hit <em>Add</em>, and keep browsing. When you&apos;re done, open your cart, check your numbers, and send everything in one go. You only give your name and phone or email once.</p>
+        <p>If someone outbids you, the card updates and you can come back and bid again. I&apos;ll text or email you when an offer is accepted.</p>
         <p>Pairs and lots are priced for the whole set unless noted. Pickup is from the apartment; happy to coordinate a time. Items marked <em>tentative</em> might be kept — offers on those are welcome but non-binding on my side.</p>
       </div>
     </div>
