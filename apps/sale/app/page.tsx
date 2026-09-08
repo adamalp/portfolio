@@ -12,6 +12,7 @@ export default async function Home() {
   const avail = items.filter((i) => i.status === "Available" || i.status === "Tentative").length;
   const pending = items.filter((i) => i.status === "Pending").length;
   const sold = items.filter((i) => i.status === "Sold").length;
+  const noBids = items.filter((i) => i.status !== "Sold" && !i.open_offers).length;
   return (
     <div className="wrap">
       <header className="hero">
@@ -27,6 +28,7 @@ export default async function Home() {
           <span><b>{avail}</b> available</span>
           <span><b>{pending}</b> pending</span>
           <span><b>{sold}</b> sold</span>
+          <span className="needs"><b>{noBids}</b> still need a home</span>
         </div>
       </header>
       <Gallery />

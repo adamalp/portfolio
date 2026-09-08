@@ -21,6 +21,9 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
   const cats = useMemo(() => Array.from(new Set(items.map((i) => i.category))), [items]);
   const [cat, setCat] = useState("All");
   const [hideSold, setHideSold] = useState(false);
+  const [bidFilter, setBidFilter] = useState<"all" | "none" | "has">("all");
+  const noBidCount = items.filter((i) => i.status !== "Sold" && !i.open_offers).length;
+  const hasBidCount = items.filter((i) => i.status !== "Sold" && i.open_offers > 0).length;
   const [cart, setCart] = useState<Cart>({});
   const [drafts, setDrafts] = useState<Cart>({}); // per-card input before "Add"
   const [mine, setMine] = useState<Record<number, number>>({}); // item id -> my last submitted bid
@@ -131,12 +134,16 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
         {["All", ...cats].map((c) => (
           <button key={c} className="chip" aria-pressed={cat === c} onClick={() => setCat(c)}>{c}</button>
         ))}
+        <span className="sep" aria-hidden="true" />
+        <button className="chip needs" aria-pressed={bidFilter === "none"} onClick={() => setBidFilter(bidFilter === "none" ? "all" : "none")}>No bids yet · {noBidCount}</button>
+        <button className="chip" aria-pressed={bidFilter === "has"} onClick={() => setBidFilter(bidFilter === "has" ? "all" : "has")}>Has bids · {hasBidCount}</button>
         <label className="tog"><input type="checkbox" checked={hideSold} onChange={(e) => setHideSold(e.target.checked)} /> Hide sold</label>
       </div>
 
       <main>
         {visibleCats.map((c) => {
-          const list = items.filter((i) => i.category === c && !(hideSold && i.status === "Sold"));
+          const list = items.filter((i) => i.category === c && !(hideSold && i.status === "Sold")
+            && (bidFilter === "all" || (bidFilter === "none" ? i.status !== "Sold" && !i.open_offers : i.open_offers > 0)));
           if (!list.length) return null;
           return (
             <section className="cat" key={c}>
@@ -157,7 +164,13 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                       )}
                       <div className="top">
                         <h3>{it.name}{it.qty > 1 && <span className="qty"> ×{it.qty}</span>}</h3>
-                        <span className={`pill ${it.status}`}>{it.status}</span>
+                        {it.status === "Available" ? (
+                          it.open_offers > 0
+                            ? <span className="pill bids">{it.open_offers} bid{it.open_offers > 1 ? "s" : ""}</span>
+                            : <span className="pill nobids">No bids yet</span>
+                        ) : (
+                          <span className={`pill ${it.status}`}>{it.status}</span>
+                        )}
                       </div>
                       {it.dimensions && <div className="dims">{it.dimensions}</div>}
                       <p className="desc">{it.description}</p>
