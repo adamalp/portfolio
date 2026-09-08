@@ -658,5 +658,29 @@
   "status": "Available",
   "notes": "",
   "sort_order": 55
+ },
+ {
+  "id": 56,
+  "category": "Furniture",
+  "name": "White bedside tables (pair)",
+  "description": "Small white side tables with tapered wood legs, currently flanking the bed. Sold each or as a pair; the lamps are listed separately.",
+  "dimensions": "",
+  "qty": 2,
+  "asking_price": 25,
+  "status": "Available",
+  "notes": "Two available; price per unit",
+  "sort_order": 56
+ },
+ {
+  "id": 57,
+  "category": "Lighting",
+  "name": "Bedside lamps (pair)",
+  "description": "Matching bedside lamps with smoky glass base and white drum shade. Sold each or as a pair.",
+  "dimensions": "",
+  "qty": 2,
+  "asking_price": 20,
+  "status": "Available",
+  "notes": "Two available; price per unit",
+  "sort_order": 57
  }
 ]
