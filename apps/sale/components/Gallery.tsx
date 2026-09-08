@@ -6,7 +6,7 @@ export default function Gallery() {
     <section className="gallery" aria-label="Apartment photos">
       {photos.map((p, i) => (
         <figure key={p.src} className={i === 0 ? "lead" : ""}>
-          <img src={p.src} alt={p.alt} loading={i === 0 ? "eager" : "lazy"} />
+          <img src={p.src} alt={p.alt} loading={i === 0 ? "eager" : "lazy"} style={p.position ? { objectPosition: p.position } : undefined} />
         </figure>
       ))}
     </section>
