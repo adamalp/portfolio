@@ -35,7 +35,8 @@
   "asking_price": 100,
   "status": "Available",
   "notes": "",
-  "sort_order": 3
+  "sort_order": 3,
+  "image_url": "/items/tv-65.jpg"
  },
  {
   "id": 4,
@@ -73,7 +74,8 @@
   "asking_price": 75,
   "status": "Available",
   "notes": "Depth TBD",
-  "sort_order": 6
+  "sort_order": 6,
+  "image_url": "/items/shelving-unit.jpg"
  },
  {
   "id": 7,
@@ -111,7 +113,8 @@
   "asking_price": 100,
   "status": "Available",
   "notes": "",
-  "sort_order": 9
+  "sort_order": 9,
+  "image_url": "/items/wall-desk.jpg"
  },
  {
   "id": 10,
@@ -149,7 +152,8 @@
   "asking_price": 100,
   "status": "Available",
   "notes": "Finish/color TBD",
-  "sort_order": 12
+  "sort_order": 12,
+  "image_url": "/items/dresser.jpg"
  },
  {
   "id": 13,
@@ -161,7 +165,8 @@
   "asking_price": 200,
   "status": "Tentative",
   "notes": "Model unknown — check label under seat",
-  "sort_order": 13
+  "sort_order": 13,
+  "image_url": "/items/herman-miller-chair.jpg"
  },
  {
   "id": 14,
@@ -173,7 +178,8 @@
   "asking_price": 20,
   "status": "Available",
   "notes": "",
-  "sort_order": 14
+  "sort_order": 14,
+  "image_url": "/items/shoe-rack.jpg"
  },
  {
   "id": 15,
@@ -185,7 +191,8 @@
   "asking_price": 20,
   "status": "Available",
   "notes": "",
-  "sort_order": 15
+  "sort_order": 15,
+  "image_url": "/items/lantern-lamp.jpg"
  },
  {
   "id": 16,
@@ -210,7 +217,8 @@
   "asking_price": 40,
   "status": "Tentative",
   "notes": "Undecided; keeping the other two wooden lamps",
-  "sort_order": 17
+  "sort_order": 17,
+  "image_url": "/items/tripod-lamp.jpg"
  },
  {
   "id": 18,
@@ -235,7 +243,8 @@
   "asking_price": 120,
   "status": "Available",
   "notes": "Model # TBD",
-  "sort_order": 19
+  "sort_order": 19,
+  "image_url": "/items/tv-44.jpg"
  },
  {
   "id": 20,
@@ -247,7 +256,8 @@
   "asking_price": 350,
   "status": "Tentative",
   "notes": "Undecided on selling",
-  "sort_order": 20
+  "sort_order": 20,
+  "image_url": "/items/klipsch-speakers.jpg"
  },
  {
   "id": 21,
@@ -259,7 +269,8 @@
   "asking_price": 75,
   "status": "Tentative",
   "notes": "Undecided; details TBD",
-  "sort_order": 21
+  "sort_order": 21,
+  "image_url": "/items/turntable.jpg"
  },
  {
   "id": 22,
@@ -284,7 +295,8 @@
   "asking_price": 60,
   "status": "Available",
   "notes": "",
-  "sort_order": 23
+  "sort_order": 23,
+  "image_url": "/items/bird-of-paradise.jpg"
  },
  {
   "id": 24,
@@ -296,7 +308,8 @@
   "asking_price": 40,
   "status": "Available",
   "notes": "",
-  "sort_order": 24
+  "sort_order": 24,
+  "image_url": "/items/snake-plant.jpg"
  },
  {
   "id": 25,
@@ -308,7 +321,8 @@
   "asking_price": 10,
   "status": "Available",
   "notes": "",
-  "sort_order": 25
+  "sort_order": 25,
+  "image_url": "/items/monstera-propagation.jpg"
  },
  {
   "id": 26,
@@ -332,7 +346,8 @@
   "asking_price": 20,
   "status": "Available",
   "notes": "",
-  "sort_order": 27
+  "sort_order": 27,
+  "image_url": "/items/fake-tall-plant.jpg"
  },
  {
   "id": 28,
@@ -506,7 +521,8 @@
   "asking_price": 30,
   "status": "Available",
   "notes": "",
-  "sort_order": 41
+  "sort_order": 41,
+  "image_url": "/items/cooler.jpg"
  },
  {
   "id": 42,
@@ -518,7 +534,8 @@
   "asking_price": 25,
   "status": "Available",
   "notes": "",
-  "sort_order": 42
+  "sort_order": 42,
+  "image_url": "/items/fire-pit-bucket.jpg"
  },
  {
   "id": 43,
@@ -578,7 +595,8 @@
   "asking_price": 15,
   "status": "Available",
   "notes": "",
-  "sort_order": 47
+  "sort_order": 47,
+  "image_url": "/items/ceramic-pot.jpg"
  },
  {
   "id": 48,
@@ -602,7 +620,8 @@
   "asking_price": 30,
   "status": "Available",
   "notes": "",
-  "sort_order": 49
+  "sort_order": 49,
+  "image_url": "/items/instant-pot.jpg"
  },
  {
   "id": 50,
@@ -626,7 +645,8 @@
   "asking_price": 30,
   "status": "Available",
   "notes": "",
-  "sort_order": 51
+  "sort_order": 51,
+  "image_url": "/items/record-holder.jpg"
  },
  {
   "id": 52,
@@ -663,7 +683,8 @@
   "asking_price": 60,
   "status": "Available",
   "notes": "Size/model TBD",
-  "sort_order": 54
+  "sort_order": 54,
+  "image_url": "/items/lg-monitor.jpg"
  },
  {
   "id": 55,
