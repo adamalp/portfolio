@@ -159,11 +159,11 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                           ) : it.best_offer ? (
                             <>
                               <span className="price lead">Current best <b>{fmt(it.best_offer)}</b></span>
-                              {it.asking_price && <span className="price sub">Asking {fmt(it.asking_price)}</span>}
+                              {it.asking_price && <span className="price sub">Started at {fmt(it.asking_price)}</span>}
                             </>
                           ) : it.asking_price ? (
                             <>
-                              <span className="price">Asking <b>{fmt(it.asking_price)}</b></span>
+                              <span className="price">Starting at <b>{fmt(it.asking_price)}</b></span>
                               <span className="price sub">No bids yet</span>
                             </>
                           ) : (
@@ -243,13 +243,15 @@ export default function Catalog({ items }: { items: PublicItem[] }) {
                   {inCart.map((it) => {
                     const amt = parseFloat(cart[it.id]) || 0;
                     const low = it.best_offer != null && amt > 0 && amt <= it.best_offer;
+                    const underStart = !low && it.asking_price != null && amt > 0 && amt < it.asking_price;
                     return (
                       <li key={it.id} className="cart-item">
                         <div className="ci-main">
                           <div className="ci-name">{it.name}{it.qty > 1 && <span className="qty"> ×{it.qty}</span>}</div>
                           <div className="ci-meta">
-                            {it.best_offer ? <>Current best {fmt(it.best_offer)}</> : it.asking_price ? <>Asking {fmt(it.asking_price)}</> : <>No bids yet</>}
+                            {it.best_offer ? <>Current best {fmt(it.best_offer)}</> : it.asking_price ? <>Starting at {fmt(it.asking_price)}</> : <>No bids yet</>}
                             {low && <span className="warn"> · below the current best</span>}
+                            {underStart && <span className="warn"> · below the starting price</span>}
                           </div>
                         </div>
                         <div className="ci-amt">
