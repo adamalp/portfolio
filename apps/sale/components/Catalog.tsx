@@ -68,6 +68,23 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
     try { localStorage.setItem(STORAGE, JSON.stringify({ cart, name, contact, mine, rewardId })); } catch {}
   }, [cart, name, contact, mine, rewardId]);
 
+  // Prefilled cart: ?cart=2:300,22:20 (built by assistants or shared links) loads those bids and opens checkout.
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("cart");
+    if (!raw) return;
+    const add: Cart = {};
+    for (const part of raw.split(",")) {
+      const [id, amt] = part.split(":");
+      const it = byId.get(Number(id));
+      if (it && it.status !== "Sold") add[it.id] = amt && Number(amt) > 0 ? String(Math.round(Number(amt))) : suggest(it);
+    }
+    if (!Object.keys(add).length) return;
+    setCart((cur) => ({ ...cur, ...add }));
+    setOpen(true);
+    window.history.replaceState(null, "", window.location.pathname);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Deep link: ?item=18 scrolls to and highlights that card.
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get("item");
