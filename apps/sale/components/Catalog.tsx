@@ -28,6 +28,8 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
   const [rewardId, setRewardId] = useState<number | null>(null);
   const [pickQ, setPickQ] = useState("");
   const [pickOpen, setPickOpen] = useState(false);
+  const [topPickerVisible, setTopPickerVisible] = useState(false);
+  const topPicker = useRef<HTMLElement | null>(null);
   const [pick, setPick] = useState<{ kind: "idle" | "busy" | "done" | "error"; msg?: string }>({ kind: "idle" });
   const noBidCount = items.filter((i) => i.status !== "Sold" && !i.open_offers).length;
   const hasBidCount = items.filter((i) => i.status !== "Sold" && i.open_offers > 0).length;
@@ -100,15 +102,25 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
     return () => clearInterval(t);
   }, [router]);
 
-  // Drawer: lock scroll, close on Escape.
+  // Drawer (and the picker sheet on phones): lock scroll, close on Escape.
   useEffect(() => {
-    if (!open) return;
+    const sheet = pickOpen && window.matchMedia("(max-width:560px)").matches;
+    if (!open && !sheet) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setOpen(false); setPickOpen(false); } };
     window.addEventListener("keydown", onKey);
     return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", onKey); };
-  }, [open]);
+  }, [open, pickOpen]);
+
+  // The floating picker button steps aside while the top picker box is already on screen.
+  useEffect(() => {
+    const el = topPicker.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([e]) => setTopPickerVisible(e.isIntersecting), { threshold: 0 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [pickerEnabled]);
 
   const byId = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
   const inCart = Object.keys(cart).map(Number).map((id) => byId.get(id)).filter((i): i is PublicItem => !!i && i.status !== "Sold");
@@ -203,7 +215,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
   return (
     <>
       {pickerEnabled && (
-        <section className="picker" aria-label="Help me pick">
+        <section className="picker" aria-label="Help me pick" ref={topPicker}>
           <form onSubmit={runPicker}>
             <label htmlFor="pickq"><b>Not sure where to start?</b> Tell me what you need and I&apos;ll build you a cart.</label>
             <div className="row">
@@ -314,7 +326,8 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
       </main>
 
       {pickerEnabled && openForBids && !open && (
-        <div className={`pickfab ${count > 0 || state.kind === "done" ? "lifted" : ""}`}>
+        <div className={`pickfab ${count > 0 || state.kind === "done" ? "lifted" : ""} ${pickOpen ? "open" : ""} ${topPickerVisible && !pickOpen ? "away" : ""}`}>
+          {pickOpen && <div className="pickscrim" onClick={() => setPickOpen(false)} aria-hidden="true" />}
           {pickOpen && (
             <form className="pickpop" onSubmit={runPicker} aria-label="Help me pick">
               <div className="pp-head"><b>Tell me what you need</b><button type="button" className="btn ghost small" onClick={() => setPickOpen(false)} aria-label="Close">✕</button></div>
@@ -325,7 +338,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
             </form>
           )}
           <button type="button" className="pill" aria-expanded={pickOpen} onClick={() => setPickOpen((v) => !v)}>
-            <span className="spark" aria-hidden="true">✦</span> {pickOpen ? "Close" : "Not sure? Let me build your cart"}
+            <span className="spark" aria-hidden="true">✦</span> {pickOpen ? "Close" : <><span className="long">Not sure? Let me build your cart</span><span className="short">Help me pick</span></>}
           </button>
         </div>
       )}

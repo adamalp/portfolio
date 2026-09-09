@@ -14,7 +14,7 @@ export default function CopyPrompt({ compact = false }: { compact?: boolean }) {
       <div className="cp-label">Using your own Claude or ChatGPT? Copy and paste this:</div>
       <div className="cp-row">
         <pre className="cp-text">{AGENT_PROMPT}</pre>
-        <button type="button" className="btn ghost small" onClick={copy}>{done ? "Copied ✓" : "Copy"}</button>
+        <button type="button" className="btn ghost small" onClick={copy}>{done ? "Copied ✓" : "Copy prompt"}</button>
       </div>
     </div>
   );

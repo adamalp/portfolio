@@ -120,7 +120,13 @@ section.cat h2 small{font-family:"IBM Plex Sans",sans-serif;font-size:12px;color
 .copyprompt .cp-row{display:flex;gap:8px;align-items:flex-start}
 .copyprompt .cp-text{flex:1;min-width:0;margin:0;padding:8px 10px;background:var(--bg);border:1px solid var(--line);border-radius:8px;font:inherit;font-size:13px;white-space:pre-wrap;word-break:break-word;color:var(--ink)}
 .how .copyprompt{border-top:0;padding-top:0;margin-top:6px}
-@media (max-width:560px){.copyprompt .cp-row{flex-direction:column}.copyprompt .btn{align-self:flex-end}}
+@media (max-width:560px){
+  .copyprompt .cp-row{flex-direction:column}.copyprompt .btn{align-self:flex-end}
+  .copyprompt.compact{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .copyprompt.compact .cp-label{flex:1;min-width:0}
+  .copyprompt.compact .cp-text{display:none}
+  .copyprompt.compact .cp-row{flex:0 0 auto}
+}
 /* floating picker */
 .pickfab{position:fixed;right:16px;bottom:16px;z-index:9;display:flex;flex-direction:column;align-items:flex-end;gap:10px;transition:transform .25s ease,opacity .25s ease}
 .pickfab.lifted{bottom:88px}
@@ -130,10 +136,26 @@ section.cat h2 small{font-family:"IBM Plex Sans",sans-serif;font-size:12px;color
 .pickpop .pp-head{display:flex;justify-content:space-between;align-items:center}
 .pickpop textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-size:15px;resize:vertical}
 .pickpop .btn{width:100%}
+.pickpop .pp-head .btn{width:auto;flex:0 0 auto}
 .pickpop .btn[disabled]{opacity:.6;cursor:progress}
 .pickpop .err{color:#B3261E;font-size:13px;margin:0}
 .pickpop .fine.left{text-align:left;margin:0}
-@media (max-width:560px){.pickfab{right:12px;left:12px;align-items:stretch}.pickfab .pill{justify-content:center}.pickfab.lifted{bottom:96px}}
+.pickfab.away{opacity:0;transform:translateY(12px);pointer-events:none}
+.pickfab .pill .short{display:none}
+.pickscrim{display:none}
+@media (max-width:560px){
+  .pickfab{right:12px;bottom:calc(12px + env(safe-area-inset-bottom))}
+  .pickfab.lifted{bottom:calc(100px + env(safe-area-inset-bottom))}
+  .pickfab .pill{padding:12px 16px;font-size:15px}
+  .pickfab .pill .long{display:none}
+  .pickfab .pill .short{display:inline}
+  .pickfab.open{z-index:21}
+  .pickfab.open .pill{display:none}
+  .pickscrim{display:block;position:fixed;inset:0;z-index:19;background:rgba(20,14,10,.45)}
+  .pickpop{position:fixed;left:0;right:0;bottom:0;z-index:20;width:auto;border-radius:16px 16px 0 0;border-left:0;border-right:0;border-bottom:0;padding:16px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(0,0,0,.25)}
+  .pickpop textarea{min-height:96px}
+  .pickpop .btn{padding:12px 18px;font-size:16px}
+}
 /* search + deep link */
 .toolbar .search{padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:inherit;font-size:13px;width:150px;flex:0 0 auto}
 .toolbar .search:focus{width:220px}
@@ -208,7 +230,7 @@ fieldset.who textarea{min-height:64px;resize:vertical}
 .done p{margin:0}
 @media (max-width:560px){
   .overlay{align-items:flex-end}
-  .drawer{width:100%;height:auto;max-height:92vh;border-left:0;border-top:1px solid var(--line);border-radius:16px 16px 0 0}
+  .drawer{width:100%;height:auto;max-height:92vh;max-height:92dvh;border-left:0;border-top:1px solid var(--line);border-radius:16px 16px 0 0}
 }
 @media (prefers-reduced-motion:no-preference){
   .drawer{animation:slidein .18s ease-out}
@@ -242,3 +264,33 @@ table.t td.num{font-variant-numeric:tabular-nums;text-align:right}
 .login{max-width:360px;margin:80px auto;display:grid;gap:10px}
 .login input{padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
 @media (prefers-reduced-motion:no-preference){.card{transition:transform .12s ease,border-color .12s ease}.card:hover{transform:translateY(-1px)}}
+
+/* phones: readable text, 16px inputs (stops iOS zooming on focus), comfortable tap targets */
+@media (max-width:640px){
+  body{font-size:16px}
+  .desc{font-size:15px}
+  .dims,.price,.offer-in,.incart,.mybid,.ci-meta{font-size:14px}
+  .wrap{padding:22px 16px 140px}
+  .toolbar{margin:0 -16px;padding-left:16px;padding-right:16px;gap:6px}
+  .gallery{margin-left:-16px;margin-right:-16px;padding:0 16px}
+  input,textarea,select,.toolbar .search,.picker input,.offer-in input,.ci-amt input,.pickpop textarea,fieldset.who input,fieldset.who textarea,fieldset.reward select,.inline input,.inline select,.login input{font-size:16px}
+  .toolbar .search{padding:8px 12px;width:140px}
+  .toolbar .search:focus{width:180px}
+  .chip{padding:8px 14px;font-size:14px}
+  .btn{min-height:42px;font-size:14px;padding:8px 14px}
+  .btn.small{min-height:36px;padding:6px 12px;font-size:13px}
+  .btn.big{min-height:50px;font-size:16px}
+  .offer-in input,.ci-amt input{padding:10px 12px}
+  .ci-amt input{width:104px}
+  fieldset.who input,fieldset.who textarea,.picker input{padding:12px 14px}
+  .picker{padding:14px}
+  .picker .btn{min-height:46px;font-size:15px}
+  .cartbar .in{padding:12px 16px calc(12px + env(safe-area-inset-bottom))}
+  .cartbar .btn{flex:1 1 auto;min-height:46px;font-size:15px}
+  .cartbar .sum{flex:1 1 100%}
+  .drawer>header{padding:14px 16px}
+  .checkout{padding:14px 16px calc(24px + env(safe-area-inset-bottom))}
+  .drawer h2{font-size:22px}
+  .cart-item{padding:10px 12px}
+  .done{padding:28px 16px}
+}
