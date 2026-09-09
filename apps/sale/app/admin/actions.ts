@@ -57,8 +57,8 @@ export async function setPaid(form: FormData) {
   const { data } = await s.from("items").select("id,sold_to").eq("status", "Sold");
   for (const it of data ?? []) {
     const who = parseSoldTo(it.sold_to);
-    if (who && normalizeContact(who.contact) === normalizeContact(contact) && who.paid !== paid)
-      await s.from("items").update({ sold_to: soldToString(who.name, who.contact, paid) }).eq("id", it.id);
+    if (who && normalizeContact(who.contact) === normalizeContact(contact) && (who.settle === "paid") !== paid)
+      await s.from("items").update({ sold_to: soldToString(who.name, who.contact, paid ? "paid" : "due") }).eq("id", it.id);
   }
   revalidatePath("/admin");
 }

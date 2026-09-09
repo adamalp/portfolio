@@ -25,8 +25,9 @@ export default async function ReceiptPage({ params }: { params: { token: string 
         <dl className="meta">
           <dt>Date</dt><dd>{longDate(r.date)}</dd>
           <dt>Picked up</dt><dd><a href={PICKUP_MAP_URL}>{PICKUP_ADDRESS}</a>, {PICKUP_CITY}</dd>
-          <dt>Status</dt><dd>{r.paid ? <span className="paid">Paid in full</span> : <span className="due">Payment due</span>}</dd>
-          {!r.paid && <><dt>Pay by</dt><dd>Venmo{VENMO ? <> <b>{VENMO}</b></> : " (Adam will send the handle)"}, {fmt(r.total)} total</dd></>}
+          <dt>Status</dt><dd>{r.settle === "paid" ? <span className="paid">Paid in full</span> : r.settle === "deposit" ? <span className="paid">Settled from security deposit</span> : <span className="due">Payment due</span>}</dd>
+          {r.settle === "due" && <><dt>Pay by</dt><dd>Venmo or Zelle to <b>{VENMO}</b>, {fmt(r.total)} total</dd></>}
+          {r.settle === "deposit" && <><dt>How</dt><dd>{fmt(r.total)} comes out of the security deposit refund, nothing to send.</dd></>}
         </dl>
         <h2>{r.items.length} item{r.items.length === 1 ? "" : "s"}</h2>
         <table className="lines">

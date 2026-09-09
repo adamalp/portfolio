@@ -68,9 +68,9 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
                   <td>
                     <form action={setPaid} className="inline">
                       <input type="hidden" name="contact" value={r.contact} />
-                      <input type="hidden" name="paid" value={r.paid ? "0" : "1"} />
-                      <span className={`pill ${r.paid ? "accepted" : "open"}`}>{r.paid ? "Paid" : "Due"}</span>
-                      <button className="btn ghost small">{r.paid ? "Mark unpaid" : "Mark paid"}</button>
+                      <input type="hidden" name="paid" value={r.settle === "paid" ? "0" : "1"} />
+                      <span className={`pill ${r.settle === "due" ? "open" : "accepted"}`}>{r.settle === "paid" ? "Paid" : r.settle === "deposit" ? "Deposit" : "Due"}</span>
+                      {r.settle !== "deposit" && <button className="btn ghost small">{r.settle === "paid" ? "Mark unpaid" : "Mark paid"}</button>}
                     </form>
                   </td>
                   <td><a className="code" href={`/receipt/${r.token}`} target="_blank" rel="noreferrer">sale.adam-alpert.com/receipt/{r.token}</a></td>
