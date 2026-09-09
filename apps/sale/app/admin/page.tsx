@@ -1,6 +1,7 @@
 import { db, type Item, type Offer } from "@/lib/db";
 import { isAdmin } from "@/lib/admin";
 import { login, decideOffer, updateItem, logout } from "./actions";
+import { receipts } from "@/lib/receipt";
 
 export const dynamic = "force-dynamic";
 
@@ -19,9 +20,10 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
     );
   }
   const s = db();
-  const [{ data: items }, { data: offers }] = await Promise.all([
+  const [{ data: items }, { data: offers }, R] = await Promise.all([
     s.from("items").select("*").order("sort_order").order("id"),
     s.from("offers").select("*").order("created_at", { ascending: false }),
+    receipts(),
   ]);
   const I = (items ?? []) as Item[];
   const O = (offers ?? []) as Offer[];
@@ -48,7 +50,29 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
         <a className="chip" aria-pressed={tab === "offers"} href="/admin?tab=offers">Offers by item</a>
         <a className="chip" aria-pressed={tab === "buyers"} href="/admin?tab=buyers">By buyer</a>
         <a className="chip" aria-pressed={tab === "items"} href="/admin?tab=items">Items</a>
+        <a className="chip" aria-pressed={tab === "receipts"} href="/admin?tab=receipts">Receipts</a>
       </div>
+
+      {tab === "receipts" && (
+        <div className="tblwrap receipts">
+          <p className="muted">One receipt per buyer, built from the items marked sold to them. Send the link once they&apos;ve paid; it shows &quot;Paid in full&quot;.</p>
+          <table className="t">
+            <thead><tr><th>Buyer</th><th>Contact</th><th>Items</th><th>Total</th><th>Link</th></tr></thead>
+            <tbody>
+              {R.map((r) => (
+                <tr key={r.token}>
+                  <td>{r.name}</td>
+                  <td>{r.contact}</td>
+                  <td className="num">{r.items.length}</td>
+                  <td className="num">{fmt(r.total)}</td>
+                  <td><a className="code" href={`/receipt/${r.token}`} target="_blank" rel="noreferrer">sale.adam-alpert.com/receipt/{r.token}</a></td>
+                </tr>
+              ))}
+              {!R.length && <tr><td colSpan={5} className="muted">Nothing sold yet.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      )}
 
       {tab === "offers" && (
         <div>
