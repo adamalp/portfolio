@@ -2,6 +2,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { normalizeContact, parseSoldTo, soldToString } from "@/lib/receipt";
 import { db } from "@/lib/db";
 import { adminCookie, checkPasscode, isAdmin } from "@/lib/admin";
 
@@ -46,4 +47,18 @@ export async function updateItem(form: FormData) {
   }).eq("id", id);
   revalidatePath("/"); revalidatePath("/admin");
   redirect("/admin?tab=items");
+}
+
+/** Flip every item sold to one buyer between paid and unpaid (stored as a " [paid]" suffix on sold_to). */
+export async function setPaid(form: FormData) {
+  if (!isAdmin()) return;
+  const contact = String(form.get("contact") ?? ""), paid = form.get("paid") === "1";
+  const s = db();
+  const { data } = await s.from("items").select("id,sold_to").eq("status", "Sold");
+  for (const it of data ?? []) {
+    const who = parseSoldTo(it.sold_to);
+    if (who && normalizeContact(who.contact) === normalizeContact(contact) && who.paid !== paid)
+      await s.from("items").update({ sold_to: soldToString(who.name, who.contact, paid) }).eq("id", it.id);
+  }
+  revalidatePath("/admin");
 }

@@ -1,6 +1,6 @@
 import { db, type Item, type Offer } from "@/lib/db";
 import { isAdmin } from "@/lib/admin";
-import { login, decideOffer, updateItem, logout } from "./actions";
+import { login, decideOffer, updateItem, logout, setPaid } from "./actions";
 import { receipts } from "@/lib/receipt";
 
 export const dynamic = "force-dynamic";
@@ -55,9 +55,9 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
 
       {tab === "receipts" && (
         <div className="tblwrap receipts">
-          <p className="muted">One receipt per buyer, built from the items marked sold to them. Send the link once they&apos;ve paid; it shows &quot;Paid in full&quot;.</p>
+          <p className="muted">One receipt per buyer, built from the items marked sold to them. Unpaid receipts show the Venmo handle and &quot;Payment due&quot;; mark paid once the money lands.</p>
           <table className="t">
-            <thead><tr><th>Buyer</th><th>Contact</th><th>Items</th><th>Total</th><th>Link</th></tr></thead>
+            <thead><tr><th>Buyer</th><th>Contact</th><th>Items</th><th>Total</th><th>Paid</th><th>Link</th></tr></thead>
             <tbody>
               {R.map((r) => (
                 <tr key={r.token}>
@@ -65,10 +65,18 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
                   <td>{r.contact}</td>
                   <td className="num">{r.items.length}</td>
                   <td className="num">{fmt(r.total)}</td>
+                  <td>
+                    <form action={setPaid} className="inline">
+                      <input type="hidden" name="contact" value={r.contact} />
+                      <input type="hidden" name="paid" value={r.paid ? "0" : "1"} />
+                      <span className={`pill ${r.paid ? "accepted" : "open"}`}>{r.paid ? "Paid" : "Due"}</span>
+                      <button className="btn ghost small">{r.paid ? "Mark unpaid" : "Mark paid"}</button>
+                    </form>
+                  </td>
                   <td><a className="code" href={`/receipt/${r.token}`} target="_blank" rel="noreferrer">sale.adam-alpert.com/receipt/{r.token}</a></td>
                 </tr>
               ))}
-              {!R.length && <tr><td colSpan={5} className="muted">Nothing sold yet.</td></tr>}
+              {!R.length && <tr><td colSpan={6} className="muted">Nothing sold yet.</td></tr>}
             </tbody>
           </table>
         </div>

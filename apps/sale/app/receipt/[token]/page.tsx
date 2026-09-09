@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { receiptByToken } from "@/lib/receipt";
+import { receiptByToken, VENMO } from "@/lib/receipt";
 import { PICKUP_ADDRESS, PICKUP_CITY, PICKUP_MAP_URL } from "@/lib/pickup";
 import SplitHelper from "@/components/SplitHelper";
 
@@ -25,7 +25,8 @@ export default async function ReceiptPage({ params }: { params: { token: string 
         <dl className="meta">
           <dt>Date</dt><dd>{longDate(r.date)}</dd>
           <dt>Picked up</dt><dd><a href={PICKUP_MAP_URL}>{PICKUP_ADDRESS}</a>, {PICKUP_CITY}</dd>
-          <dt>Status</dt><dd><span className="paid">Paid in full</span></dd>
+          <dt>Status</dt><dd>{r.paid ? <span className="paid">Paid in full</span> : <span className="due">Payment due</span>}</dd>
+          {!r.paid && <><dt>Pay by</dt><dd>Venmo{VENMO ? <> <b>{VENMO}</b></> : " (Adam will send the handle)"}, {fmt(r.total)} total</dd></>}
         </dl>
         <h2>{r.items.length} item{r.items.length === 1 ? "" : "s"}</h2>
         <table className="lines">

@@ -1,7 +1,10 @@
 import { createHmac } from "node:crypto";
 import { db, type Item } from "@/lib/db";
 
-export type Receipt = { token: string; name: string; contact: string; items: Item[]; total: number; date: string };
+export type Receipt = { token: string; name: string; contact: string; items: Item[]; total: number; date: string; paid: boolean };
+
+/** Where buyers send money. Shown on unpaid receipts. */
+export const VENMO = process.env.VENMO_HANDLE || "";
 
 /** Receipt links are derived from the buyer's contact, so no table is needed. Rotating the secret invalidates old links. */
 const secret = () => process.env.RECEIPT_SECRET || process.env.ADMIN_PASSCODE || "";
@@ -12,10 +15,16 @@ export function normalizeContact(c: string): string {
 export function receiptToken(contact: string): string {
   return createHmac("sha256", secret()).update(normalizeContact(contact)).digest("base64url").slice(0, 10);
 }
-/** items.sold_to is stored as "Name (contact)". */
-export function parseSoldTo(s: string | null | undefined): { name: string; contact: string } | null {
-  const m = (s ?? "").match(/^(.*?)\s*\(([^)]+)\)\s*$/);
-  return m ? { name: m[1].trim(), contact: m[2].trim() } : null;
+/** items.sold_to is stored as "Name (contact)", with a trailing " [paid]" once the buyer has settled up. */
+export const PAID_MARK = " [paid]";
+export function parseSoldTo(s: string | null | undefined): { name: string; contact: string; paid: boolean } | null {
+  const raw = (s ?? "").trim();
+  const paid = raw.endsWith(PAID_MARK);
+  const m = (paid ? raw.slice(0, -PAID_MARK.length) : raw).match(/^(.*?)\s*\(([^)]+)\)\s*$/);
+  return m ? { name: m[1].trim(), contact: m[2].trim(), paid } : null;
+}
+export function soldToString(name: string, contact: string, paid: boolean): string {
+  return `${name} (${contact})${paid ? PAID_MARK : ""}`;
 }
 
 /** One receipt per buyer with at least one sold item. */
@@ -36,7 +45,8 @@ export async function receipts(): Promise<Receipt[]> {
     const who = parseSoldTo(it.sold_to);
     if (!who) continue;
     const k = normalizeContact(who.contact);
-    const r = by.get(k) ?? { token: receiptToken(who.contact), name: who.name, contact: who.contact, items: [], total: 0, date: paidAt.get(k) ?? new Date().toISOString() };
+    const r = by.get(k) ?? { token: receiptToken(who.contact), name: who.name, contact: who.contact, items: [], total: 0, date: paidAt.get(k) ?? new Date().toISOString(), paid: true };
+    r.paid = r.paid && who.paid;
     r.items.push(it);
     r.total += it.sold_price ?? 0;
     by.set(k, r);
