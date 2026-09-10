@@ -267,8 +267,10 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
                       <div className="top">
                         <h3>{it.name}{it.qty > 1 && <span className="qty"> ×{it.qty}</span>}</h3>
                         {it.status === "Available" ? (
-                          it.open_offers > 0
+                          it.open_offers > 0 && it.best_offer
                             ? <span className="pill bids">{it.open_offers} bid{it.open_offers > 1 ? "s" : ""}</span>
+                            : it.open_offers > 0
+                            ? <span className="pill Tentative">Free pick claimed</span>
                             : <span className="pill nobids">No bids yet</span>
                         ) : (
                           <span className={`pill ${it.status}`}>{it.status}</span>
@@ -288,7 +290,8 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
                           ) : it.asking_price ? (
                             <>
                               <span className="price">Starting at <b>{fmt(it.asking_price)}</b></span>
-                              {freeEligible(it) ? <span className="freetag">Free with a {fmt(FREE_MIN_SPEND)}+ cart</span>
+                              {it.open_offers > 0 ? <span className="price sub">Claimed as a free pick · any paid bid takes it</span>
+                                : freeEligible(it) ? <span className="freetag">Free with a {fmt(FREE_MIN_SPEND)}+ cart</span>
                                 : rewardEligible(it) ? <span className="freetag">Free pick with a {fmt(rewardSpendFor(it.asking_price)!)}+ cart</span>
                                 : <span className="price sub">No bids yet</span>}
                             </>
