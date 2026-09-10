@@ -31,3 +31,9 @@ export function rewardSpendFor(price: number | null): number | null {
 export function rewardEligible(item: { asking_price: number | null; status: string; open_offers?: number }): boolean {
   return (item.status === "Available" || item.status === "Tentative") && !item.open_offers && rewardSpendFor(item.asking_price) != null;
 }
+
+/** A new bid has to beat the current best by at least this much. */
+export const MIN_INCREMENT = 5;
+export function minBid(best: number | null | undefined): number | null {
+  return best == null ? null : best + MIN_INCREMENT;
+}

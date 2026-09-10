@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { biddingOpen, BIDS_CLOSE_LABEL } from "@/lib/pickup";
-import { FREE_MIN_SPEND, freeEligible, rewardEligible, rewardTier } from "@/lib/deals";
+import { FREE_MIN_SPEND, freeEligible, minBid, rewardEligible, rewardTier } from "@/lib/deals";
 import { randomUUID } from "crypto";
 import { db } from "@/lib/db";
 
@@ -19,8 +19,21 @@ export async function POST(req: Request) {
   if (!offers.length || offers.length > 60) return NextResponse.json({ error: "Pick at least one item." }, { status: 400 });
 
   const ids = offers.map((o: any) => Number(o.item_id));
-  const { data: items, error } = await db().from("items").select("id,status,asking_price").in("id", ids);
+  const { data: items, error } = await db().from("items").select("id,name,status,asking_price").in("id", ids);
   if (error) return NextResponse.json({ error: "Database error" }, { status: 500 });
+
+  // Minimum increment: a paid bid must beat the current best by MIN_INCREMENT, unless that best is the same buyer's.
+  const { data: openBids } = await db().from("offers").select("item_id,amount,buyer_contact").in("item_id", ids).eq("status", "open");
+  const lead = new Map<number, { amount: number; contact: string }>();
+  for (const b of openBids ?? []) if (!lead.has(b.item_id) || Number(b.amount) > lead.get(b.item_id)!.amount) lead.set(b.item_id, { amount: Number(b.amount), contact: b.buyer_contact });
+  const digits = (c: string) => c.replace(/\D/g, "");
+  const short = offers.flatMap((o: any) => {
+    const id = Number(o.item_id), amt = Number(o.amount), l = lead.get(id), it = (items ?? []).find((i: any) => i.id === id);
+    if (!it || !l || !(amt > 0) || digits(l.contact) === digits(contact)) return [];
+    const floor = minBid(l.amount)!;
+    return amt < floor ? [`${it.name} (at least $${floor})`] : [];
+  });
+  if (short.length) return NextResponse.json({ error: `Bids have to beat the current best by $${minBid(0)}: ${short.join(", ")}.` }, { status: 409 });
   const ok = new Set((items ?? []).filter((i) => i.status !== "Sold" && i.status !== "Hidden").map((i) => i.id));
 
   const submission_id = randomUUID();

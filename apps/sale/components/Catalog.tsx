@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PublicItem } from "@/lib/db";
 import { biddingOpen, BIDS_CLOSE_LABEL, pickupDays, PICKUP_ADDRESS, PICKUP_DAY_KEY, PICKUP_DAY_LABEL, PICKUP_TIMES } from "@/lib/pickup";
-import { FREE_MIN_SPEND, freeEligible, REWARD_TIERS, rewardEligible, rewardSpendFor, rewardTier } from "@/lib/deals";
+import { FREE_MIN_SPEND, freeEligible, MIN_INCREMENT, minBid, REWARD_TIERS, rewardEligible, rewardSpendFor, rewardTier } from "@/lib/deals";
 import CopyPrompt from "@/components/CopyPrompt";
 
 const fmt = (n: number | null | undefined) => (n == null ? null : "$" + Math.round(n).toLocaleString());
@@ -13,7 +13,7 @@ type Cart = Record<number, string>; // item id -> amount text
 
 /** Suggested opening bid: a bit over the current best, else the asking price. */
 function suggest(it: PublicItem): string {
-  if (it.best_offer) return String(Math.max(Math.round(it.best_offer * 1.1), it.best_offer + 5));
+  if (it.best_offer) return String(Math.max(Math.round(it.best_offer * 1.1), minBid(it.best_offer)!));
   if (it.asking_price) return String(it.asking_price);
   return "";
 }
@@ -152,6 +152,8 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
     e.preventDefault();
     const bad = inCart.filter((i) => !(amountFor(i) > 0) && !(freeUnlocked && freeEligible(i)) && !(rewardValid && i.id === rewardId));
     if (bad.length) return setState({ kind: "error", msg: `Enter a price for: ${bad.map((b) => b.name).join(", ")}` });
+    const short = inCart.filter((i) => i.best_offer != null && amountFor(i) > 0 && !(mine[i.id] != null && mine[i.id] >= i.best_offer) && amountFor(i) < minBid(i.best_offer)!);
+    if (short.length) return setState({ kind: "error", msg: `Bids have to beat the current best by $${MIN_INCREMENT}: ${short.map((i) => `${i.name} (at least ${fmt(minBid(i.best_offer))})`).join(", ")}` });
     if (contact.replace(/\D/g, "").length < 10) return setState({ kind: "error", msg: "Enter a phone number I can text (10 digits)." });
     if (!biddingOpen()) return setState({ kind: "error", msg: `Bidding closed ${BIDS_CLOSE_LABEL}.` });
     const pickedDays = dayOptions.filter((d) => days.includes(d.key)).map((d) => d.label);
@@ -386,7 +388,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
                 <ol className="cart-list">
                   {inCart.map((it) => {
                     const amt = parseFloat(cart[it.id]) || 0;
-                    const low = it.best_offer != null && amt > 0 && amt <= it.best_offer;
+                    const low = it.best_offer != null && amt > 0 && amt < minBid(it.best_offer)! && !(mine[it.id] != null && mine[it.id] >= it.best_offer);
                     const underStart = !low && it.asking_price != null && amt > 0 && amt < it.asking_price;
                     return (
                       <li key={it.id} className="cart-item">
@@ -394,7 +396,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
                           <div className="ci-name">{it.name}{it.qty > 1 && <span className="qty"> ×{it.qty}</span>}</div>
                           <div className="ci-meta">
                             {it.best_offer ? <>Current best {fmt(it.best_offer)}</> : it.asking_price ? <>Starting at {fmt(it.asking_price)}</> : <>No bids yet</>}
-                            {low && <span className="warn"> · below the current best</span>}
+                            {low && <span className="warn"> · needs at least {fmt(minBid(it.best_offer))}</span>}
                             {underStart && <span className="warn"> · below the starting price</span>}
                             {freeEligible(it) && !freeUnlocked && <span className="hint"> · free once the rest of your cart hits {fmt(FREE_MIN_SPEND)}</span>}
                           </div>

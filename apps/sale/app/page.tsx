@@ -3,7 +3,7 @@ import Gallery from "@/components/Gallery";
 import RecentBids from "@/components/RecentBids";
 import Countdown from "@/components/Countdown";
 import CopyPrompt from "@/components/CopyPrompt";
-import { FREE_MIN_SPEND, FREE_UNDER, REWARD_TIERS } from "@/lib/deals";
+import { FREE_MIN_SPEND, FREE_UNDER, MIN_INCREMENT, REWARD_TIERS } from "@/lib/deals";
 import { BIDS_CLOSE_LABEL, MOVE_OUT_LABEL, PICKUP_ADDRESS, PICKUP_CITY, PICKUP_DAY_LABEL, PICKUP_DEADLINE_LABEL, PICKUP_MAP_URL, WINNERS_LABEL } from "@/lib/pickup";
 import { publicItems, recentBids } from "@/lib/db";
 
@@ -39,7 +39,7 @@ export default async function Home() {
       <div className="how">
         <h2>How offers work</h2>
         <p>It works like a quiet auction. Every item has a low starting price, and each card shows the current best bid, so you know what to beat. Type your price, hit <em>Add</em>, and keep browsing. When you&apos;re done, open your cart, check your numbers, and send everything in one go. You only give your name and phone number once.</p>
-        <p>If someone outbids you, the card updates and you can come back and bid again. Bidding closes <b>{BIDS_CLOSE_LABEL}</b>. I&apos;ll text the winners {WINNERS_LABEL}.</p>
+        <p>If someone outbids you, the card updates and you can come back and bid again. A new bid has to beat the current best by at least <b>${MIN_INCREMENT}</b>. Bidding closes <b>{BIDS_CLOSE_LABEL}</b>. I&apos;ll text the winners {WINNERS_LABEL}.</p>
         <p><b>{PICKUP_DAY_LABEL} is pickup day.</b> Swing by the apartment any time that afternoon or evening, grab your stuff, and help me finish the beer in the fridge. If Saturday truly doesn&apos;t work, pick another day in the cart and we&apos;ll sort it out, as long as it&apos;s before {PICKUP_DEADLINE_LABEL}.</p>
         <p>I&apos;m moving out on {MOVE_OUT_LABEL}, so everything has to be picked up by <b>{PICKUP_DEADLINE_LABEL}</b>. </p>
         <p><b>Spend more, take more home free.</b> Anything starting at ${FREE_UNDER} or less is free once the rest of your cart adds up to ${FREE_MIN_SPEND}. On top of that, {REWARD_TIERS.map((t, i) => <span key={t.spend}>{i > 0 ? (i === REWARD_TIERS.length - 1 ? ", and " : ", ") : ""}a ${t.spend} cart lets you pick any unbid item up to ${t.cap} free</span>)}. Every card without a bid shows what it takes to earn it.</p>

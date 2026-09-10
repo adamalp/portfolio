@@ -40,5 +40,5 @@ To point at a single item without bidding: ${SITE}/?item=ITEM_ID
 
 ## Tone
 
-Be practical and brief. Mention when a bid would be below the starting price or below the current best, and when adding one more item would unlock a free pick.
+Be practical and brief. A bid on an item that already has a best bid must beat it by at least $5 or it is rejected. Mention when a bid would be below the starting price, and when adding one more item would unlock a free pick.
 `;
