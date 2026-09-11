@@ -1,6 +1,6 @@
 import { db, type Item, type Offer } from "@/lib/db";
 import { isAdmin } from "@/lib/admin";
-import { login, decideOffer, updateItem, logout, setPaid, closeSale, sellTo } from "./actions";
+import { login, decideOffer, updateItem, logout, setPaid, closeSale, sellTo, addItem } from "./actions";
 import { receipts, receiptToken, normalizeContact, VENMO } from "@/lib/receipt";
 import { biddingOpen } from "@/lib/pickup";
 import { parseNotes, smsHref, waHref, winnerMessage, counterMessage, leftoversMessage, type WonLine } from "@/lib/outreach";
@@ -309,7 +309,17 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
       )}
 
       {tab === "items" && (
-        <div className="tblwrap"><table className="t">
+        <div className="tblwrap">
+        <form action={addItem} className="item-block inline addit">
+          <b>Add an off-list item</b>
+          <input name="name" placeholder="what it is" required style={{ width: 200 }} />
+          <input name="sold_price" type="number" placeholder="$" style={{ width: 70 }} />
+          <input name="sold_name" placeholder="sold to (name)" style={{ width: 130 }} />
+          <input name="sold_contact" placeholder="phone" style={{ width: 120 }} />
+          <button className="btn small">Add</button>
+          <span className="muted">Leave the buyer blank to list it as available at that price.</span>
+        </form>
+        <table className="t">
           <thead><tr><th>#</th><th>Item</th><th>Category</th><th>Asking</th><th>Best open</th><th>Status</th><th>Sold for / to</th><th></th></tr></thead>
           <tbody>
             {I.map((it) => {

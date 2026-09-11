@@ -8,6 +8,8 @@ export const BIDS_CLOSE_LABEL = "Thursday, Sept 10 at 6pm";
 export const WINNERS_LABEL = "Friday morning";
 export const PICKUP_DAY_KEY = "9/12";
 export const PICKUP_DAY_LABEL = "Saturday, Sept 12";
+/** The window winners are asked to come in on pickup day. */
+export const PICKUP_WINDOW_LABEL = "Saturday between 1 and 3pm";
 export function biddingOpen(now = Date.now()): boolean { return now < new Date(BIDS_CLOSE_ISO).getTime(); }
 export const PICKUP_ADDRESS = "129 Franklin St, Central Square";
 export const PICKUP_CITY = "Cambridge, MA";

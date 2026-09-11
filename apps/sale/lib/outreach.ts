@@ -1,5 +1,5 @@
 /** Helpers for texting buyers from /admin?tab=winners. Pure functions, safe to import anywhere. */
-import { PICKUP_ADDRESS, PICKUP_DEADLINE_LABEL, MOVE_OUT_LABEL } from "@/lib/pickup";
+import { PICKUP_ADDRESS, PICKUP_DEADLINE_LABEL, PICKUP_WINDOW_LABEL } from "@/lib/pickup";
 
 export const SITE = "sale.adam-alpert.com";
 
@@ -55,19 +55,19 @@ export type WonLine = { name: string; price: number };
 export function winnerMessage(o: { name: string; items: WonLine[]; pending?: WonLine[]; total: number; token: string; pickup: string[]; venmo: string }): string {
   const lines = o.items.map((i) => `• ${i.name} — ${i.price > 0 ? "$" + i.price : "free"}`);
   const pend = (o.pending ?? []).map((i) => `• ${i.name} — your $${i.price} bid, still sorting this one out`);
-  const pref = o.pickup.length ? ` You mentioned ${o.pickup.join(" or ")}.` : "";
+  const pref = o.pickup.length ? ` You mentioned ${o.pickup.join(" or ")}, so if Saturday doesn't work tell me a time before ${PICKUP_DEADLINE_LABEL} and we'll sort it.` : ` If that window doesn't work, tell me a time before ${PICKUP_DEADLINE_LABEL} and we'll sort it.`;
   return [
     `Hi ${firstName(o.name)}! Adam here 👋 Bidding closed and you won at my moving sale:`,
     ...lines,
     ...pend,
-    `Total $${o.total}. Pickup is at ${PICKUP_ADDRESS}, any time through ${PICKUP_DEADLINE_LABEL} (I move out ${MOVE_OUT_LABEL}).${pref} What day and time works for you?`,
+    `Total $${o.total}. Pickup is ${PICKUP_WINDOW_LABEL} at ${PICKUP_ADDRESS}, just come by.${pref}`,
     `Venmo or Zelle ${o.venmo} at pickup. Receipt: ${SITE}/receipt/${o.token}`,
   ].join("\n");
 }
 
 /** Counter-offer text for a leader who is under the start price. */
 export function counterMessage(o: { name: string; item: string; bid: number; ask: number }): string {
-  return `Hi ${firstName(o.name)}! Adam here. Bidding closed and you're the top bid on the ${o.item} at $${o.bid}. I was hoping for closer to $${o.ask}. Would you do $${o.ask}? If so it's yours, pickup at ${PICKUP_ADDRESS} through ${PICKUP_DEADLINE_LABEL}.`;
+  return `Hi ${firstName(o.name)}! Adam here. Bidding closed and you're the top bid on the ${o.item} at $${o.bid}. I was hoping for closer to $${o.ask}. Would you do $${o.ask}? If so it's yours, pickup is ${PICKUP_WINDOW_LABEL} at ${PICKUP_ADDRESS}.`;
 }
 
 /** "Still available" text for people who bid and won nothing. */
@@ -77,6 +77,6 @@ export function leftoversMessage(o: { name: string; wanted: string[]; leftovers:
   return [
     `Hi ${firstName(o.name)}! Adam here.${wanted} A few things didn't sell and are first-come at these prices:`,
     ...list,
-    `Reply with what you want and it's yours. Pickup at ${PICKUP_ADDRESS} through ${PICKUP_DEADLINE_LABEL}. Everything: ${SITE}`,
+    `Reply with what you want and it's yours. Pickup is ${PICKUP_WINDOW_LABEL} at ${PICKUP_ADDRESS}. Everything: ${SITE}`,
   ].join("\n");
 }

@@ -49,8 +49,30 @@ export async function updateItem(form: FormData) {
   }).eq("id", id);
   // A hand-marked sale closes the item's bidding too, so nobody stays "leading" on something that is gone.
   if (status === "Sold") await s.from("offers").update({ status: "declined", decided_at: new Date().toISOString() }).eq("item_id", id).eq("status", "open");
+  // Un-selling (buyer backed out, or bid by mistake) releases the accepted bid so the public card stops showing it as the best offer.
+  else await s.from("offers").update({ status: "withdrawn", decided_at: new Date().toISOString() }).eq("item_id", id).eq("status", "accepted");
   revalidatePath("/"); revalidatePath("/admin");
   redirect("/admin?tab=items");
+}
+
+/** Add an item that was never on the list, e.g. something sold on the spot. Optionally already sold to someone. */
+export async function addItem(form: FormData) {
+  if (!isAdmin()) redirect("/admin");
+  const name = String(form.get("name") ?? "").trim();
+  if (!name) redirect("/admin?tab=items");
+  const num = (k: string) => { const v = String(form.get(k) ?? "").trim(); return v === "" ? null : Number(v); };
+  const soldName = String(form.get("sold_name") ?? "").trim(), soldContact = String(form.get("sold_contact") ?? "").trim();
+  const s = db();
+  const { data: last } = await s.from("items").select("id,sort_order").order("id", { ascending: false }).limit(1);
+  const id = (last?.[0]?.id ?? 0) + 1;
+  await s.from("items").insert({
+    id, name, category: String(form.get("category") ?? "Off-list").trim() || "Off-list", description: String(form.get("description") ?? "").trim(),
+    asking_price: num("asking_price") ?? num("sold_price"), sort_order: (last?.[0]?.sort_order ?? 0) + 1,
+    status: soldName ? "Sold" : "Available", sold_price: soldName ? num("sold_price") : null,
+    sold_to: soldName ? soldToString(soldName, soldContact, "due") : null,
+  });
+  revalidatePath("/"); revalidatePath("/admin");
+  redirect(soldName ? "/admin?tab=winners" : "/admin?tab=items");
 }
 
 /**
