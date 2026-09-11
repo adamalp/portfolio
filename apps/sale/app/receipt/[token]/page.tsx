@@ -25,8 +25,9 @@ export default async function ReceiptPage({ params }: { params: { token: string 
         <dl className="meta">
           <dt>Date</dt><dd>{longDate(r.date)}</dd>
           <dt>Picked up</dt><dd><a href={PICKUP_MAP_URL}>{PICKUP_ADDRESS}</a>, {PICKUP_CITY}</dd>
-          <dt>Status</dt><dd>{r.settle === "paid" ? <span className="paid">Paid in full</span> : r.settle === "deposit" ? <span className="paid">Settled from security deposit</span> : <span className="due">Payment due</span>}</dd>
-          {r.settle === "due" && <><dt>Pay by</dt><dd>Venmo or Zelle to <b>{VENMO}</b>, {fmt(r.total)} total</dd></>}
+          <dt>Status</dt><dd>{r.settle === "paid" ? <span className="paid">Paid in full</span> : r.settle === "deposit" ? <span className="paid">Settled from security deposit</span> : r.paid > 0 ? <span className="due">Balance due</span> : <span className="due">Payment due</span>}</dd>
+          {r.settle === "due" && r.paid > 0 && <><dt>Paid so far</dt><dd>{fmt(r.paid)}, thank you</dd></>}
+          {r.settle === "due" && <><dt>Pay by</dt><dd>Venmo or Zelle to <b>{VENMO}</b>, {r.paid > 0 ? <>{fmt(r.total - r.paid)} balance ({fmt(r.total)} total)</> : <>{fmt(r.total)} total</>}</dd></>}
           {r.settle === "deposit" && <><dt>How</dt><dd>{fmt(r.total)} comes out of the security deposit refund, nothing to send.</dd></>}
         </dl>
         <h2>{r.items.length} item{r.items.length === 1 ? "" : "s"}</h2>
@@ -35,7 +36,7 @@ export default async function ReceiptPage({ params }: { params: { token: string 
             {r.items.map((it) => (
               <tr key={it.id}>
                 <td className="item">{it.name}{it.qty > 1 ? <span className="qty"> ×{it.qty}</span> : null}</td>
-                {it.sold_price ? <td className="price">{fmt(it.sold_price)}</td> : <td className="price free">Included</td>}
+                {it.sold_price ? <td className="price">{fmt(it.sold_price)}{r.settle === "due" && r.paid > 0 && /\[paid\]/.test(it.sold_to ?? "") && <span className="qty"> paid</span>}</td> : <td className="price free">Included</td>}
               </tr>
             ))}
           </tbody>

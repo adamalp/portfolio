@@ -48,15 +48,15 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
   }
   const ready = leads.filter((l) => l.top.amount > 0 && l.top.amount >= (l.item.asking_price ?? 0));
   const undecided = leads.filter((l) => !ready.includes(l));
-  type Buyer = { key: string; name: string; contact: string; won: WonLine[]; pending: WonLine[]; total: number; notes: string[]; settle: string; wanted: string[] };
+  type Buyer = { key: string; name: string; contact: string; won: WonLine[]; pending: WonLine[]; total: number; paid: number; notes: string[]; settle: string; wanted: string[] };
   const buyers = new Map<string, Buyer>();
   const buyer = (name: string, contact: string) => {
     const key = normalizeContact(contact);
     let b = buyers.get(key);
-    if (!b) { b = { key, name, contact, won: [], pending: [], total: 0, notes: [], settle: "due", wanted: [] }; buyers.set(key, b); }
+    if (!b) { b = { key, name, contact, won: [], pending: [], total: 0, paid: 0, notes: [], settle: "due", wanted: [] }; buyers.set(key, b); }
     return b;
   };
-  for (const r of R) { const b = buyer(r.name, r.contact); b.won = r.items.map((i) => ({ name: i.name, price: i.sold_price ?? 0 })); b.total = r.total; b.settle = r.settle; }
+  for (const r of R) { const b = buyer(r.name, r.contact); b.won = r.items.map((i) => ({ name: i.name, price: i.sold_price ?? 0, paid: /\[paid\]/.test(i.sold_to ?? "") })); b.total = r.total; b.paid = r.paid; b.settle = r.settle; }
   for (const l of leads) { const b = buyer(l.top.buyer_name, l.top.buyer_contact); b.pending.push({ name: l.item.name, price: l.top.amount }); }
   for (const o of O) {
     if (o.status === "withdrawn") continue;
@@ -70,7 +70,7 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
     if (o.status === "withdrawn" || buyers.get(normalizeContact(o.buyer_contact))?.won.length || buyers.get(normalizeContact(o.buyer_contact))?.pending.length) continue;
     const key = normalizeContact(o.buyer_contact);
     let b = losers.get(key);
-    if (!b) { b = { key, name: o.buyer_name, contact: o.buyer_contact, won: [], pending: [], total: 0, notes: [], settle: "due", wanted: [] }; losers.set(key, b); }
+    if (!b) { b = { key, name: o.buyer_name, contact: o.buyer_contact, won: [], pending: [], total: 0, paid: 0, notes: [], settle: "due", wanted: [] }; losers.set(key, b); }
     const nm = I.find((i) => i.id === o.item_id)?.name;
     if (nm && !b.wanted.includes(nm)) b.wanted.push(nm);
     if (o.note) b.notes.push(o.note);
@@ -156,7 +156,7 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
           <p className="muted">Each card has their items, what they told you about pickup, and a Text button that opens Messages with the note already written. Edit it before you hit send if you like.</p>
           {winners.map((b) => {
             const n = parseNotes(b.notes);
-            const msg = winnerMessage({ name: b.name, items: b.won, pending: b.pending, total: b.total, token: receiptToken(b.contact), pickup: n.pickup, venmo: VENMO });
+            const msg = winnerMessage({ name: b.name, items: b.won, pending: b.pending, total: b.total, paid: b.paid, token: receiptToken(b.contact), pickup: n.pickup, venmo: VENMO });
             const sms = smsHref(b.contact, msg);
             const wa = waHref(n.whatsapp ?? b.contact, msg);
             const showWa = !!n.whatsapp || b.contact.trim().startsWith("+") || /whats/i.test(b.notes.join(" "));
@@ -166,7 +166,7 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
                   <h3>{b.name} <span className="muted">{b.contact}{n.whatsapp ? ` · WhatsApp ${n.whatsapp}` : ""}</span></h3>
                   <span className="inline">
                     <b className="tot">{fmt(b.total)}</b>
-                    {b.won.length > 0 && <span className={`pill ${b.settle === "due" ? "open" : "accepted"}`}>{b.settle === "paid" ? "Paid" : b.settle === "deposit" ? "Deposit" : "Due"}</span>}
+                    {b.won.length > 0 && <span className={`pill ${b.settle === "due" ? "open" : "accepted"}`}>{b.settle === "paid" ? "Paid" : b.settle === "deposit" ? "Deposit" : b.paid > 0 ? `${fmt(b.total - b.paid)} due, ${fmt(b.paid)} paid` : "Due"}</span>}
                   </span>
                 </header>
                 <ul className="lines-list">

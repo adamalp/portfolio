@@ -2,7 +2,8 @@ import { createHmac } from "node:crypto";
 import { db, type Item } from "@/lib/db";
 
 export type Settle = "due" | "paid" | "deposit";
-export type Receipt = { token: string; name: string; contact: string; items: Item[]; total: number; date: string; settle: Settle };
+/** `paid` is the sum of the items already marked paid, so a buyer who added items after paying sees the balance, not the whole total. */
+export type Receipt = { token: string; name: string; contact: string; items: Item[]; total: number; paid: number; date: string; settle: Settle };
 
 /** Where buyers send money. Shown on unpaid receipts. */
 export const VENMO = process.env.VENMO_HANDLE || "914-374-0913";
@@ -43,8 +44,9 @@ export async function receipts(): Promise<Receipt[]> {
     const who = parseSoldTo(it.sold_to);
     if (!who) continue;
     const k = normalizeContact(who.contact);
-    const r = by.get(k) ?? { token: receiptToken(who.contact), name: who.name, contact: who.contact, items: [], total: 0, date: paidAt.get(k) ?? new Date().toISOString(), settle: who.settle };
+    const r = by.get(k) ?? { token: receiptToken(who.contact), name: who.name, contact: who.contact, items: [], total: 0, paid: 0, date: paidAt.get(k) ?? new Date().toISOString(), settle: who.settle };
     if (who.settle === "due") r.settle = "due";
+    if (who.settle === "paid") r.paid += it.sold_price ?? 0;
     r.items.push(it);
     r.total += it.sold_price ?? 0;
     by.set(k, r);

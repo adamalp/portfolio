@@ -49,10 +49,21 @@ export function parseNotes(notes: string[]): { pickup: string[]; whatsapp: strin
   return { pickup: [...pickup], whatsapp, text: [...text] };
 }
 
-export type WonLine = { name: string; price: number };
+export type WonLine = { name: string; price: number; paid?: boolean };
 
 /** The "you won" text. Short enough to read on a lock screen, with the receipt link last so it previews. */
-export function winnerMessage(o: { name: string; items: WonLine[]; pending?: WonLine[]; total: number; token: string; pickup: string[]; venmo: string }): string {
+export function winnerMessage(o: { name: string; items: WonLine[]; pending?: WonLine[]; total: number; paid?: number; token: string; pickup: string[]; venmo: string }): string {
+  const paid = o.paid ?? 0;
+  if (paid > 0 && paid < o.total) {
+    // Already paid once, then won more: list only the new items and the balance.
+    const fresh = o.items.filter((i) => !i.paid);
+    return [
+      `Hi ${firstName(o.name)}! Adam here 👋 Since you paid, you also won:`,
+      ...fresh.map((i) => `• ${i.name} — ${i.price > 0 ? "$" + i.price : "free"}`),
+      `That's $${o.total - paid} more on top of the $${paid} you already sent ($${o.total} total). Pickup is ${PICKUP_WINDOW_LABEL} at ${PICKUP_ADDRESS}.`,
+      `Venmo or Zelle ${o.venmo} for the balance. Updated receipt: ${SITE}/receipt/${o.token}`,
+    ].join("\n");
+  }
   const lines = o.items.map((i) => `• ${i.name} — ${i.price > 0 ? "$" + i.price : "free"}`);
   const pend = (o.pending ?? []).map((i) => `• ${i.name} — your $${i.price} bid, still sorting this one out`);
   const pref = o.pickup.length ? ` You mentioned ${o.pickup.join(" or ")}, so if Saturday doesn't work tell me a time before ${PICKUP_DEADLINE_LABEL} and we'll sort it.` : ` If that window doesn't work, tell me a time before ${PICKUP_DEADLINE_LABEL} and we'll sort it.`;
