@@ -86,7 +86,8 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
         <div className="stats">
           <span><b>{openCount}</b> open offers</span>
           <span><b>{I.filter((i) => i.status === "Sold").length}</b> sold</span>
-          <span><b>{fmt(revenue)}</b> collected</span>
+          <span><b>{fmt(revenue)}</b> sold</span>
+          <span><b>{fmt(R.reduce((s, r) => s + (r.settle === "due" ? r.paid : r.total), 0))}</b> collected</span>
           <span><a href="/">View public page</a></span>
           <form action={logout} style={{ display: "inline" }}><button className="chip">Sign out</button></form>
         </div>
