@@ -269,6 +269,18 @@ table.t td.num{font-variant-numeric:tabular-nums;text-align:right}
 .inline{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}
 .inline input,.inline select{padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit;font-size:13px}
 .muted{color:var(--ink-2);font-size:13px}
+/* winners & texts tab */
+.winners .wh{font-family:"Young Serif",Georgia,serif;font-weight:400;font-size:22px;margin:26px 0 4px}
+.winners .closeit{border-color:var(--accent);background:var(--sel)}
+.winners .closeit p{margin:8px 0 0}
+.winners .buyer .tot{font-variant-numeric:tabular-nums;font-size:16px}
+.winners .lines-list{list-style:none;margin:8px 0;padding:0;display:grid;gap:3px;font-size:14px}
+.winners .lines-list li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding:3px 0}
+.winners .lines-list b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.winners .notes{margin:6px 0 10px;line-height:1.6}
+.winners .actions{margin-top:4px}
+.winners .sellto{margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)}
+@media (max-width:640px){.winners .actions .btn{min-height:40px}.winners table.t td{display:block;border-bottom:0}.winners table.t tr{display:block;border-bottom:1px solid var(--line);padding:6px 0}.winners table.t thead{display:none}.winners table.t td.num{text-align:left}}
 .login{max-width:360px;margin:80px auto;display:grid;gap:10px}
 .login input{padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit}
 @media (prefers-reduced-motion:no-preference){.card{transition:transform .12s ease,border-color .12s ease}.card:hover{transform:translateY(-1px)}}
