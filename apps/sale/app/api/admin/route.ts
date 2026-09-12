@@ -34,6 +34,13 @@ export async function POST(req: Request) {
   if (!authorized(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const b = await req.json();
   const s = db();
+  if (b.add && b.add.name) {
+    // Insert a new item with the next id, e.g. late additions from a phone photo dump.
+    const { data: last } = await s.from("items").select("id,sort_order").order("id", { ascending: false }).limit(1);
+    const row = { id: (last?.[0]?.id ?? 0) + 1, sort_order: (last?.[0]?.sort_order ?? 0) + 1, status: "Available", ...b.add };
+    const { error } = await s.from("items").insert(row);
+    return error ? NextResponse.json({ error: error.message }, { status: 400 }) : NextResponse.json({ ok: true, id: row.id });
+  }
   if (b.item_id && b.patch) {
     const { error } = await s.from("items").update(b.patch).eq("id", b.item_id);
     return error ? NextResponse.json({ error: error.message }, { status: 400 }) : NextResponse.json({ ok: true });
