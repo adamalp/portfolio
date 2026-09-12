@@ -24,6 +24,11 @@ h1{font-family:"Young Serif",Georgia,serif;font-weight:400;font-size:clamp(30px,
 .deadline.closed{background:var(--sold-bg);color:var(--sold)}
 .chips .chip.star{border-color:var(--ok);color:var(--ok)}
 .chips .chip.star[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:#fff}
+.recap{display:grid;gap:6px;padding:14px 16px;border:1px solid var(--ok);border-radius:10px;background:var(--ok-bg);max-width:70ch}
+.recap .eyebrow{color:var(--ok)}
+.recap p{margin:0;font-size:15px;line-height:1.5}
+.recap b{font-variant-numeric:tabular-nums}
+.recap em{font-style:normal;font-weight:600;color:var(--accent)}
 .stats{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .stats b{color:var(--ink);font-weight:600}
 .stats .where{flex-basis:100%;color:var(--ink)}

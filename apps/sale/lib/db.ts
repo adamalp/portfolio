@@ -68,6 +68,27 @@ export async function publicItems(): Promise<PublicItem[]> {
   }));
 }
 
+export type SaleStats = { sold: number; soldTotal: number; bids: number; bidders: number; listed: number };
+
+/** Headline numbers for the public recap banner. No buyer identity leaves the server. */
+export async function saleStats(): Promise<SaleStats> {
+  if (process.env.MOCK_DB === "1") return { sold: 0, soldTotal: 0, bids: 0, bidders: 0, listed: 0 };
+  const s = db();
+  const [{ data: items }, { data: offers }] = await Promise.all([
+    s.from("items").select("status,sold_price").neq("status", "Hidden"),
+    s.from("offers").select("buyer_contact,status").neq("status", "withdrawn"),
+  ]);
+  const sold = (items ?? []).filter((i: any) => i.status === "Sold");
+  const norm = (c: string) => c.replace(/\D/g, "") || c.trim().toLowerCase();
+  return {
+    sold: sold.length,
+    soldTotal: sold.reduce((a: number, i: any) => a + Number(i.sold_price ?? 0), 0),
+    bids: (offers ?? []).length,
+    bidders: new Set((offers ?? []).map((o: any) => norm(o.buyer_contact))).size,
+    listed: (items ?? []).length,
+  };
+}
+
 export type RecentBid = { id: string; item_id: number; item: string; first_name: string; amount: number; created_at: string; leading: boolean };
 
 /** Latest bids for the public ticker. First names only, no contact info. */

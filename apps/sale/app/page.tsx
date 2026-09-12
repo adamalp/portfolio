@@ -5,12 +5,14 @@ import Countdown from "@/components/Countdown";
 import CopyPrompt from "@/components/CopyPrompt";
 import { FREE_MIN_SPEND, FREE_UNDER, MIN_INCREMENT, REWARD_TIERS } from "@/lib/deals";
 import { BIDS_CLOSE_LABEL, MOVE_OUT_LABEL, PICKUP_ADDRESS, PICKUP_CITY, PICKUP_DAY_LABEL, PICKUP_DEADLINE_LABEL, PICKUP_MAP_URL, PICKUP_WINDOW_LABEL, WINNERS_LABEL } from "@/lib/pickup";
-import { publicItems, recentBids } from "@/lib/db";
+import { publicItems, recentBids, saleStats } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
+const money = (n: number) => "$" + Math.round(n).toLocaleString();
+
 export default async function Home() {
-  const [items, bids] = await Promise.all([publicItems(), recentBids()]);
+  const [items, bids, stats] = await Promise.all([publicItems(), recentBids(), saleStats()]);
   const avail = items.filter((i) => i.status === "Available" || i.status === "Tentative").length;
   const pending = items.filter((i) => i.status === "Pending").length;
   const sold = items.filter((i) => i.status === "Sold").length;
@@ -25,6 +27,15 @@ export default async function Home() {
           kitchen gear. Put your price on anything you want and hit Add. When you&apos;re done, review your cart and send it all at once with your name and number. Prices are just starting points, and the best offer takes it. Winners get a text {WINNERS_LABEL}, and <b>{PICKUP_DAY_LABEL}</b> is pickup day at the apartment. Come grab your stuff and help me finish the beer.
         </p>
         <Countdown />
+        <div className="recap">
+          <div className="eyebrow">Round one: complete</div>
+          <p>
+            <b>{stats.sold} items</b> found new homes for <b>{money(stats.soldTotal)}</b> total, from <b>{stats.bids} bids</b> by <b>{stats.bidders} people</b> in three days. Thank you, Cambridge.
+          </p>
+          <p>
+            <b>Round two is on now:</b> everything under <em>New this round</em> below is still up for grabs. Bidding closes <b>{BIDS_CLOSE_LABEL}</b>, and <b>{PICKUP_DAY_LABEL}, 6 to 8pm</b> is the final pickup.
+          </p>
+        </div>
         <div className="stats">
           <span className="where">📍 <a href={PICKUP_MAP_URL} target="_blank" rel="noreferrer">{PICKUP_ADDRESS}</a>, {PICKUP_CITY}</span>
           <span><b>{avail}</b> available</span>
