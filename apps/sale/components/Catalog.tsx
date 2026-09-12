@@ -441,7 +441,7 @@ export default function Catalog({ items, pickerEnabled = false }: { items: Publi
 
                 <fieldset className="pickup">
                   <legend>When could you pick up?</legend>
-                  <p className="muted"><b>{PICKUP_DAY_LABEL}</b> is pickup day at {PICKUP_ADDRESS} (beer provided). Tap Saturday, or any other days that could work.</p>
+                  <p className="muted"><b>{PICKUP_DAY_LABEL}</b> is pickup day at {PICKUP_ADDRESS} (beer provided). Tap Monday, or any other days that could work.</p>
                   <div className="chips">
                     {dayOptions.map((d) => (
                       <button type="button" key={d.key} className={`chip ${d.key === PICKUP_DAY_KEY ? "star" : ""}`} aria-pressed={days.includes(d.key)} onClick={() => toggleIn(setDays, d.key)}>{d.key === PICKUP_DAY_KEY ? "🍻 " : ""}{d.label}</button>

@@ -66,7 +66,7 @@ export function winnerMessage(o: { name: string; items: WonLine[]; pending?: Won
   }
   const lines = o.items.map((i) => `• ${i.name} — ${i.price > 0 ? "$" + i.price : "free"}`);
   const pend = (o.pending ?? []).map((i) => `• ${i.name} — your $${i.price} bid, still sorting this one out`);
-  const pref = o.pickup.length ? ` You mentioned ${o.pickup.join(" or ")}, so if Saturday doesn't work tell me a time before ${PICKUP_DEADLINE_LABEL} and we'll sort it.` : ` If that window doesn't work, tell me a time before ${PICKUP_DEADLINE_LABEL} and we'll sort it.`;
+  const pref = o.pickup.length ? ` You mentioned ${o.pickup.join(" or ")}, so if Monday evening doesn't work tell me a time before ${PICKUP_DEADLINE_LABEL} and we'll sort it.` : ` If that window doesn't work, tell me a time before ${PICKUP_DEADLINE_LABEL} and we'll sort it.`;
   return [
     `Hi ${firstName(o.name)}! Adam here 👋 Bidding closed and you won at my moving sale:`,
     ...lines,

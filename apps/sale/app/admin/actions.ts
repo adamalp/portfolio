@@ -46,6 +46,7 @@ export async function updateItem(form: FormData) {
     status,
     sold_price: num("sold_price"),
     sold_to: String(form.get("sold_to") ?? "").trim() || null,
+    image_url: String(form.get("image_url") ?? "").trim() || null,
   }).eq("id", id);
   // A hand-marked sale closes the item's bidding too, so nobody stays "leading" on something that is gone.
   if (status === "Sold") await s.from("offers").update({ status: "declined", decided_at: new Date().toISOString() }).eq("item_id", id).eq("status", "open");
@@ -68,6 +69,7 @@ export async function addItem(form: FormData) {
   await s.from("items").insert({
     id, name, category: String(form.get("category") ?? "Off-list").trim() || "Off-list", description: String(form.get("description") ?? "").trim(),
     asking_price: num("asking_price") ?? num("sold_price"), sort_order: (last?.[0]?.sort_order ?? 0) + 1,
+    image_url: String(form.get("image_url") ?? "").trim() || null,
     status: soldName ? "Sold" : "Available", sold_price: soldName ? num("sold_price") : null,
     sold_to: soldName ? soldToString(soldName, soldContact, "due") : null,
   });

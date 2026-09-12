@@ -314,7 +314,9 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
         <form action={addItem} className="item-block inline addit">
           <b>Add an off-list item</b>
           <input name="name" placeholder="what it is" required style={{ width: 200 }} />
-          <input name="sold_price" type="number" placeholder="$" style={{ width: 70 }} />
+          <input name="asking_price" type="number" placeholder="asking $" style={{ width: 80 }} />
+          <input name="image_url" placeholder="photo URL (optional)" style={{ width: 170 }} />
+          <input name="sold_price" type="number" placeholder="sold $" style={{ width: 70 }} />
           <input name="sold_name" placeholder="sold to (name)" style={{ width: 130 }} />
           <input name="sold_contact" placeholder="phone" style={{ width: 120 }} />
           <button className="btn small">Add</button>
@@ -340,6 +342,7 @@ export default async function Admin({ searchParams }: { searchParams: { tab?: st
                       </select>
                       <input name="sold_price" type="number" placeholder="sold $" defaultValue={it.sold_price ?? ""} style={{ width: 80 }} />
                       <input name="sold_to" placeholder="sold to" defaultValue={it.sold_to ?? ""} style={{ width: 120 }} />
+                      <input name="image_url" placeholder="photo URL" defaultValue={it.image_url ?? ""} style={{ width: 140 }} />
                       <button className="btn small">Save</button>
                     </form>
                   </td>

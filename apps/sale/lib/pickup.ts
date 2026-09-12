@@ -3,13 +3,13 @@ export const MOVE_OUT = new Date(2026, 8, 15); // Tue Sept 15, 2026 (local)
 export const PICKUP_DEADLINE_LABEL = "Monday, Sept 14";
 export const MOVE_OUT_LABEL = "Tuesday, Sept 15";
 /** Bidding closes here (America/New_York). Winners are texted the next morning. */
-export const BIDS_CLOSE_ISO = "2026-09-10T18:00:00-04:00";
-export const BIDS_CLOSE_LABEL = "Thursday, Sept 10 at 6pm";
-export const WINNERS_LABEL = "Friday morning";
-export const PICKUP_DAY_KEY = "9/12";
-export const PICKUP_DAY_LABEL = "Saturday, Sept 12";
+export const BIDS_CLOSE_ISO = "2026-09-14T17:00:00-04:00";
+export const BIDS_CLOSE_LABEL = "Monday, Sept 14 at 5pm";
+export const WINNERS_LABEL = "Monday evening";
+export const PICKUP_DAY_KEY = "9/14";
+export const PICKUP_DAY_LABEL = "Monday, Sept 14";
 /** The window winners are asked to come in on pickup day. */
-export const PICKUP_WINDOW_LABEL = "Saturday between 1 and 3pm";
+export const PICKUP_WINDOW_LABEL = "Monday between 6 and 8pm";
 export function biddingOpen(now = Date.now()): boolean { return now < new Date(BIDS_CLOSE_ISO).getTime(); }
 export const PICKUP_ADDRESS = "129 Franklin St, Central Square";
 export const PICKUP_CITY = "Cambridge, MA";
