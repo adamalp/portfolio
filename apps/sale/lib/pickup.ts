@@ -3,9 +3,9 @@ export const MOVE_OUT = new Date(2026, 8, 15); // Tue Sept 15, 2026 (local)
 export const PICKUP_DEADLINE_LABEL = "Monday, Sept 14";
 export const MOVE_OUT_LABEL = "Tuesday, Sept 15";
 /** Bidding closes here (America/New_York). Winners are texted the next morning. */
-export const BIDS_CLOSE_ISO = "2026-09-14T17:00:00-04:00";
-export const BIDS_CLOSE_LABEL = "Monday, Sept 14 at 5pm";
-export const WINNERS_LABEL = "Monday evening";
+export const BIDS_CLOSE_ISO = "2026-09-14T13:00:00-04:00";
+export const BIDS_CLOSE_LABEL = "Monday, Sept 14 at 1pm";
+export const WINNERS_LABEL = "Monday afternoon";
 export const PICKUP_DAY_KEY = "9/14";
 export const PICKUP_DAY_LABEL = "Monday, Sept 14";
 /** The window winners are asked to come in on pickup day. */
