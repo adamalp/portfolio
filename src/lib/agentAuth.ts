@@ -15,7 +15,9 @@ export function sha256(s: string): string {
  */
 export async function verifyAgentToken(_req: Request, bearer?: string): Promise<AuthInfo | undefined> {
   if (!bearer) return undefined;
-  const owner = process.env.AGENT_TOKEN;
+  // Trim both sides: values pasted into dashboards often pick up a trailing newline or space.
+  const owner = process.env.AGENT_TOKEN?.trim();
+  bearer = bearer.trim();
   if (owner && bearer.length === owner.length && timingSafeEqual(bearer, owner)) {
     return { token: bearer, clientId: "owner", scopes: ["read", "write", "admin"] };
   }
