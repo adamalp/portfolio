@@ -15,7 +15,7 @@ export function Navigation() {
       const d = new Date();
       const hh = String(d.getHours()).padStart(2, "0");
       const mm = String(d.getMinutes()).padStart(2, "0");
-      setClock(`Cambridge · ${hh}:${mm}`);
+      setClock(`San Francisco · ${hh}:${mm}`);
     };
     tick();
     const id = setInterval(tick, 30_000);

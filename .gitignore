@@ -44,3 +44,5 @@ next-env.d.ts
 Adam Alpert Resume*.docx
 Adam Alpert Resume*.pdf
 Site Content.MD
+.gstack/
+supabase/.temp/

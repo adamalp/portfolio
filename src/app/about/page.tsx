@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About · Adam Alpert",
     description:
-      "Six chapters of life and work — Brown, NOLS Alaska, Pangea, Y Combinator, NYC, MIT Sloan — plus a timeline and adventures.",
+      "Six chapters of life and work — Brown, NOLS Alaska, Pangea, Y Combinator, NYC, MIT Sloan, and now a16z in San Francisco — plus a timeline and adventures.",
     url: "/about",
     type: "profile",
   },
@@ -27,7 +27,7 @@ const storyLedes: Record<string, string> = {
   yc: "W21, $125K, and three months that compressed years of learning into a season.",
   "new-york":
     "Moving to NYC, building a remote-first team, and scaling the marketplace through pivots.",
-  mit: "Going back to school. Media Lab, the $100K, and Cambridge Founders Club on top of the ecosystem.",
+  mit: "A year back in school. Media Lab, the $100K, and the Cambridge Founders Club — then a call from the West Coast.",
 };
 
 const adventureImages: Record<string, string> = {
@@ -87,12 +87,11 @@ export default function AboutPage() {
                 <Link href="/story/new-york" className="inline-link">
                   New York
                 </Link>{" "}
-                and Cambridge. Now digging deeper into systems, AI, and
-                strategy at{" "}
+                and Cambridge, spent a year at{" "}
                 <Link href="/story/mit" className="inline-link">
                   MIT Sloan
                 </Link>
-                .
+                , and in 2026 moved to San Francisco to join a16z.
               </p>
             </div>
             <div className="about-portrait">
@@ -104,7 +103,7 @@ export default function AboutPage() {
                 className="object-cover"
                 priority
               />
-              <span className="badge">Cambridge · 2026</span>
+              <span className="badge">San Francisco · 2026</span>
             </div>
           </div>
         </div>

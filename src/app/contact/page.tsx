@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ContactForm } from "./ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -45,6 +46,12 @@ const cways = [
     name: "@the_pangean",
     href: "https://x.com/the_pangean",
     external: true,
+  },
+  {
+    tag: "Agents",
+    name: "Skill file for your AI assistant",
+    href: "/SKILL.md",
+    external: false,
   },
 ];
 
@@ -131,7 +138,7 @@ export default function ContactPage() {
                   className="animate-pulse-slow"
                 />
                 <span>
-                  OPEN · CONVERSATIONS &amp; SUMMER 2026 OPPORTUNITIES · REPLIES IN 24–48 HOURS
+                  OPEN · CONVERSATIONS &amp; COLLABORATIONS · SAN FRANCISCO · REPLIES IN 24–48 HOURS
                 </span>
               </div>
             </div>
@@ -144,51 +151,3 @@ export default function ContactPage() {
   );
 }
 
-function ContactForm() {
-  return (
-    <form
-      className="contact-form"
-      action="mailto:aalpert421@gmail.com"
-      method="post"
-      encType="text/plain"
-    >
-      <div className="kicker" style={{ marginBottom: 20 }}>
-        Or send a note
-      </div>
-      <div className="field">
-        <label htmlFor="contact-name">Name</label>
-        <input id="contact-name" name="name" type="text" placeholder="Your name" />
-      </div>
-      <div className="field">
-        <label htmlFor="contact-email">Email</label>
-        <input id="contact-email" name="email" type="email" placeholder="you@domain.com" />
-      </div>
-      <div className="field">
-        <label htmlFor="contact-context">Context</label>
-        <textarea
-          id="contact-context"
-          name="context"
-          placeholder="What are you building? What kind of conversation are you hoping to have?"
-        />
-      </div>
-      <button
-        type="submit"
-        className="btn btn-primary"
-        style={{ width: "100%", justifyContent: "center" }}
-      >
-        Send <span className="arr">→</span>
-      </button>
-      <p
-        style={{
-          fontFamily: "var(--font-mono)",
-          color: "var(--mute)",
-          fontSize: 10,
-          letterSpacing: "0.06em",
-          marginTop: 16,
-        }}
-      >
-        Replies typically within 48 hours.
-      </p>
-    </form>
-  );
-}

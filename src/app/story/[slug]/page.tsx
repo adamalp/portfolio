@@ -38,7 +38,7 @@ const chapterLedes: Record<string, string> = {
   yc: "W21, $125K, and three months that compressed years of learning into a season.",
   "new-york":
     "Moving to NYC, building a remote-first team, and scaling the marketplace through pivots.",
-  mit: "Going back to school. Media Lab, the $100K, and Cambridge Founders Club on top of the ecosystem.",
+  mit: "A year back in school. Media Lab, the $100K, and the Cambridge Founders Club — then a call from the West Coast.",
 };
 
 interface StoryChapterPageProps {
@@ -207,17 +207,17 @@ const chapterContent: Record<
       {
         title: "Core threads",
         content:
-          "Most of my time at Sloan has been spent building. I've been deep in the agentic web — exploring agentic CRMs, agentic memory systems, agent-to-agent experiences, and platforms that treat AI agents as first-class participants rather than features bolted on to existing software.",
+          "Most of my time at Sloan was spent building. I went deep into the agentic web — exploring agentic CRMs, agentic memory systems, agent-to-agent experiences, and platforms that treat AI agents as first-class participants rather than features bolted on to existing software.",
       },
       {
         title: "MIT roles",
         content:
-          "I'm on the leadership team of the MIT $100K, the longest-running student startup competition in the country. I've also been putting together a working group to better connect MIT Sloan and the MIT Media Lab. And I launched the Cambridge Founders Club — an extension of the community-building work I started in New York — complete with a full-stack application I built to support it.",
+          "I served on the leadership team of the MIT $100K, the longest-running student startup competition in the country, put together a working group to better connect MIT Sloan and the MIT Media Lab, and launched the Cambridge Founders Club — an extension of the community-building work I started in New York — complete with a full-stack application I built to support it.",
       },
       {
         title: "How Sloan fits the bigger arc",
         content:
-          "The MIT chapter isn't a detour from building — it's an accelerant. I'm using this time to reinvent Pangea as an AI-natively powered platform, agentically driven from the inside out. The question I keep coming back to is the same one I've been asking since Brown: what does the future of work look like, and how do you build the platform that meets it? The tools have changed dramatically, but the mission hasn't.",
+          "The MIT chapter wasn't a detour from building — it was an accelerant, and it ended early: in 2026 I left the program and moved to San Francisco to join a16z. I used the year to reinvent Pangea as an AI-natively powered platform, agentically driven from the inside out. The question I keep coming back to is the same one I've been asking since Brown: what does the future of work look like, and how do you build the platform that meets it? The tools have changed dramatically, but the mission hasn't.",
       },
     ],
   },

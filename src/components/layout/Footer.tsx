@@ -29,9 +29,9 @@ export function Footer() {
                   color: "var(--paper-dim)",
                 }}
               >
-                Founder, builder, operator. Currently at <em>MIT Sloan</em>,
-                scaling <em>Pangea</em>, running founder communities in NYC &amp;
-                Cambridge.
+                Founder, builder, operator. Now at <em>a16z</em> in San
+                Francisco, co-founder of <em>Pangea</em>, and still running the
+                NYC Founders Club.
               </p>
             </div>
 

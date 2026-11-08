@@ -25,7 +25,7 @@ const instrumentSerif = Instrument_Serif({
 const SITE_URL = "https://adam-alpert.com";
 const SITE_TITLE = "Adam Alpert · Founder, Builder, Operator";
 const SITE_DESCRIPTION =
-  "Founder of Pangea.app, NYC & Cambridge Founders Clubs, MIT Sloan MBA '27. Building marketplaces, AI products, and founder communities.";
+  "Founder of Pangea.app and the NYC Founders Club, now at a16z in San Francisco. Building marketplaces, AI products, and founder communities.";
 
 export const metadata: Metadata = {
   title: {
@@ -44,6 +44,7 @@ export const metadata: Metadata = {
     "Pangea.app",
     "NYC Founders Club",
     "Cambridge Founders Club",
+    "a16z",
     "MIT Sloan",
     "Y Combinator",
     "marketplaces",
@@ -72,7 +73,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Adam Alpert — Founder, Builder, Operator. YC W21 · MIT Sloan · adamalpert.com",
+        alt: "Adam Alpert — Founder, Builder, Operator. YC W21 · a16z · adam-alpert.com",
         type: "image/png",
       },
     ],
@@ -88,7 +89,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Adam Alpert — Founder, Builder, Operator. YC W21 · MIT Sloan · adamalpert.com",
+        alt: "Adam Alpert — Founder, Builder, Operator. YC W21 · a16z · adam-alpert.com",
         type: "image/png",
       },
     ],

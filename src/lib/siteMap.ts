@@ -103,7 +103,7 @@ export const storyChapters: StoryChapter[] = [
   { slug: "rhode-island", title: "Rhode Island & Early Pangea",   subtitle: "Turning a student project into a company",          year: "2017–2020" },
   { slug: "yc",           title: "Y Combinator",                  subtitle: "W21 batch, compressing years of learning",          year: "2021" },
   { slug: "new-york",     title: "New York & Scaling Pangea",     subtitle: "Building the team, scaling the marketplace",        year: "2021–2024" },
-  { slug: "mit",          title: "MIT Sloan & Cambridge",         subtitle: "MBA, Media Lab, founder communities",               year: "2025–" },
+  { slug: "mit",          title: "MIT Sloan & Cambridge",         subtitle: "A year of MBA, Media Lab, founder communities",     year: "2025–26" },
 ];
 
 export const buildProjects: BuildProject[] = [
@@ -1327,6 +1327,7 @@ export const timelineEntries: TimelineEntry[] = [
   { year: "2025", title: "Cambridge Founders Club",                       category: "build",     link: "/projects/founder-communities" },
   { year: "2025", title: "Launch Friend Roulette",                        category: "build",     link: "/projects/friend-roulette" },
   { year: "2026", title: "Cotopaxi summit",                               category: "adventure", link: "/adventures/cotopaxi" },
+  { year: "2026", title: "Leave MIT, move to San Francisco, join a16z",   category: "story",     link: "/about" },
 ];
 
 export const writingPosts: WritingPost[] = [
@@ -1412,7 +1413,8 @@ export const homeStats = [
 
 export const affiliations = [
   { mark: "Y", name: "Y Combinator", meta: "W21" },
-  { mark: "M", name: "MIT Sloan",    meta: "MBA '27" },
+  { mark: "a", name: "a16z",         meta: "2026–" },
+  { mark: "M", name: "MIT Sloan",    meta: "2025–26" },
   { mark: "B", name: "Brown",        meta: "History '17" },
   { mark: "P", name: "Pangea.app",   meta: "Founder & CEO" },
 ];

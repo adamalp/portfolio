@@ -58,13 +58,13 @@ Four nav items: **About | Projects | Writing | Contact**
 
 ## Site Data
 
-All content data lives in `src/lib/siteMap.ts` — not in MDX files or separate content directories. This includes:
+Structural data lives in `src/lib/siteMap.ts`; editable content (writing posts, homepage status line and "now" cards, agent skills) lives in Supabase and is read through `src/lib/content.ts` with in-code fallbacks. See "Content database & MCP" below. `siteMap.ts` holds:
 - `navItems` — navigation links
 - `storyChapters` — 6 life chapters with slugs, titles, years
 - `buildProjects` — projects with roles, descriptions, status
 - `adventures` — adventure entries
 - `timelineEntries` — chronological events (link to story/project/adventure pages)
-- `writingPosts` — blog post metadata
+- `writingPosts` — fallback post metadata only (live posts come from the `posts` table)
 
 Detail page content (long descriptions, sections) is stored inline in each `[slug]/page.tsx` file.
 
@@ -103,3 +103,14 @@ Standalone Next.js 14 + Supabase app for **sale.adam-alpert.com** (buyers browse
 - Env vars: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSCODE` (see `apps/sale/.env.example`).
 - Setup, seeding, and API details: `apps/sale/README.md`. Local preview without a database: `MOCK_DB=1 npm run dev` inside `apps/sale`.
 - Item data of record once live is the Supabase DB; `apps/sale/supabase/items.json` is the seed (mirrors the `Apartment_Sale_Inventory` Google Sheet).
+
+## Content database & MCP (root site)
+
+Editable content is in the personal Supabase project `adam-alpert` (ref `eitadkuaqhxrpgpjyyou`, same project as the sale app). Tables: `posts`, `site_blocks`, `agent_skills`, `agent_tokens`, `agent_messages`, `content_log`. All have RLS on with no anon policies; the server reads/writes with the service-role key only.
+
+- Schema: `supabase/schema.sql`. Seed: `supabase/seed_posts.sql`, `supabase/seed_blocks_skills.sql`. Apply with the SQL editor or `npx supabase@latest db query --remote=eitadkuaqhxrpgpjyyou -f <file> --yes`.
+- Env (root `.env.local` and Vercel): `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `AGENT_TOKEN` (owner bearer token for the MCP), `NEXT_PUBLIC_SITE_URL`.
+- Readers: `src/lib/content.ts` (`getPublishedPosts`, `getPost`, `getBlock`, `getPublicSkill`). Every reader falls back to in-code content when the DB is unreachable, so a paused project never breaks the build.
+- MCP server: `src/app/api/mcp/route.ts` (mcp-handler, Streamable HTTP, bearer auth via `src/lib/agentAuth.ts`). Tools: list/get/upsert/delete posts, list/set blocks, list/get/upsert skills, list messages, token management. Writes call `revalidatePath`, so content goes live without a deploy. Pages use `revalidate = 300` as a backstop.
+- Public surfaces: `GET /SKILL.md` (public skill from `agent_skills.public`) and `POST /api/messages` (visitors or their agents leave a message).
+- Agent skills in the DB (`voice`, `publishing`, `public`) are the source of truth for how agents write here; edit them through the MCP rather than in code.

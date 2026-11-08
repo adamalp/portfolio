@@ -4,11 +4,26 @@ import {
   buildProjects,
   homeBeliefs,
   homeStats,
-  writingPosts,
 } from "@/lib/siteMap";
 import { TopoShader } from "@/components/effects";
+import { getBlock, getPublishedPosts } from "@/lib/content";
 
-const currentFocus = [
+export const revalidate = 300;
+
+interface NowCard {
+  slug: string;
+  role: string;
+  name: string;
+  ital: string;
+  desc: string;
+  tag: string;
+  href: string;
+}
+
+/** Defaults for the "now" cards and hero status; the live values come from site_blocks. */
+const defaultHeroStatus = "Now · a16z · San Francisco · building on the side";
+
+const defaultNowCards: NowCard[] = [
   {
     slug: "pangea",
     role: "Co-founder & CEO",
@@ -23,24 +38,29 @@ const currentFocus = [
     role: "Founder",
     name: "Founder",
     ital: " communities",
-    desc: "Curated IRL networks in NYC and Cambridge — intimate dinners, real collisions, and a custom platform I built from scratch. NYC has grown to 5,000+ in network with ~50 paid members.",
+    desc: "Curated IRL networks — intimate dinners, real collisions, and a custom platform I built from scratch. NYC Founders Club has grown to 5,000+ in network with ~50 paid members.",
     tag: "Active · 2022→",
     href: "/projects/founder-communities",
   },
   {
-    slug: "mit",
-    role: "MBA Candidate, '27",
-    name: "MIT",
-    ital: " Sloan",
-    desc: "Deep in agentic AI — building experimental platforms around agentic CRMs, memory systems, and agent-to-agent interactions. On the MIT $100K leadership team and bridging Sloan with the Media Lab.",
-    tag: "Active · 2025→",
-    href: "/story/mit",
+    slug: "a16z",
+    role: "New chapter",
+    name: "a16z",
+    ital: " · San Francisco",
+    desc: "Left MIT Sloan after a year and moved west to join a16z in 2026. Still building on the side — agent infrastructure, a personal data layer and MCP, and the tools behind Friend Roulette.",
+    tag: "Active · 2026→",
+    href: "/about",
   },
 ];
 
 const sideRibbon = buildProjects.filter((p) => p.type === "tool").slice(0, 4);
 
-export default function Home() {
+export default async function Home() {
+  const [heroStatus, currentFocus, posts] = await Promise.all([
+    getBlock<string>("hero_status", defaultHeroStatus),
+    getBlock<NowCard[]>("now_cards", defaultNowCards),
+    getPublishedPosts(),
+  ]);
   return (
     <div className="page" data-page="home">
       {/* HERO */}
@@ -52,7 +72,7 @@ export default function Home() {
           <div className="hero-text">
             <div className="hero-status">
               <span className="pulse" />
-              <span>Now · MIT Sloan · scaling Pangea · Cambridge, MA</span>
+              <span>{heroStatus}</span>
             </div>
             <h1 className="hero-headline">
               I build <span className="ital">marketplaces,</span>
@@ -63,10 +83,10 @@ export default function Home() {
             </h1>
             <p className="hero-sub">
               I&rsquo;m <span className="name">Adam Alpert</span> — applied AI
-              engineer, founder, and MIT Sloan MBA. I started a company in a
-              dorm room, took it through Y&nbsp;Combinator, and I&rsquo;ve been
-              building at the intersection of technology and human connection
-              ever since.
+              engineer and founder, now at a16z in San Francisco. I started a
+              company in a dorm room, took it through Y&nbsp;Combinator, and
+              I&rsquo;ve been building at the intersection of technology and
+              human connection ever since.
             </p>
             <div className="hero-actions">
               <Link href="/projects" className="btn btn-primary">
@@ -217,7 +237,7 @@ export default function Home() {
             <h2 className="sec-title">Writing on marketplaces, communities, and building.</h2>
           </div>
           <div className="list-rows">
-            {writingPosts.slice(0, 3).map((w, i) => (
+            {posts.slice(0, 3).map((w, i) => (
               <Link key={w.slug} href={`/writing/${w.slug}`} className="row">
                 <span className="row-num">
                   {String(i + 1).padStart(2, "0")}
@@ -228,7 +248,7 @@ export default function Home() {
                     className="row-meta"
                     style={{ marginTop: 6, textTransform: "uppercase" }}
                   >
-                    {(w.tags?.[0] ?? "")} · {w.readingTime}
+                    {(w.tags?.[0] ?? "")} · {w.reading_time}
                   </div>
                 </div>
                 <span className="arr mono">↗</span>
