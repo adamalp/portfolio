@@ -2,37 +2,22 @@
  * adam-alpert.com MCP server.
  *
  * Streamable-HTTP endpoint at /api/mcp. Agents (Muse, Dots, Claude, …) connect with a bearer
- * token and read/write the site's content: posts, site blocks, agent skills, inbound messages.
+ * token and read/write the site's content (posts, site blocks, agent skills, inbound messages) and
+ * Adam's personal CRM (people, interactions, follow-ups; see ./crm.ts).
  * Writes revalidate the affected pages, so changes go live without a deploy.
  *
  * Auth: `Authorization: Bearer <token>`. AGENT_TOKEN (env) is the owner token; per-agent tokens
  * live in agent_tokens with scopes read | write | admin.
  */
 import { createMcpHandler, withMcpAuth } from "mcp-handler";
-import type { AuthInfo } from "@modelcontextprotocol/server";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
-import { hasScope, sha256, verifyAgentToken, type Scope } from "@/lib/agentAuth";
+import { sha256, verifyAgentToken } from "@/lib/agentAuth";
+import { type Ctx, actor, fail, log, need, text } from "@/lib/mcpTools";
+import { registerCrmTools } from "./crm";
 import { readingTimeFor } from "@/lib/content";
 
-type Ctx = { http?: { authInfo?: AuthInfo } };
-
-function text(data: unknown) {
-  return { content: [{ type: "text" as const, text: typeof data === "string" ? data : JSON.stringify(data, null, 2) }] };
-}
-function fail(message: string) {
-  return { isError: true, content: [{ type: "text" as const, text: message }] };
-}
-function need(ctx: Ctx, scope: Scope): string | null {
-  return hasScope(ctx.http?.authInfo, scope) ? null : `This token lacks the "${scope}" scope.`;
-}
-function actor(ctx: Ctx): string {
-  return ctx.http?.authInfo?.clientId ?? "unknown";
-}
-async function log(ctx: Ctx, action: string, target: string, detail: Record<string, unknown> = {}) {
-  await db().from("content_log").insert({ actor: actor(ctx), action, target, detail });
-}
 function revalidatePost(slug: string) {
   revalidatePath("/");
   revalidatePath("/writing");
@@ -44,7 +29,8 @@ Before writing or editing any content, call get_skill("voice") and get_skill("pu
 Posts: list_posts / get_post / upsert_post. New posts default to status "draft"; set status "published" only when Adam has approved the piece.
 Site blocks: small editable pieces of the homepage (hero_status, now_cards). Read list_blocks to see what exists and the expected shape before set_block.
 Skills: the voice and publishing guides are editable with upsert_skill when Adam asks to change how things are written.
-Messages: list_messages shows notes visitors and their agents left via POST /api/messages.`;
+Messages: list_messages shows notes visitors and their agents left via POST /api/messages. link_message_to_person attaches one to the CRM.
+CRM: Adam's personal relationship manager lives here too (people, interactions, follow_ups). Read get_skill("crm") before using it. Always find_people before creating someone; log every touchpoint Adam mentions with log_interaction; touch_queue and roll tell you who is overdue.`;
 
 const mcp = createMcpHandler(
   (server) => {
@@ -332,6 +318,8 @@ const mcp = createMcpHandler(
         return text(data);
       }
     );
+
+    registerCrmTools(server);
 
     server.registerTool(
       "revoke_agent_token",
